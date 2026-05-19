@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": { "id": "minecraft:dragon_head" },
+    "title": { "translate": "advancements.primegodling.primordial_supreme_god.title" },
+    "description": { "translate": "advancements.primegodling.primordial_supreme_god.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "primegodling:luminarch_god",
+  "criteria": {
+    "evolve_primordial_supreme_god": {
+      "trigger": "tensura:race_awakened",
+      "conditions": {
+        "player_data": {
+          "tensura_data": { "race": "primegodling:primordial_supreme_god" }
+        }
+      }
+    }
+  },
+  "requirements": [["evolve_primordial_supreme_god"]]
+}

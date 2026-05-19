@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": { "id": "primegodling:nexus_core" },
+    "title": { "translate": "advancements.primegodling.divine_nexus.title" },
+    "description": { "translate": "advancements.primegodling.divine_nexus.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "primegodling:luminarch_god",
+  "criteria": {
+    "awaken_divine_nexus": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [["awaken_divine_nexus"]],
+  "rewards": {
+    "function": "primegodling:advancements/divine_nexus_unlock"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": { "id": "minecraft:dragon_breath" },
+    "title": { "translate": "advancements.primegodling.prime_godling.title" },
+    "description": { "translate": "advancements.primegodling.prime_godling.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "primegodling:root",
+  "criteria": {
+    "become_prime_godling": {
+      "trigger": "tensura:reincarnated",
+      "conditions": {
+        "race": "primegodling:prime_godling"
+      }
+    }
+  },
+  "requirements": [["become_prime_godling"]]
+}

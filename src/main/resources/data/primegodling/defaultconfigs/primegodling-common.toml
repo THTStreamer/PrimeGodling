@@ -1,0 +1,64 @@
+# Prime Godling — Race & Skill Configuration
+# Generated from PrimeGodling_Detailed_Plan.md
+
+# ── Prime Godling (Stage 1 — starter race) ───────────────────────────
+races {
+    # Player's EP range when spawning as Prime Godling
+    prime_godling_min_ep = 5000
+    prime_godling_max_ep = 25000
+
+    # Starting / maximum magicules (MP)
+    prime_godling_magicule_cap = 1_500_000
+}
+
+# ── Evolution thresholds ─────────────────────────────────────────────
+evolution {
+    # EP required to advance from Stage 1 → Stage 2
+    stage2_celestial_essence_ep = 50_000
+
+    # EP required to advance from Stage 2 → Stage 3
+    stage3_ecliptic_warden_ep = 250_000
+
+    # EP required to advance from Stage 3 → Stage 4
+    stage4_luminarch_god_ep = 1_000_000
+
+    # EP required to advance from Stage 4 → Stage 5
+    stage5_primordial_supreme_god_ep = 3_000_000
+}
+
+# ── Magicule (MP) caps per stage ────────────────────────────────────
+stats {
+    magicule_stage1_prime_godling         = 1_500_000
+    magicule_stage2_celestial_essence     = 3_000_000
+    magicule_stage3_ecliptic_warden       = 7_000_000
+    magicule_stage4_luminarch_god         = 10_000_000
+    magicule_stage5_primordial_supreme_god = 10_000_000
+}
+
+# ── Primordial Bloom (Unique Skill) ─────────────────────────────────
+[primordial_bloom]
+    # Percent of max magicules regenerated per second (passive)
+    regen_rate_percent_per_second = 3
+    # Fraction of elemental damage taken converted into magicule gain [0-1]
+    damage_to_mp_conversion = 0.15
+
+# ── Cosmic Awareness (Intrinsic Skill) ──────────────────────────────
+[cosmic_awareness]
+    # Block radius in vanilla blocks over which EP/MP of nearby entities is visible
+    detection_range = 32
+
+# ── Divine Nexus Awakening ──────────────────────────────────────────
+[divine_nexus]
+    # Minimum number of unique skills the player must possess to unlock Divine Nexus
+    min_unique_skills = 5
+    # EP floor at which the Divine Nexus button appears in the Awakening UI
+    min_ep_required = 150_000
+    # EP cost to shape the Nexus Core at the Awakening Altar
+    nexus_core_ep_cost = 10_000
+    # EP multiplier applied while in Divine Nexus state (multiplicative with base)
+    ep_multiplier = 5
+
+# ── Starting resistances (Stage 1 — always present) ─────────────────
+[resistances]
+    # Grants all base-element resistances at spawn; mastery improves further through evolution stages
+    grant_all_at_spawn = true

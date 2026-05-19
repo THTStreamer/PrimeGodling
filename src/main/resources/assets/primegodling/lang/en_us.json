@@ -1,0 +1,69 @@
+{
+  "primegodling.race.prime_godling": "Prime Godling",
+  "primegodling.race.prime_godling.description": "A newborn deity awakens — a being born from the weave of primordial light and will unshaped by fate. The Prime Godling gazes upon a world of limitless possibility, its soul carrying the echo of creation itself.",
+
+  "primegodling.race.celestial_essence": "Celestial Essence",
+  "primegodling.race.celestial_essence.description": "The godling's mortal shell begins to shed. What remains is purer than spirit — an essence woven from star-stuff and the first breath of the cosmos. The heavens themselves grow silent in recognition.",
+
+  "primegodling.race.ecliptic_warden": "Ecliptic Warden",
+  "primegodling.race.ecliptic_warden.description": "Twilight bends to the Warden's will. Neither light nor dark may claim dominion where one who walks the ecliptic stands. The boundary between day and night becomes a threshold, not a barrier.",
+
+  "primegodling.race.luminarch_god": "Luminarch God",
+  "primegodling.race.luminarch_god.description": "Radiance given form. The Luminarch God burns with an inner sun that illuminates the unseen truths of the world. At this height, the veil between the mortal and the divine grows thin enough to step through.",
+
+  "primegodling.race.primordial_supreme_god": "Primordial Supreme God",
+  "primegodling.race.primordial_supreme_god.description": "The journey ends where it began — at the source of all things. The Primordial Supreme God is no longer a being who wields power; it has become the hand that writes what power is. Existence bends, and does not break.",
+
+  "primegodling.evolution.nexus_cores": "Nexus Cores: %d/%d",
+  "primegodling.evolution.scaled_ep": "EP: %d / %d",
+
+  "primegodling.skill.primordial_bloom": "Primordial Bloom",
+  "primegodling.skill.primordial_bloom.description": "Passively regenerates magicules at a configurable percentage per second.",
+
+  "primegodling.skill.cosmic_awareness": "Cosmic Awareness",
+  "primegodling.skill.cosmic_awareness.description": "Toggle: grants presence sense, allowing the bearer to detect all entities within a vast radius. Drains energy while active.",
+
+  "primegodling.skill.stellar_ascension": "Stellar Ascension",
+  "primegodling.skill.stellar_ascension.description": "Toggle: channels stellar energy to boost attack damage and maximum health. Drains energy while active. Mastery doubles the effect.",
+
+  "primegodling.skill.ecliptic_mastery": "Ecliptic Mastery",
+  "primegodling.skill.ecliptic_mastery.description": "Reinforces the body with ecliptic energy, granting bonus armor and toughness. Mastery doubles the effect.",
+
+  "primegodling.skill.luminarch_blessing": "Luminarch Blessing",
+  "primegodling.skill.luminarch_blessing.description": "Toggle: releases radiant light that grants Regeneration and Absorption. Mastery improves potency.",
+
+  "primegodling.skill.primordial_omnipotence": "Primordial Omnipotence",
+  "primegodling.skill.primordial_omnipotence.description": "Bestows overwhelming divine power, massively boosting all core attributes. Greatly accelerates skill learning, mastery gain, and chant speed. Mastery improves the effect.",
+
+  "primegodling.skill.creation_authority": "Creation Authority",
+  "primegodling.skill.creation_authority.description": "Press to call down a bolt of primordial lightning that devastates the target area with a massive explosion. High energy cost.",
+
+  "awakening.primegodling.divine_nexus.name": "Divine Nexus",
+  "awakening.primegodling.divine_nexus.desc": "The third path alongside True Demon Lord and True Hero. Requires Luminarch God, 150k EP, and 5 unique skills.",
+
+  "item.primegodling.nexus_core": "Nexus Core",
+  "item.primegodling.nexus_core.desc": "A crystallised fragment of raw creation energy. Use to unlock the Divine Nexus awakening.",
+  "item.primegodling.nexus_core.tooltip": "Luminarch God only. Bring to the Awakening Altar to open the Divine Nexus path.",
+
+  "advancements.primegodling.root.title": "Prime Godling",
+  "advancements.primegodling.root.description": "The path of the primordial gods begins",
+
+  "advancements.primegodling.prime_godling.title": "I Am All That Is Prime",
+  "advancements.primegodling.prime_godling.description": "Become a Prime Godling — a newborn deity with all resistances",
+  "advancements.primegodling.celestial_essence.title": "Awakened Essence",
+  "advancements.primegodling.celestial_essence.description": "Evolve to Celestial Essence — the second stage of godhood",
+  "advancements.primegodling.ecliptic_warden.title": "Warden of Twilight",
+  "advancements.primegodling.ecliptic_warden.description": "Evolve to Ecliptic Warden — master of light and darkness",
+  "advancements.primegodling.luminarch_god.title": "Radiant God",
+  "advancements.primegodling.luminarch_god.description": "Evolve to Luminarch God — the gatekeeper of the Divine Nexus",
+  "advancements.primegodling.primordial_supreme_god.title": "Supreme Origin",
+  "advancements.primegodling.primordial_supreme_god.description": "Evolve to Primordial Supreme God — the apex of the Prime Godling line",
+  "advancements.primegodling.divine_nexus.title": "Divine Nexus",
+  "advancements.primegodling.divine_nexus.description": "Awaken the Divine Nexus — become one with the primordial source",
+  "advancements.primegodling.divine_nexus.reward": "You are now connected to the primordial source. Creation Authority granted.",
+
+  "primegodling.configuration.title": "Prime Godling — Configuration",
+  "primegodling.configuration.section.primegodling-common.toml": "Prime Godling — Race & Skill Configs",
+  "primegodling.configuration.races": "Race Settings",
+  "primegodling.configuration.skills": "Skill & Awakening Settings"
+}

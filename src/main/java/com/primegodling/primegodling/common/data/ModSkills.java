@@ -1,0 +1,42 @@
+package com.primegodling.primegodling.common.data;
+
+import com.primegodling.primegodling.PrimeGodling;
+import com.primegodling.primegodling.common.data.skill.CosmicAwarenessSkill;
+import com.primegodling.primegodling.common.data.skill.CreationAuthoritySkill;
+import com.primegodling.primegodling.common.data.skill.EclipticMasterySkill;
+import com.primegodling.primegodling.common.data.skill.LuminarchBlessingSkill;
+import com.primegodling.primegodling.common.data.skill.PrimordialBloomSkill;
+import com.primegodling.primegodling.common.data.skill.PrimordialOmnipotenceSkill;
+import com.primegodling.primegodling.common.data.skill.StellarAscensionSkill;
+import dev.architectury.registry.registries.DeferredRegister;
+import dev.architectury.registry.registries.RegistrySupplier;
+import io.github.manasmods.manascore.skill.api.ManasSkill;
+import io.github.manasmods.manascore.skill.impl.SkillRegistry;
+
+public class ModSkills {
+
+    private static final DeferredRegister<ManasSkill> SKILLS =
+            DeferredRegister.create(PrimeGodling.MOD_ID, SkillRegistry.KEY);
+
+    public static final RegistrySupplier<ManasSkill> PRIMORDIAL_BLOOM;
+    public static final RegistrySupplier<ManasSkill> COSMIC_AWARENESS;
+    public static final RegistrySupplier<ManasSkill> STELLAR_ASCENSION;
+    public static final RegistrySupplier<ManasSkill> ECLIPTIC_MASTERY;
+    public static final RegistrySupplier<ManasSkill> LUMINARCH_BLESSING;
+    public static final RegistrySupplier<ManasSkill> PRIMORDIAL_OMNIPOTENCE;
+    public static final RegistrySupplier<ManasSkill> CREATION_AUTHORITY;
+
+    static {
+        PRIMORDIAL_BLOOM = SKILLS.register("primordial_bloom", PrimordialBloomSkill::new);
+        COSMIC_AWARENESS = SKILLS.register("cosmic_awareness", CosmicAwarenessSkill::new);
+        STELLAR_ASCENSION = SKILLS.register("stellar_ascension", StellarAscensionSkill::new);
+        ECLIPTIC_MASTERY = SKILLS.register("ecliptic_mastery", EclipticMasterySkill::new);
+        LUMINARCH_BLESSING = SKILLS.register("luminarch_blessing", LuminarchBlessingSkill::new);
+        PRIMORDIAL_OMNIPOTENCE = SKILLS.register("primordial_omnipotence", PrimordialOmnipotenceSkill::new);
+        CREATION_AUTHORITY = SKILLS.register("creation_authority", CreationAuthoritySkill::new);
+    }
+
+    public static void init() {
+        SKILLS.register();
+    }
+}
