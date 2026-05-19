@@ -100,7 +100,8 @@ public class PrimeGodlingRace extends DefaultRace {
 
     @Override
     public void triggerEvolutionRewards(ManasRaceInstance instance, LivingEntity entity) {
-        super.triggerEvolutionRewards(instance, entity);
+        // super call omitted — Tensura plays an unwanted evolution sound
+        // super.triggerEvolutionRewards(instance, entity);
         if (entity instanceof ServerPlayer player) {
             int stageIndex = 0;
             for (int i = 0; i < RaceRegistry.EP_THRESHOLDS.length; i++) {
@@ -145,10 +146,6 @@ public class PrimeGodlingRace extends DefaultRace {
         level.sendParticles(net.minecraft.core.particles.ParticleTypes.FLASH,
                 player.getX(), player.getY() + 1.5, player.getZ(),
                 1, 0.0, 0.0, 0.0, 0.0);
-        level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                net.minecraft.sounds.SoundEvents.UI_TOAST_CHALLENGE_COMPLETE,
-                net.minecraft.sounds.SoundSource.PLAYERS, 1.5f, 1.0f);
-
         player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§6✦ Divine Nexus Awakening Complete!"));
         player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§eYou are now connected to the primordial source."));
 
