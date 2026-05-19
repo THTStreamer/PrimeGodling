@@ -32,6 +32,12 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+### Decompiled class stubs ###
+io/
+
+### GitHub Actions (needs workflow-scoped PAT) ###
+.github/
+
 ### Minecraft Modding ###
 run/
 !**/src/**/run/
