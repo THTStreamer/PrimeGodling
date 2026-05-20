@@ -21,9 +21,12 @@ public class ScaledEPRequirement extends EvolutionRequirement {
         if (!(entity instanceof ServerPlayer player)) return 0;
         double currentEP = EnergyHelper.getBaseMaxEP(entity);
         double entryEP = player.getPersistentData().getDouble(ENTRY_EP_KEY);
-        if (entryEP <= 0) return currentEP > 0 ? 1.0f : 0;
+        if (entryEP <= 0) {
+            storeEntryEP(entity);
+            entryEP = EnergyHelper.getBaseMaxEP(entity);
+            if (entryEP <= 0) return 0;
+        }
         double required = entryEP * multiplier;
-        // Progress = how far we've come from entry toward required
         double delta = currentEP - entryEP;
         double needed = required - entryEP;
         if (needed <= 0) return 1.0f;
@@ -39,7 +42,7 @@ public class ScaledEPRequirement extends EvolutionRequirement {
             entryEP = player.getPersistentData().getDouble(ENTRY_EP_KEY);
         }
         if (entryEP <= 0) {
-            return Component.translatable("primegodling.evolution.scaled_ep", (long) currentEP, 0);
+            return Component.translatable("primegodling.evolution.scaled_ep", (long) currentEP, (long) (currentEP * multiplier));
         }
         double required = entryEP * multiplier;
         return Component.translatable("primegodling.evolution.scaled_ep", (long) currentEP, (long) required);

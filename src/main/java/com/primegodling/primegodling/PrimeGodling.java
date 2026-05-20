@@ -88,10 +88,16 @@ public class PrimeGodling {
         int maintenanceCost = hasSub ? RaceConfig.COMMON.flightMaintenanceCostSub.get() : RaceConfig.COMMON.flightMaintenanceCost.get();
         int maintenanceInterval = hasSub ? RaceConfig.COMMON.flightMaintenanceIntervalSub.get() : RaceConfig.COMMON.flightMaintenanceInterval.get();
 
+        boolean sufficientMagicule = !EnergyHelper.isOutOfEnergy(player, activationCost, 0.0);
         boolean isFlying = player.getAbilities().mayfly && player.getAbilities().flying;
 
-        if (fd.flightLocked && !EnergyHelper.isOutOfEnergy(player, activationCost, 0.0)) {
-            fd.flightLocked = false;
+        if (fd.flightLocked) {
+            if (sufficientMagicule) {
+                fd.flightLocked = false;
+                player.getAbilities().mayfly = true;
+                player.onUpdateAbilities();
+            }
+        } else if (!player.getAbilities().mayfly && sufficientMagicule) {
             player.getAbilities().mayfly = true;
             player.onUpdateAbilities();
         }
