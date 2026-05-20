@@ -13,8 +13,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import org.slf4j.Logger;
@@ -33,7 +35,9 @@ public class PrimeGodling {
         ModRaces.init();
         ModSkills.init();
 
-        ClientProxy.init(bus);
+        if (FMLLoader.getDist() == Dist.CLIENT) {
+            ClientProxy.init(bus);
+        }
         TensuraIntegration.register(bus);
 
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onLivingDeath);
