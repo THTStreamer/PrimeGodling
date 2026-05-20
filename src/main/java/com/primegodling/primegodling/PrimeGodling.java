@@ -6,7 +6,6 @@ import com.primegodling.primegodling.common.config.RaceConfig;
 import com.primegodling.primegodling.common.config.SkillConfig;
 import com.primegodling.primegodling.common.data.ModRaces;
 import com.primegodling.primegodling.common.data.ModSkills;
-import com.primegodling.primegodling.common.integration.PrimeGodlingConfig;
 import com.primegodling.primegodling.common.integration.TensuraIntegration;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.EventResult;
@@ -15,6 +14,8 @@ import io.github.manasmods.manascore.race.api.RaceAPI;
 import io.github.manasmods.manascore.race.api.RaceEvents;
 import io.github.manasmods.manascore.race.api.Races;
 import io.github.manasmods.tensura.data.TensuraRaceTags;
+import io.github.manasmods.tensura.storage.TensuraStorages;
+import io.github.manasmods.tensura.storage.ep.IExistence;
 import io.github.manasmods.tensura.util.EnergyHelper;
 import io.github.manasmods.tensura.util.SubordinateHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -92,55 +93,62 @@ public class PrimeGodling {
         UUID uuid = player.getUUID();
         FlightData fd = FLIGHT_DATA.computeIfAbsent(uuid, k -> new FlightData());
 
-        boolean hasSub = false;
-        for (LivingEntity e : player.serverLevel().getEntitiesOfClass(LivingEntity.class,
-                player.getBoundingBox().inflate(32),
-                e -> e != player && e.isAlive() && e.hasCustomName() && SubordinateHelper.isSubordinate(e, player))) {
-            hasSub = true;
-            break;
-        }
-
+        boolean hasSub = hasNamedSubordinate(player);
         int activationCost = hasSub ? RaceConfig.COMMON.flightActivationCostSub.get() : RaceConfig.COMMON.flightActivationCost.get();
         int maintenanceCost = hasSub ? RaceConfig.COMMON.flightMaintenanceCostSub.get() : RaceConfig.COMMON.flightMaintenanceCost.get();
         int maintenanceInterval = hasSub ? RaceConfig.COMMON.flightMaintenanceIntervalSub.get() : RaceConfig.COMMON.flightMaintenanceInterval.get();
 
-        boolean sufficientMagicule = !EnergyHelper.isOutOfEnergy(player, activationCost, 0.0);
         boolean isFlying = player.getAbilities().mayfly && player.getAbilities().flying;
+        double currentMagicule = getCurrentMagicule(player);
 
         if (fd.flightLocked) {
-            if (sufficientMagicule) {
+            if (currentMagicule >= activationCost) {
                 fd.flightLocked = false;
                 player.getAbilities().mayfly = true;
                 player.onUpdateAbilities();
             }
-        } else if (!player.getAbilities().mayfly && sufficientMagicule) {
+        } else if (!player.getAbilities().mayfly && currentMagicule >= activationCost) {
             player.getAbilities().mayfly = true;
             player.onUpdateAbilities();
         }
 
         if (isFlying) {
             if (!fd.wasFlying) {
-                if (EnergyHelper.isOutOfEnergy(player, activationCost, 0.0)) {
+                if (currentMagicule < activationCost) {
                     disableFlight(player);
                     fd.flightLocked = true;
                 } else {
-                    EnergyHelper.gainMagicule(player, -activationCost, EnergyHelper.GainType.NORMAL);
+                    EnergyHelper.isOutOfMagiculeConsuming(player, activationCost, 0.0);
                 }
             }
 
             fd.maintenanceCounter++;
             if (fd.maintenanceCounter >= maintenanceInterval) {
                 fd.maintenanceCounter = 0;
-                if (EnergyHelper.isOutOfEnergy(player, maintenanceCost, 0.0)) {
+                if (currentMagicule < maintenanceCost) {
                     disableFlight(player);
                     fd.flightLocked = true;
                 } else {
-                    EnergyHelper.gainMagicule(player, -maintenanceCost, EnergyHelper.GainType.NORMAL);
+                    EnergyHelper.isOutOfMagiculeConsuming(player, maintenanceCost, 0.0);
                 }
             }
         }
 
         fd.wasFlying = isFlying;
+    }
+
+    private static boolean hasNamedSubordinate(ServerPlayer player) {
+        for (LivingEntity e : player.serverLevel().getEntitiesOfClass(LivingEntity.class,
+                player.getBoundingBox().inflate(32),
+                e -> e != player && e.isAlive() && e.hasCustomName() && SubordinateHelper.isSubordinate(e, player))) {
+            return true;
+        }
+        return false;
+    }
+
+    private static double getCurrentMagicule(ServerPlayer player) {
+        IExistence existence = TensuraStorages.getExistenceFrom(player);
+        return existence != null ? existence.getMagicule() : 0;
     }
 
     private static void disableFlight(ServerPlayer player) {

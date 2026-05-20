@@ -58,8 +58,8 @@ public class RaceConfig {
             flightMaintenanceCost = builder.defineInRange("maintenance_cost", 10, 0, 10000);
             flightMaintenanceInterval = builder.defineInRange("maintenance_interval_ticks", 10, 1, 200);
             flightActivationCostSub = builder.defineInRange("activation_cost_subordinate", 20, 0, 10000);
-            flightMaintenanceCostSub = builder.defineInRange("maintenance_cost_subordinate", 1, 0, 10000);
-            flightMaintenanceIntervalSub = builder.defineInRange("maintenance_interval_ticks_subordinate", 40, 1, 200);
+            flightMaintenanceCostSub = builder.defineInRange("maintenance_cost_subordinate", 2, 0, 10000);
+            flightMaintenanceIntervalSub = builder.defineInRange("maintenance_interval_ticks_subordinate", 100, 1, 200);
             builder.pop();
         }
     }
