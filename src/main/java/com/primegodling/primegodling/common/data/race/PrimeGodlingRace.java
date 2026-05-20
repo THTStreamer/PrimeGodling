@@ -223,7 +223,7 @@ public class PrimeGodlingRace extends DefaultRace {
     @Override
     public void onRaceSet(ManasRaceInstance instance, LivingEntity entity) {
         super.onRaceSet(instance, entity);
-        ScaledEPRequirement.storeEntryEP(entity);
+        ScaledEPRequirement.storeEntryEP(instance, entity);
         if (nextEvolution == null) {
             EnergyHelper.gainMagicule(entity, EnergyHelper.getMaxMagicule(entity), EnergyHelper.GainType.NORMAL);
         }

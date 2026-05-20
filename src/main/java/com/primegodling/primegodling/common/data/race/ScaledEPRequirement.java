@@ -4,7 +4,6 @@ import io.github.manasmods.manascore.race.api.ManasRaceInstance;
 import io.github.manasmods.tensura.race.template.EvolutionRequirement;
 import io.github.manasmods.tensura.util.EnergyHelper;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 
 public class ScaledEPRequirement extends EvolutionRequirement {
@@ -18,12 +17,11 @@ public class ScaledEPRequirement extends EvolutionRequirement {
 
     @Override
     public float getProgress(ManasRaceInstance instance, LivingEntity entity) {
-        if (!(entity instanceof ServerPlayer player)) return 0;
         double currentEP = EnergyHelper.getBaseMaxEP(entity);
-        double entryEP = player.getPersistentData().getDouble(ENTRY_EP_KEY);
+        double entryEP = readEntryEP(instance);
         if (entryEP <= 0) {
-            storeEntryEP(entity);
-            entryEP = EnergyHelper.getBaseMaxEP(entity);
+            storeEntryEP(instance, entity);
+            entryEP = currentEP;
             if (entryEP <= 0) return 0;
         }
         double required = entryEP * multiplier;
@@ -35,12 +33,8 @@ public class ScaledEPRequirement extends EvolutionRequirement {
 
     @Override
     public Component getRequirementComponent(ManasRaceInstance instance, LivingEntity entity) {
-        double currentEP = 0;
-        double entryEP = 0;
-        if (entity instanceof ServerPlayer player) {
-            currentEP = EnergyHelper.getBaseMaxEP(entity);
-            entryEP = player.getPersistentData().getDouble(ENTRY_EP_KEY);
-        }
+        double currentEP = EnergyHelper.getBaseMaxEP(entity);
+        double entryEP = readEntryEP(instance);
         if (entryEP <= 0) {
             return Component.translatable("primegodling.evolution.scaled_ep", (long) currentEP, (long) (currentEP * multiplier));
         }
@@ -48,10 +42,13 @@ public class ScaledEPRequirement extends EvolutionRequirement {
         return Component.translatable("primegodling.evolution.scaled_ep", (long) currentEP, (long) required);
     }
 
-    public static void storeEntryEP(LivingEntity entity) {
-        if (entity instanceof ServerPlayer player) {
-            double ep = EnergyHelper.getBaseMaxEP(entity);
-            player.getPersistentData().putDouble(ENTRY_EP_KEY, ep);
-        }
+    public static void storeEntryEP(ManasRaceInstance instance, LivingEntity entity) {
+        double ep = EnergyHelper.getBaseMaxEP(entity);
+        instance.getOrCreateTag().putDouble(ENTRY_EP_KEY, ep);
+    }
+
+    private static double readEntryEP(ManasRaceInstance instance) {
+        var tag = instance.getTag();
+        return tag != null ? tag.getDouble(ENTRY_EP_KEY) : 0;
     }
 }
