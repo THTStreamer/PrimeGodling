@@ -57,6 +57,8 @@ public class PrimeGodling {
         ServerConfig.register();
         NexusDropsConfig.register();
 
+        bus.addListener(RaceConfig::onLoad);
+
         ModItems.ITEMS.register(bus);
         ModRaces.init();
         ModSkills.init();

@@ -1,12 +1,16 @@
 package com.primegodling.primegodling.common.config;
 
+import com.primegodling.primegodling.PrimeGodling;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class RaceConfig {
+    public static final int CONFIG_VERSION = 2;
+
     public static final ModConfigSpec COMMON_SPEC;
     public static final Common COMMON;
 
@@ -24,6 +28,7 @@ public class RaceConfig {
     }
 
     public static class Common {
+        public final ModConfigSpec.IntValue configVersion;
         public final ModConfigSpec.IntValue primeGodlingMinEp;
         public final ModConfigSpec.IntValue primeGodlingMaxEp;
         public final ModConfigSpec.IntValue primeGodlingMagiculeCap;
@@ -40,6 +45,10 @@ public class RaceConfig {
         public final ModConfigSpec.IntValue flightMaintenanceIntervalSub;
 
         Common(ModConfigSpec.Builder builder) {
+            builder.push("_meta").comment("Internal metadata — do not edit");
+            configVersion = builder.defineInRange("config_version", CONFIG_VERSION, 1, Integer.MAX_VALUE);
+            builder.pop();
+
             builder.push("races").comment("Base race stats for primegodling:prime_godling");
             primeGodlingMinEp = builder.defineInRange("prime_godling_min_ep", 5000, Integer.MIN_VALUE, Integer.MAX_VALUE);
             primeGodlingMaxEp = builder.defineInRange("prime_godling_max_ep", 25000, Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -61,6 +70,15 @@ public class RaceConfig {
             flightMaintenanceCostSub = builder.defineInRange("maintenance_cost_subordinate", 2, 0, 10000);
             flightMaintenanceIntervalSub = builder.defineInRange("maintenance_interval_ticks_subordinate", 100, 1, 200);
             builder.pop();
+        }
+    }
+
+    public static void onLoad(ModConfigEvent.Loading event) {
+        if (COMMON.configVersion.get() < CONFIG_VERSION) {
+            PrimeGodling.LOGGER.warn(
+                    "[{}] primegodling-races.toml is outdated (version {} < {}). " +
+                    "Delete the file to regenerate with current defaults.",
+                    PrimeGodling.MOD_ID, COMMON.configVersion.get(), CONFIG_VERSION);
         }
     }
 }
