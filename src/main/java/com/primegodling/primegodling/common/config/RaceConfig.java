@@ -32,6 +32,13 @@ public class RaceConfig {
         public final ModConfigSpec.IntValue stage4LuminarchGodEp;
         public final ModConfigSpec.IntValue stage5PrimordialSupremeGodEp;
 
+        public final ModConfigSpec.IntValue flightActivationCost;
+        public final ModConfigSpec.IntValue flightMaintenanceCost;
+        public final ModConfigSpec.IntValue flightMaintenanceInterval;
+        public final ModConfigSpec.IntValue flightActivationCostSub;
+        public final ModConfigSpec.IntValue flightMaintenanceCostSub;
+        public final ModConfigSpec.IntValue flightMaintenanceIntervalSub;
+
         Common(ModConfigSpec.Builder builder) {
             builder.push("races").comment("Base race stats for primegodling:prime_godling");
             primeGodlingMinEp = builder.defineInRange("prime_godling_min_ep", 5000, Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -44,6 +51,15 @@ public class RaceConfig {
             stage3EclipticWardenEp = builder.defineInRange("stage3_ecliptic_warden_ep", 250_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
             stage4LuminarchGodEp = builder.defineInRange("stage4_luminarch_god_ep", 1_000_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
             stage5PrimordialSupremeGodEp = builder.defineInRange("stage5_primordial_supreme_god_ep", 3_000_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            builder.pop();
+
+            builder.push("creative_flight").comment("Magicule costs for creative flight");
+            flightActivationCost = builder.defineInRange("activation_cost", 40, 0, 10000);
+            flightMaintenanceCost = builder.defineInRange("maintenance_cost", 10, 0, 10000);
+            flightMaintenanceInterval = builder.defineInRange("maintenance_interval_ticks", 10, 1, 200);
+            flightActivationCostSub = builder.defineInRange("activation_cost_subordinate", 20, 0, 10000);
+            flightMaintenanceCostSub = builder.defineInRange("maintenance_cost_subordinate", 1, 0, 10000);
+            flightMaintenanceIntervalSub = builder.defineInRange("maintenance_interval_ticks_subordinate", 40, 1, 200);
             builder.pop();
         }
     }

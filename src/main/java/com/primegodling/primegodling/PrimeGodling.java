@@ -9,6 +9,12 @@ import com.primegodling.primegodling.common.data.ModSkills;
 import com.primegodling.primegodling.common.integration.PrimeGodlingConfig;
 import com.primegodling.primegodling.common.integration.TensuraIntegration;
 import com.mojang.logging.LogUtils;
+import io.github.manasmods.manascore.race.api.ManasRaceInstance;
+import io.github.manasmods.manascore.race.api.RaceAPI;
+import io.github.manasmods.manascore.race.api.Races;
+import io.github.manasmods.tensura.data.TensuraRaceTags;
+import io.github.manasmods.tensura.util.EnergyHelper;
+import io.github.manasmods.tensura.util.SubordinateHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,14 +25,22 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import org.slf4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @Mod(PrimeGodling.MOD_ID)
 public class PrimeGodling {
     public static final String MOD_ID = "primegodling";
     public static final ResourceLocation MOD_RL = ResourceLocation.fromNamespaceAndPath(MOD_ID, "root");
     public static final Logger LOGGER = LogUtils.getLogger();
+
+    private static final Map<UUID, FlightData> FLIGHT_DATA = new HashMap<>();
 
     public PrimeGodling(IEventBus bus) {
         RaceConfig.register();
@@ -42,6 +56,81 @@ public class PrimeGodling {
         TensuraIntegration.register(bus);
 
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onLivingDeath);
+        NeoForge.EVENT_BUS.addListener(PrimeGodling::onPlayerTick);
+    }
+
+    private static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (player.isCreative() || player.isSpectator()) return;
+
+        Races races = RaceAPI.getRaceFrom(player);
+        Optional<ManasRaceInstance> opt = races.getRace();
+        if (opt.isEmpty()) return;
+        ManasRaceInstance raceInstance = opt.get();
+
+        if (!raceInstance.is(TensuraRaceTags.HAS_CREATIVE_FLIGHT)) {
+            FLIGHT_DATA.remove(player.getUUID());
+            return;
+        }
+
+        UUID uuid = player.getUUID();
+        FlightData fd = FLIGHT_DATA.computeIfAbsent(uuid, k -> new FlightData());
+
+        boolean hasSub = false;
+        for (LivingEntity e : player.serverLevel().getEntitiesOfClass(LivingEntity.class,
+                player.getBoundingBox().inflate(32),
+                e -> e != player && e.isAlive() && e.hasCustomName() && SubordinateHelper.isSubordinate(e, player))) {
+            hasSub = true;
+            break;
+        }
+
+        int activationCost = hasSub ? RaceConfig.COMMON.flightActivationCostSub.get() : RaceConfig.COMMON.flightActivationCost.get();
+        int maintenanceCost = hasSub ? RaceConfig.COMMON.flightMaintenanceCostSub.get() : RaceConfig.COMMON.flightMaintenanceCost.get();
+        int maintenanceInterval = hasSub ? RaceConfig.COMMON.flightMaintenanceIntervalSub.get() : RaceConfig.COMMON.flightMaintenanceInterval.get();
+
+        boolean isFlying = player.getAbilities().mayfly && player.getAbilities().flying;
+
+        if (fd.flightLocked && !EnergyHelper.isOutOfEnergy(player, activationCost, 0.0)) {
+            fd.flightLocked = false;
+            player.getAbilities().mayfly = true;
+            player.onUpdateAbilities();
+        }
+
+        if (isFlying) {
+            if (!fd.wasFlying) {
+                if (EnergyHelper.isOutOfEnergy(player, activationCost, 0.0)) {
+                    disableFlight(player);
+                    fd.flightLocked = true;
+                } else {
+                    EnergyHelper.gainMagicule(player, -activationCost, EnergyHelper.GainType.NORMAL);
+                }
+            }
+
+            fd.maintenanceCounter++;
+            if (fd.maintenanceCounter >= maintenanceInterval) {
+                fd.maintenanceCounter = 0;
+                if (EnergyHelper.isOutOfEnergy(player, maintenanceCost, 0.0)) {
+                    disableFlight(player);
+                    fd.flightLocked = true;
+                } else {
+                    EnergyHelper.gainMagicule(player, -maintenanceCost, EnergyHelper.GainType.NORMAL);
+                }
+            }
+        }
+
+        fd.wasFlying = isFlying;
+    }
+
+    private static void disableFlight(ServerPlayer player) {
+        player.getAbilities().mayfly = false;
+        player.getAbilities().flying = false;
+        player.onUpdateAbilities();
+    }
+
+    private static class FlightData {
+        int maintenanceCounter = 0;
+        boolean wasFlying = false;
+        boolean flightLocked = false;
     }
 
     private static void onLivingDeath(LivingDeathEvent event) {
