@@ -24,6 +24,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,10 @@ public class PrimeGodlingRace extends DefaultRace {
     private final double maxMagicule;
     private final double auraCap;
     private ManasRace nextEvolution;
+
+    private final List<ExtraModifier> extraModifiers = new ArrayList<>();
+
+    private record ExtraModifier(Holder<Attribute> attribute, ResourceLocation id, double amount, AttributeModifier.Operation operation) {}
 
     public PrimeGodlingRace(Difficulty difficulty, long epThreshold, double minMagicule, double maxMagicule, double auraCap, List<Supplier<ManasSkill>> intrinsicSkillSuppliers) {
         super(difficulty);
@@ -74,7 +79,35 @@ public class PrimeGodlingRace extends DefaultRace {
     }
 
     public void addAttr(Holder<Attribute> attribute, String name, double amount, AttributeModifier.Operation operation) {
-        addAttributeModifier(attribute, ResourceLocation.fromNamespaceAndPath("primegodling", name), amount, operation);
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath("primegodling", name);
+        if (this.attributeModifiers.containsKey(attribute)) {
+            extraModifiers.add(new ExtraModifier(attribute, id, amount, operation));
+        } else {
+            addAttributeModifier(attribute, id, amount, operation);
+        }
+    }
+
+    @Override
+    public void addAttributeModifiers(ManasRaceInstance instance, LivingEntity entity) {
+        super.addAttributeModifiers(instance, entity);
+        for (ExtraModifier em : extraModifiers) {
+            AttributeInstance attr = entity.getAttribute(em.attribute);
+            if (attr != null) {
+                attr.removeModifier(em.id);
+                attr.addTransientModifier(new AttributeModifier(em.id, em.amount, em.operation));
+            }
+        }
+    }
+
+    @Override
+    public void removeAttributeModifiers(ManasRaceInstance instance, LivingEntity entity) {
+        super.removeAttributeModifiers(instance, entity);
+        for (ExtraModifier em : extraModifiers) {
+            AttributeInstance attr = entity.getAttribute(em.attribute);
+            if (attr != null) {
+                attr.removeModifier(em.id);
+            }
+        }
     }
 
     @Override

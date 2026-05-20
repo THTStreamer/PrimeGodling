@@ -9,8 +9,10 @@ import com.primegodling.primegodling.common.data.ModSkills;
 import com.primegodling.primegodling.common.integration.PrimeGodlingConfig;
 import com.primegodling.primegodling.common.integration.TensuraIntegration;
 import com.mojang.logging.LogUtils;
+import dev.architectury.event.EventResult;
 import io.github.manasmods.manascore.race.api.ManasRaceInstance;
 import io.github.manasmods.manascore.race.api.RaceAPI;
+import io.github.manasmods.manascore.race.api.RaceEvents;
 import io.github.manasmods.manascore.race.api.Races;
 import io.github.manasmods.tensura.data.TensuraRaceTags;
 import io.github.manasmods.tensura.util.EnergyHelper;
@@ -57,6 +59,20 @@ public class PrimeGodling {
 
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onLivingDeath);
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onPlayerTick);
+
+        RaceEvents.ACTIVATE_ABILITY.register((raceInstance, entity) -> {
+            if (entity instanceof ServerPlayer player && raceInstance.is(TensuraRaceTags.HAS_CREATIVE_FLIGHT)) {
+                if (player.getAbilities().flying) {
+                    player.getAbilities().flying = false;
+                } else {
+                    player.getAbilities().mayfly = true;
+                    player.getAbilities().flying = true;
+                }
+                player.onUpdateAbilities();
+                return EventResult.interruptFalse();
+            }
+            return EventResult.pass();
+        });
     }
 
     private static void onPlayerTick(PlayerTickEvent.Post event) {
