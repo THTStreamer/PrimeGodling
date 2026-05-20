@@ -55,18 +55,21 @@ public final class RaceData {
             case 0 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "pg_health", 8.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ATTACK_DAMAGE, "pg_damage", 2.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "pg_mult", 0.20, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 race.addAttr(Attributes.MOVEMENT_SPEED, "pg_speed", 0.05, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "pg_armor", 4.0, AttributeModifier.Operation.ADD_VALUE);
             }
             case 1 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "ce_health", 16.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ATTACK_DAMAGE, "ce_damage", 4.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "ce_mult", 0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 race.addAttr(Attributes.MOVEMENT_SPEED, "ce_speed", 0.08, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "ce_armor", 8.0, AttributeModifier.Operation.ADD_VALUE);
             }
             case 2 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "ew_health", 24.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ATTACK_DAMAGE, "ew_damage", 6.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "ew_mult", 0.30, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 race.addAttr(Attributes.MOVEMENT_SPEED, "ew_speed", 0.10, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "ew_armor", 12.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR_TOUGHNESS, "ew_toughness", 4.0, AttributeModifier.Operation.ADD_VALUE);
@@ -74,6 +77,7 @@ public final class RaceData {
             case 3 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "lg_health", 40.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ATTACK_DAMAGE, "lg_damage", 10.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "lg_mult", 0.35, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 race.addAttr(Attributes.MOVEMENT_SPEED, "lg_speed", 0.15, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "lg_armor", 16.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR_TOUGHNESS, "lg_toughness", 8.0, AttributeModifier.Operation.ADD_VALUE);
@@ -81,6 +85,7 @@ public final class RaceData {
             case 4 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "psg_health", 60.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ATTACK_DAMAGE, "psg_damage", 16.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "psg_mult", 0.40, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 race.addAttr(Attributes.MOVEMENT_SPEED, "psg_speed", 0.20, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "psg_armor", 20.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR_TOUGHNESS, "psg_toughness", 12.0, AttributeModifier.Operation.ADD_VALUE);
