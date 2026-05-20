@@ -3,6 +3,7 @@ package com.primegodling.primegodling.common.data;
 import com.primegodling.primegodling.PrimeGodling;
 import com.primegodling.primegodling.common.data.skill.CosmicAwarenessSkill;
 import com.primegodling.primegodling.common.data.skill.CreationAuthoritySkill;
+import com.primegodling.primegodling.common.data.skill.DivineDevourSkill;
 import com.primegodling.primegodling.common.data.skill.EclipticMasterySkill;
 import com.primegodling.primegodling.common.data.skill.LuminarchBlessingSkill;
 import com.primegodling.primegodling.common.data.skill.PrimordialBloomSkill;
@@ -45,6 +46,7 @@ public final class SkillData {
         map.put(com.primegodling.primegodling.common.data.SkillRegistry.LUMINARCH_BLESSING, new LuminarchBlessingSkill());
         map.put(com.primegodling.primegodling.common.data.SkillRegistry.PRIMORDIAL_OMNIPOTENCE, new PrimordialOmnipotenceSkill());
         map.put(com.primegodling.primegodling.common.data.SkillRegistry.CREATION_AUTHORITY, new CreationAuthoritySkill());
+        map.put(com.primegodling.primegodling.common.data.SkillRegistry.DIVINE_DEVOUR, new DivineDevourSkill());
 
         return map;
     }

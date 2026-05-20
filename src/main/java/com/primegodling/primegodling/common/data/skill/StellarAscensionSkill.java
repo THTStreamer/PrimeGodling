@@ -1,9 +1,14 @@
 package com.primegodling.primegodling.common.data.skill;
 
+import io.github.manasmods.manascore.network.api.util.Changeable;
 import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
 import io.github.manasmods.tensura.ability.skill.Skill;
 import io.github.manasmods.tensura.util.EnergyHelper;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -47,7 +52,27 @@ public class StellarAscensionSkill extends Skill {
         if (EnergyHelper.isOutOfEnergy(entity, instance, 0, 5.0f)) {
             instance.setToggled(false);
             instance.onToggleOff(entity);
+            return;
         }
+        if (entity.level() instanceof ServerLevel serverLevel) {
+            double x = entity.getX();
+            double y = entity.getY() + 2.0;
+            double z = entity.getZ();
+            serverLevel.sendParticles(ParticleTypes.END_ROD, x, y, z, 3, 1.5, 1.0, 1.5, 0.02);
+            serverLevel.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, x, y, z, 2, 1.0, 0.5, 1.0, 0.01);
+        }
+        if (instance.isMastered(entity) && entity.fallDistance > 3.0f) {
+            entity.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 40, 0, false, false, true));
+        }
+    }
+
+    @Override
+    public boolean onDamageEntity(ManasSkillInstance instance, LivingEntity entity,
+            LivingEntity target, net.minecraft.world.damagesource.DamageSource source,
+            Changeable<Float> damage) {
+        if (!instance.isToggled()) return false;
+        target.hurt(entity.damageSources().magic(), instance.isMastered(entity) ? 4.0f : 2.0f);
+        return false;
     }
 
     @Override

@@ -18,25 +18,28 @@
   "primegodling.evolution.scaled_ep": "EP: %d / %d",
 
   "primegodling.skill.primordial_bloom": "Primordial Bloom",
-  "primegodling.skill.primordial_bloom.description": "Passively regenerates magicules at a configurable percentage per second.",
+  "primegodling.skill.primordial_bloom.description": "Passively regenerates magicules. Periodically spawns blooming particles. Mastery: also grants Regeneration to nearby players.",
 
   "primegodling.skill.cosmic_awareness": "Cosmic Awareness",
-  "primegodling.skill.cosmic_awareness.description": "Toggle: grants presence sense, allowing the bearer to detect all entities within a vast radius. Drains energy while active.",
+  "primegodling.skill.cosmic_awareness.description": "Toggle: grants presence sense, detects invisible entities, and marks entities that target the bearer. Drains energy while active.",
 
   "primegodling.skill.stellar_ascension": "Stellar Ascension",
-  "primegodling.skill.stellar_ascension.description": "Toggle: channels stellar energy to boost attack damage and maximum health. Drains energy while active. Mastery doubles the effect.",
+  "primegodling.skill.stellar_ascension.description": "Toggle: boosts attack damage and maximum health with a celestial particle aura. Deals bonus magic damage on attack. Mastery: slow falling while falling.",
 
   "primegodling.skill.ecliptic_mastery": "Ecliptic Mastery",
-  "primegodling.skill.ecliptic_mastery.description": "Reinforces the body with ecliptic energy, granting bonus armor and toughness. Mastery doubles the effect.",
+  "primegodling.skill.ecliptic_mastery.description": "Passively grants bonus armor and toughness. Reflects damage back to attackers and has a chance to negate incoming damage. Mastery doubles the effect.",
 
   "primegodling.skill.luminarch_blessing": "Luminarch Blessing",
-  "primegodling.skill.luminarch_blessing.description": "Toggle: releases radiant light that grants Regeneration and Absorption. Mastery improves potency.",
+  "primegodling.skill.luminarch_blessing.description": "Toggle: grants Regeneration, Absorption, and highlights all living entities within 24 blocks through walls (Glowing). Mastery: 48-block range and heals nearby allies.",
 
   "primegodling.skill.primordial_omnipotence": "Primordial Omnipotence",
-  "primegodling.skill.primordial_omnipotence.description": "Bestows overwhelming divine power, massively boosting all core attributes. Greatly accelerates skill learning, mastery gain, and chant speed. Mastery improves the effect.",
+  "primegodling.skill.primordial_omnipotence.description": "Bestows overwhelming divine power, massively boosting all core attributes. Grants Fire Resistance, Water Breathing, fall damage immunity, and 30-50% damage reduction. Greatly accelerates skill learning.",
 
   "primegodling.skill.creation_authority": "Creation Authority",
-  "primegodling.skill.creation_authority.description": "Ultimate Skill. Passively grants +6 Attack, +16 HP, +4 Armor, +4 Toughness. Press to call down a storm of primordial lightning bolts that devastates the target area with a massive explosion. High energy cost. Mastery increases lightning count and explosion radius.",
+  "primegodling.skill.creation_authority.description": "Ultimate Skill. Passively grants +6 Attack, +16 HP, +4 Armor, +4 Toughness. Press to call down primordial lightning that devastates the target area with a massive explosion. Grants brief damage immunity after activation. High energy cost.",
+
+  "primegodling.skill.divine_devour": "Divine Devour",
+  "primegodling.skill.divine_devour.description": "Unique Skill. Press the skill key while looking at a mob to attempt to steal one of its skills. 10% chance per use. Cooldown: 10 ticks (3 when mastered).",
 
   "awakening.primegodling.divine_nexus.name": "Divine Nexus",
   "awakening.primegodling.divine_nexus.desc": "The third path alongside True Demon Lord and True Hero. Requires Luminarch God, 150k EP, and 5 unique skills.",

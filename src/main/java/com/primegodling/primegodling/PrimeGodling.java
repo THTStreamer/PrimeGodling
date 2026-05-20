@@ -19,6 +19,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import org.slf4j.Logger;
 
 @Mod(PrimeGodling.MOD_ID)
@@ -41,6 +42,28 @@ public class PrimeGodling {
         TensuraIntegration.register(bus);
 
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onLivingDeath);
+        NeoForge.EVENT_BUS.addListener(PrimeGodling::onLivingDamage);
+    }
+
+    private static void onLivingDamage(LivingDamageEvent.Pre event) {
+        if (event.getSource().getEntity() instanceof ServerPlayer attacker) {
+            if (event.getEntity() instanceof net.minecraft.world.entity.player.Player) return;
+
+            var opt = io.github.manasmods.manascore.race.api.RaceAPI.getRaceFrom(attacker).getRace();
+            if (opt.isEmpty()) return;
+
+            io.github.manasmods.manascore.race.api.ManasRace race = opt.get().getRace();
+
+            float bonus = 0.0f;
+            if (race.equals(ModRaces.PRIME_GODLING.get())) bonus = 0.20f;
+            else if (race.equals(ModRaces.CELESTIAL_ESSENCE.get())) bonus = 0.25f;
+            else if (race.equals(ModRaces.ECLIPTIC_WARDEN.get())) bonus = 0.30f;
+            else if (race.equals(ModRaces.LUMINARCH_GOD.get())) bonus = 0.35f;
+            else if (race.equals(ModRaces.PRIMORDIAL_SUPREME_GOD.get())) bonus = 0.40f;
+            else return;
+
+            event.setNewDamage(event.getNewDamage() * (1.0f + bonus));
+        }
     }
 
     private static void onLivingDeath(LivingDeathEvent event) {

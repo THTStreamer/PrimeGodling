@@ -3,6 +3,7 @@ package com.primegodling.primegodling.common.data;
 import com.primegodling.primegodling.PrimeGodling;
 import com.primegodling.primegodling.common.data.skill.CosmicAwarenessSkill;
 import com.primegodling.primegodling.common.data.skill.CreationAuthoritySkill;
+import com.primegodling.primegodling.common.data.skill.DivineDevourSkill;
 import com.primegodling.primegodling.common.data.skill.EclipticMasterySkill;
 import com.primegodling.primegodling.common.data.skill.LuminarchBlessingSkill;
 import com.primegodling.primegodling.common.data.skill.PrimordialBloomSkill;
@@ -25,6 +26,7 @@ public class ModSkills {
     public static final RegistrySupplier<ManasSkill> LUMINARCH_BLESSING;
     public static final RegistrySupplier<ManasSkill> PRIMORDIAL_OMNIPOTENCE;
     public static final RegistrySupplier<ManasSkill> CREATION_AUTHORITY;
+    public static final RegistrySupplier<ManasSkill> DIVINE_DEVOUR;
 
     static {
         PRIMORDIAL_BLOOM = SKILLS.register("primordial_bloom", PrimordialBloomSkill::new);
@@ -34,6 +36,7 @@ public class ModSkills {
         LUMINARCH_BLESSING = SKILLS.register("luminarch_blessing", LuminarchBlessingSkill::new);
         PRIMORDIAL_OMNIPOTENCE = SKILLS.register("primordial_omnipotence", PrimordialOmnipotenceSkill::new);
         CREATION_AUTHORITY = SKILLS.register("creation_authority", CreationAuthoritySkill::new);
+        DIVINE_DEVOUR = SKILLS.register("divine_devour", DivineDevourSkill::new);
     }
 
     public static void init() {

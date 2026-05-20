@@ -1,15 +1,19 @@
 package com.primegodling.primegodling.common.data.skill;
 
+import com.primegodling.primegodling.common.config.SkillConfig;
 import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
 import io.github.manasmods.tensura.ability.skill.Skill;
 import io.github.manasmods.tensura.util.EnergyHelper;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 
 public class LuminarchBlessingSkill extends Skill {
 
-    private static final double ENERGY_COST = 200.0;
+    private static final int GLOW_RANGE = 24;
+    private static final int GLOW_RANGE_MASTERED = 48;
 
     public LuminarchBlessingSkill() {
         super(SkillType.INTRINSIC);
@@ -30,7 +34,8 @@ public class LuminarchBlessingSkill extends Skill {
         if (!instance.isToggled()) return;
         if (entity.level().isClientSide) return;
 
-        if (EnergyHelper.isOutOfEnergy(entity, 0.0, ENERGY_COST)) {
+        int cost = SkillConfig.COMMON.luminarchBlessingCost.get();
+        if (EnergyHelper.isOutOfEnergy(entity, 0.0, cost)) {
             instance.setToggled(false);
             return;
         }
@@ -38,5 +43,26 @@ public class LuminarchBlessingSkill extends Skill {
         int amplifier = instance.isMastered(entity) ? 1 : 0;
         entity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, amplifier, false, false, true));
         entity.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, amplifier, false, false, true));
+
+        if (entity.level() instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(ParticleTypes.GLOW,
+                entity.getX(), entity.getY() + 1.5, entity.getZ(),
+                2, 1.5, 0.8, 1.5, 0.01);
+
+            int range = instance.isMastered(entity) ? GLOW_RANGE_MASTERED : GLOW_RANGE;
+            for (LivingEntity nearby : serverLevel.getEntitiesOfClass(LivingEntity.class,
+                    entity.getBoundingBox().inflate(range),
+                    e -> e != entity && e.isAlive())) {
+                nearby.addEffect(new MobEffectInstance(MobEffects.GLOWING, 30, 0, false, false, true));
+            }
+
+            if (instance.isMastered(entity)) {
+                for (LivingEntity nearby : serverLevel.getEntitiesOfClass(LivingEntity.class,
+                        entity.getBoundingBox().inflate(4.0),
+                        e -> e != entity && e.isAlive())) {
+                    nearby.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0, false, false, true));
+                }
+            }
+        }
     }
 }

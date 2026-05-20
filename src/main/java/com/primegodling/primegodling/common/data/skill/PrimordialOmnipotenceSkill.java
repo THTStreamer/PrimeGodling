@@ -1,10 +1,13 @@
 package com.primegodling.primegodling.common.data.skill;
 
+import io.github.manasmods.manascore.network.api.util.Changeable;
 import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
 import io.github.manasmods.tensura.ability.skill.Skill;
 import io.github.manasmods.tensura.registry.attribute.TensuraAttributes;
 import io.github.manasmods.tensura.util.AttributeHelper;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -42,6 +45,33 @@ public class PrimordialOmnipotenceSkill extends Skill {
             return 1.5;
         }
         return 1.0;
+    }
+
+    @Override
+    public boolean canTick(ManasSkillInstance instance, LivingEntity entity) {
+        return true;
+    }
+
+    @Override
+    public void onTick(ManasSkillInstance instance, LivingEntity entity) {
+        if (entity.level().isClientSide) return;
+        if (entity.tickCount % 40 == 0) {
+            entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 100, 0, false, false, true));
+            entity.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 100, 0, false, false, true));
+        }
+        if (entity.fallDistance > 0f) {
+            entity.fallDistance = 0f;
+        }
+    }
+
+    @Override
+    public boolean onTakenDamage(ManasSkillInstance instance, LivingEntity entity,
+            net.minecraft.world.damagesource.DamageSource source, Changeable<Float> damage) {
+        if (!entity.level().isClientSide) {
+            float reduction = instance.isMastered(entity) ? 0.5f : 0.3f;
+            damage.set(damage.get() * (1.0f - reduction));
+        }
+        return false;
     }
 
     @Override

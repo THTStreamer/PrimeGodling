@@ -32,6 +32,7 @@ public class CreationAuthoritySkill extends Skill {
     private static final float EXPLOSION_RADIUS = 12.0f;
     private static final float EXPLOSION_RADIUS_MASTERED = 18.0f;
     private static final double LIGHTNING_SPREAD = 4.0;
+    private static final int IMMUNITY_DURATION = 40;
 
     public CreationAuthoritySkill() {
         super(SkillType.ULTIMATE);
@@ -84,10 +85,8 @@ public class CreationAuthoritySkill extends Skill {
             int bolts = mastered ? LIGHTNING_COUNT_MASTERED : LIGHTNING_COUNT;
             float radius = mastered ? EXPLOSION_RADIUS_MASTERED : EXPLOSION_RADIUS;
 
-            // Central lightning
             summonLightning(serverLevel, target.x, target.y, target.z);
 
-            // Additional lightning in spread pattern
             for (int i = 1; i < bolts; i++) {
                 double angle = (Math.PI * 2 / bolts) * i;
                 double ox = Math.cos(angle) * LIGHTNING_SPREAD;
@@ -95,26 +94,29 @@ public class CreationAuthoritySkill extends Skill {
                 summonLightning(serverLevel, target.x + ox, target.y, target.z + oz);
             }
 
-            // Explosion
             serverLevel.explode(entity, target.x, target.y, target.z, radius, Level.ExplosionInteraction.BLOCK);
 
-            // Particles
             Vec3 center = new Vec3(target.x, target.y, target.z);
             serverLevel.sendParticles(ParticleTypes.FLASH, target.x, target.y + 1.0, target.z, 1, 0, 0, 0, 0);
             serverLevel.sendParticles(ParticleTypes.SOUL, target.x, target.y + 1.0, target.z, 60, 4.0, 2.0, 4.0, 0.1);
             serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, target.x, target.y + 1.0, target.z, 30, 3.0, 1.0, 3.0, 0.05);
             serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK, target.x, target.y + 1.0, target.z, 80, 5.0, 2.0, 5.0, 0.3);
 
-            // Sound
             serverLevel.playSound(null, target.x, target.y, target.z,
                 SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.WEATHER, 5.0f, 0.8f);
             serverLevel.playSound(null, target.x, target.y, target.z,
                 SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0f, 0.6f);
+
+            int lingerTicks = mastered ? 100 : 60;
+            serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK, target.x, target.y + 0.5, target.z,
+                lingerTicks, radius * 0.5, 0.5, radius * 0.5, 0.15);
         }
 
         EnergyHelper.gainMagicule(entity, -energyCost, EnergyHelper.GainType.NORMAL);
         int cooldown = instance.isMastered(entity) ? 60 : 200;
         instance.setCoolDown(cooldown, mode);
+
+        entity.invulnerableTime = Math.max(entity.invulnerableTime, IMMUNITY_DURATION);
     }
 
     private void summonLightning(ServerLevel level, double x, double y, double z) {
