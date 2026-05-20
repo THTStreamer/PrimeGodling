@@ -25,10 +25,8 @@ public class ScaledEPRequirement extends EvolutionRequirement {
             if (entryEP <= 0) return 0;
         }
         double required = entryEP * multiplier;
-        double delta = currentEP - entryEP;
-        double needed = required - entryEP;
-        if (needed <= 0) return 1.0f;
-        return (float) Math.min(1.0, delta / needed);
+        if (required <= 0) return 1.0f;
+        return (float) Math.min(1.0, currentEP / required);
     }
 
     @Override
