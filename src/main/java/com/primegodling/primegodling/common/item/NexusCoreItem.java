@@ -1,6 +1,6 @@
 package com.primegodling.primegodling.common.item;
 
-import com.primegodling.primegodling.common.data.RaceRegistry;
+import com.primegodling.primegodling.common.config.ServerConfig;
 import com.primegodling.primegodling.common.integration.FTBIntegration;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,7 +25,8 @@ public class NexusCoreItem extends Item {
         }
         if (player instanceof ServerPlayer serverPlayer) {
             int eaten = serverPlayer.getPersistentData().getInt("primegodling:nexus_cores_eaten");
-            if (eaten >= RaceRegistry.NEXUS_CORES_REQUIRED) {
+            int required = ServerConfig.COMMON.nexusCoresRequired.get();
+            if (eaten >= required) {
                 serverPlayer.displayClientMessage(
                     Component.literal("§eYou have already absorbed enough Nexus Cores. Evolve in the Evolution menu!"),
                     true);
@@ -35,16 +36,16 @@ public class NexusCoreItem extends Item {
             int now = eaten + 1;
             FTBIntegration.onConsumeNexusCore(serverPlayer, now);
             serverPlayer.displayClientMessage(
-                Component.literal("§eYou absorb the Nexus Core. §7(" + now + "/" + RaceRegistry.NEXUS_CORES_REQUIRED + ")"),
+                Component.literal("§eYou absorb the Nexus Core. §7(" + now + "/" + required + ")"),
                 true);
-            if (now < RaceRegistry.NEXUS_CORES_REQUIRED) {
-                int remaining = RaceRegistry.NEXUS_CORES_REQUIRED - now;
+            if (now < required) {
+                int remaining = required - now;
                 serverPlayer.displayClientMessage(
                     Component.literal("§7" + remaining + " more required to unlock the Divine Nexus."),
                     false);
             } else {
                 serverPlayer.displayClientMessage(
-                    Component.literal("§6✦ All " + RaceRegistry.NEXUS_CORES_REQUIRED + " Nexus Cores absorbed! Evolve to Primordial Supreme God in the Evolution menu."),
+                    Component.literal("§6✦ All " + required + " Nexus Cores absorbed! Evolve to Primordial Supreme God in the Evolution menu."),
                     false);
             }
             stack.shrink(1);

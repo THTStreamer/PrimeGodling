@@ -60,7 +60,6 @@ public class RaceRegistry {
     public static final long MP_LUMINARCH_GOD            = 10_000_000;
     public static final long MP_PRIMORDIAL_SUPREMEGOD    = 10_000_000;
 
-    public static final int  NEXUS_CORES_REQUIRED      = 20;
     public static final int  NEXUS_UNIQUE_SKILL_COUNT = 5;
     public static final long NEXUS_EP_REQUIRED         = 150_000;
     public static final long NEXUS_EP_MULTIPLIER       = 5L;

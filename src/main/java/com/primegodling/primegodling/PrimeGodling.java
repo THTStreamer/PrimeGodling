@@ -2,7 +2,9 @@ package com.primegodling.primegodling;
 
 import com.primegodling.primegodling.client.ClientProxy;
 import com.primegodling.primegodling.common.ModItems;
+import com.primegodling.primegodling.common.config.NexusDropsConfig;
 import com.primegodling.primegodling.common.config.RaceConfig;
+import com.primegodling.primegodling.common.config.ServerConfig;
 import com.primegodling.primegodling.common.config.SkillConfig;
 import com.primegodling.primegodling.common.data.ModRaces;
 import com.primegodling.primegodling.common.data.ModSkills;
@@ -22,19 +24,23 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import org.slf4j.Logger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @Mod(PrimeGodling.MOD_ID)
@@ -48,6 +54,8 @@ public class PrimeGodling {
     public PrimeGodling(IEventBus bus) {
         RaceConfig.register();
         SkillConfig.register();
+        ServerConfig.register();
+        NexusDropsConfig.register();
 
         ModItems.ITEMS.register(bus);
         ModRaces.init();
@@ -60,6 +68,7 @@ public class PrimeGodling {
 
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onLivingDeath);
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(PrimeGodling::onLivingDrops);
 
         RaceEvents.ACTIVATE_ABILITY.register((raceInstance, entity) -> {
             if (entity instanceof ServerPlayer player && raceInstance.is(TensuraRaceTags.HAS_CREATIVE_FLIGHT)) {
@@ -135,6 +144,32 @@ public class PrimeGodling {
         }
 
         fd.wasFlying = isFlying;
+    }
+
+    private static final Random RANDOM = new Random();
+
+    private static void onLivingDrops(LivingDropsEvent event) {
+        if (!NexusDropsConfig.COMMON.dropsEnabled.get()) return;
+        if (!(event.getSource().getEntity() instanceof ServerPlayer)) return;
+
+        ResourceLocation killedId = net.minecraft.world.entity.EntityType.getKey(event.getEntity().getType());
+        String killedKey = killedId.getNamespace() + ":" + killedId.getPath();
+
+        List<? extends String> entries = NexusDropsConfig.COMMON.mobDrops.get();
+        for (String entry : entries) {
+            String[] parts = entry.split(";");
+            if (parts.length != 2) continue;
+            if (!parts[0].equals(killedKey)) continue;
+            try {
+                double chance = Double.parseDouble(parts[1]);
+                if (RANDOM.nextDouble() < chance) {
+                    event.getDrops().add(event.getEntity().spawnAtLocation(
+                            new ItemStack(ModItems.NEXUS_CORE.get()), 0.0f));
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            break;
+        }
     }
 
     private static boolean hasNamedSubordinate(ServerPlayer player) {
