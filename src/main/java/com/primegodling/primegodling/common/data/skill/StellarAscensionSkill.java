@@ -71,7 +71,8 @@ public class StellarAscensionSkill extends Skill {
             LivingEntity target, net.minecraft.world.damagesource.DamageSource source,
             Changeable<Float> damage) {
         if (!instance.isToggled()) return false;
-        target.hurt(entity.damageSources().magic(), instance.isMastered(entity) ? 4.0f : 2.0f);
+        float bonus = instance.isMastered(entity) ? 4.0f : 2.0f;
+        damage.set(damage.get() + bonus);
         return false;
     }
 

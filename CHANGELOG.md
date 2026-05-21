@@ -1,6 +1,15 @@
 # Changelog
 
-## [0.1.5] — 2026-05-20
+## [0.1.5 → 0.1.6] — 2026-05-21
+
+### Fixed
+- **Zero Damage After Evolution (Critical)**: `StellarAscensionSkill.onDamageEntity()` called `target.hurt()` reentrantly inside the damage-processing callback, causing a recursive `hurt()` call that corrupted the damage pipeline and nullified the player's physical damage output. Fixed by adding the bonus damage directly to the `Changeable<Float> damage` parameter instead.
+- **Mobs Not Attacking Player**: Root cause was the same reentrant `target.hurt()` corrupting entity state during damage processing. Mob AI should now function normally.
+
+### Changed
+- Removed reentrant `target.hurt(magic, bonus)` from `StellarAscensionSkill` — bonus is now added directly to the damage value (`damage.set(damage.get() + bonus)`).
+
+## [0.1.4 → 0.1.5] — 2026-05-20
 
 ### Added
 - **Creative Flight**: Prime Godling races now have `HAS_CREATIVE_FLIGHT` tag, granting creative flight.
@@ -14,6 +23,8 @@
 - **NexusCoreRequirement**: Now reads from `ServerConfig.COMMON.nexusCoresRequired.get()` instead of hardcoded `RaceRegistry.NEXUS_CORES_REQUIRED`.
 - **`pack.mcmeta`**: Added to `src/main/resources/` — mod assets now load correctly.
 - **SkillConfig Fields**: `creationAuthorityMasteredCooldown` (default 60 ticks) added alongside existing cooldown fields.
+- **Tensura Damage Pipeline Fix**: Added `PHYSICAL_RESIST_DEGRADATION` (1.0), `RESISTANCE_DEGRADATION` (1.0 at stage 2+), and `DODGE_NEGATE_CHANCE` (100) attribute modifiers to all Prime Godling stages. This bypasses Tensura's `getPhysicalAttackInputMultiplier()` which otherwise reduces physical damage to 1% (0.01x) for players lacking specific degradation modifier IDs like `DIVINE_KI` or `HAKI_COAT`.
+- **Client Sync on Removal**: `PrimeGodlingRace.removeAttributeModifiers()` now sends a `ClientboundUpdateAttributesPacket` after removing extra modifiers, ensuring the client reflects the correct attribute state.
 
 ### Changed
 - **Damage Bonus Refactor**: Replaced ad-hoc `LivingHurtEvent` handler with proper `AttributeModifier`-based system using `MULTIPLY_TOTAL` operation on `Attributes.ATTACK_DAMAGE`.
@@ -28,7 +39,9 @@
 - **DivineDevour Cooldowns**: Increased from 10/3 ticks (0.5s/0.15s) to 200 ticks normal / 100 ticks mastered (10s/5s).
 - **CreationAuthority Cooldowns**: Changed from hardcoded 200/60 ticks to config-driven `creationAuthorityCooldown` (default 200) / `creationAuthorityMasteredCooldown` (default 60).
 - **CreationAuthority Energy Deduction**: Removed redundant `gainMagicule(entity, -energyCost, GainType.NORMAL)` — `isOutOfEnergy()` already deducts the cost.
+- **Extra Modifier Consistency**: Changed `addTransientModifier()` to `addPermanentModifier()` in `PrimeGodlingRace.addAttributeModifiers()` to match the base ManasRace system.
 - **LuminarchBlessing `canTick`**: Now returns `instance.isToggled()` instead of `true`, preventing unnecessary ticks when toggled off.
+- **PrimordialFortitude Rename**: Renamed `PrimordialOmnipotenceSkill` → `PrimordialFortitudeSkill` (ID `primordial_fortitude`), with modifier IDs updated from `omni_*` to `fort_*`.
 - **NexusCoreItem**: Now uses config value for required cores count.
 - **ConfigInjector**: `divine_devour` added to `ALL_SKILLS` for config injection.
 - **NexusDropsConfig Entries**: Changed from `"modid:entity_id"` format to `"modid:entity_id;chance"` format with validation on config load.
@@ -38,8 +51,5 @@
 - **Unused Constants**: `PRIMORDIAL_BLOOM_TTL` and `NEXUS_AWAKENED` removed from `SkillRegistry.java`.
 - **Stale Default Config**: `data/primegodling/defaultconfigs/primegodling-common.toml` removed (used old format/values, never read).
 - **Hardcoded `NEXUS_CORES_REQUIRED`**: Removed from `RaceRegistry.java` in favour of config-driven value.
-- **Tensura Damage Pipeline Fix**: Added `PHYSICAL_RESIST_DEGRADATION` (1.0), `RESISTANCE_DEGRADATION` (1.0 at stage 2+), and `DODGE_NEGATE_CHANCE` (100) attribute modifiers to all Prime Godling stages. This bypasses Tensura's `getPhysicalAttackInputMultiplier()` which otherwise reduces physical damage to 1% (0.01x) for players lacking specific degradation modifier IDs like `DIVINE_KI` or `HAKI_COAT`.
-- **Extra Modifier Consistency**: Changed `addTransientModifier()` to `addPermanentModifier()` in `PrimeGodlingRace.addAttributeModifiers()` to match the base ManasRace system.
-- **Client Sync on Removal**: `PrimeGodlingRace.removeAttributeModifiers()` now sends a `ClientboundUpdateAttributesPacket` after removing extra modifiers, ensuring the client reflects the correct attribute state.
 - **Duplicate Imports**: Cleaned up duplicate and unused imports across multiple files.
 - **Old Build Artifact**: Previous `0.1.4` jar deleted and rebuilt.
