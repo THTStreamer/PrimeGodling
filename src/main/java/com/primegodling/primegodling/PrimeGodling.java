@@ -110,22 +110,21 @@ public class PrimeGodling {
         int maintenanceInterval = hasSub ? RaceConfig.COMMON.flightMaintenanceIntervalSub.get() : RaceConfig.COMMON.flightMaintenanceInterval.get();
 
         boolean isFlying = player.getAbilities().mayfly && player.getAbilities().flying;
-        double currentMagicule = getCurrentMagicule(player);
 
         if (fd.flightLocked) {
-            if (currentMagicule >= activationCost) {
+            if (getCurrentMagicule(player) >= activationCost) {
                 fd.flightLocked = false;
                 player.getAbilities().mayfly = true;
                 player.onUpdateAbilities();
             }
-        } else if (!player.getAbilities().mayfly && currentMagicule >= activationCost) {
+        } else if (!player.getAbilities().mayfly && getCurrentMagicule(player) >= activationCost) {
             player.getAbilities().mayfly = true;
             player.onUpdateAbilities();
         }
 
         if (isFlying) {
             if (!fd.wasFlying) {
-                if (currentMagicule < activationCost) {
+                if (getCurrentMagicule(player) < activationCost) {
                     disableFlight(player);
                     fd.flightLocked = true;
                 } else {
@@ -136,7 +135,7 @@ public class PrimeGodling {
             fd.maintenanceCounter++;
             if (fd.maintenanceCounter >= maintenanceInterval) {
                 fd.maintenanceCounter = 0;
-                if (currentMagicule < maintenanceCost) {
+                if (getCurrentMagicule(player) < maintenanceCost) {
                     disableFlight(player);
                     fd.flightLocked = true;
                 } else {
@@ -154,7 +153,10 @@ public class PrimeGodling {
         if (!NexusDropsConfig.COMMON.dropsEnabled.get()) return;
         if (!(event.getSource().getEntity() instanceof ServerPlayer)) return;
 
-        ResourceLocation killedId = net.minecraft.world.entity.EntityType.getKey(event.getEntity().getType());
+        LivingEntity killed = event.getEntity();
+        if (killed == null) return;
+
+        ResourceLocation killedId = net.minecraft.world.entity.EntityType.getKey(killed.getType());
         String killedKey = killedId.getNamespace() + ":" + killedId.getPath();
 
         List<? extends String> entries = NexusDropsConfig.COMMON.mobDrops.get();
@@ -214,6 +216,7 @@ public class PrimeGodling {
                 }
             }
 
+            if (killed == null) return;
             ResourceLocation killedId = net.minecraft.world.entity.EntityType.getKey(killed.getType());
             if (killedId.equals(ResourceLocation.parse("tensura:hinata_sakaguchi"))) {
                 killer.getPersistentData().putBoolean("primegodling:hinata_killed", true);

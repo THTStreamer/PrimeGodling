@@ -32,8 +32,8 @@ public class RaceRegistry {
 
     public static final List<String> ALL_SKILL_IDS = List.of(
             "primordial_bloom", "cosmic_awareness", "stellar_ascension",
-            "ecliptic_mastery", "luminarch_blessing", "primordial_omnipotence",
-            "creation_authority"
+            "ecliptic_mastery", "luminarch_blessing",             "primordial_fortitude",
+            "creation_authority", "divine_devour"
     );
 
     public static final List<String> EVOLUTION_CHAIN = List.of(

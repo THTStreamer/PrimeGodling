@@ -19,7 +19,7 @@ public class SkillConfig {
     public static void register() {
         ModContainer container = ModLoadingContext.get().getActiveContainer();
         if (container != null) {
-            container.registerConfig(ModConfig.Type.COMMON, COMMON_SPEC, "primegodling-skills.toml");
+            container.registerConfig(ModConfig.Type.COMMON, COMMON_SPEC, "primegodling/skills.toml");
         }
     }
 
@@ -31,6 +31,7 @@ public class SkillConfig {
         public final ModConfigSpec.IntValue nexusCoreEpCost;
         public final ModConfigSpec.IntValue luminarchBlessingCost;
         public final ModConfigSpec.IntValue creationAuthorityCooldown;
+        public final ModConfigSpec.IntValue creationAuthorityMasteredCooldown;
         public final ModConfigSpec.DoubleValue creationAuthorityEnergyCost;
 
         Common(ModConfigSpec.Builder builder) {
@@ -53,7 +54,8 @@ public class SkillConfig {
             builder.pop();
 
             builder.push("creation_authority").comment("Creation Authority — Ultimate Skill settings");
-            creationAuthorityCooldown = builder.defineInRange("cooldown_ticks", 100, 10, 1200);
+            creationAuthorityCooldown = builder.defineInRange("cooldown_ticks", 200, 10, 1200);
+            creationAuthorityMasteredCooldown = builder.defineInRange("mastered_cooldown_ticks", 60, 10, 1200);
             creationAuthorityEnergyCost = builder.defineInRange("energy_cost", 5000.0, 0.0, 100000.0);
             builder.pop();
         }

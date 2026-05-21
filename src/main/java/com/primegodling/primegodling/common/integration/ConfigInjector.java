@@ -18,8 +18,9 @@ public class ConfigInjector {
             SkillRegistry.STELLAR_ASCENSION,
             SkillRegistry.ECLIPTIC_MASTERY,
             SkillRegistry.LUMINARCH_BLESSING,
-            SkillRegistry.PRIMORDIAL_OMNIPOTENCE,
-            SkillRegistry.CREATION_AUTHORITY
+            SkillRegistry.PRIMORDIAL_FORTITUDE,
+            SkillRegistry.CREATION_AUTHORITY,
+            SkillRegistry.DIVINE_DEVOUR
     );
 
     private ConfigInjector() {}

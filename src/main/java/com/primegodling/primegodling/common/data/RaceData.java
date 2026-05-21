@@ -4,6 +4,7 @@ import com.primegodling.primegodling.common.data.race.PrimeGodlingRace;
 import io.github.manasmods.manascore.race.api.ManasRace.Difficulty;
 import io.github.manasmods.manascore.skill.api.ManasSkill;
 import io.github.manasmods.manascore.skill.impl.SkillRegistry;
+import io.github.manasmods.tensura.registry.attribute.TensuraAttributes;
 import io.github.manasmods.tensura.registry.skill.ResistanceSkills;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -20,30 +21,31 @@ public final class RaceData {
 
     public static PrimeGodlingRace createStage(int index) {
         PrimeGodlingRace race = switch (index) {
-            // Stage 0: EP ≈ 1,500,000 (from aura 1,495,000 + magicule 2,500-7,000)
-            case 0 -> new PrimeGodlingRace(Difficulty.EASY, 0, 2_500, 7_000, 1_495_000, allResistances());
-            case 1 -> new PrimeGodlingRace(Difficulty.INTERMEDIATE, 250_000, 3_000_000, 3_000_000, 0,
+            // Stage 0: aura random 200-3,000; magicule 2,500-7,000
+            case 0 -> new PrimeGodlingRace(Difficulty.EASY, 0, 2_500, 7_000, 200, 3_000, allResistances());
+            // Stages 1-4: aura = half of EP threshold
+            case 1 -> new PrimeGodlingRace(Difficulty.INTERMEDIATE, 250_000, 3_000_000, 3_000_000, 125_000, 125_000,
                     withResistances(
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION)));
-            case 2 -> new PrimeGodlingRace(Difficulty.HARD, 1_000_000, 7_000_000, 7_000_000, 0,
+            case 2 -> new PrimeGodlingRace(Difficulty.HARD, 1_000_000, 7_000_000, 7_000_000, 500_000, 500_000,
                     withResistances(
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.ECLIPTIC_MASTERY)));
-            case 3 -> new PrimeGodlingRace(Difficulty.HARD, 5_000_000, 10_000_000, 10_000_000, 0,
+            case 3 -> new PrimeGodlingRace(Difficulty.HARD, 5_000_000, 10_000_000, 10_000_000, 2_500_000, 2_500_000,
                     withResistances(
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.ECLIPTIC_MASTERY),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.LUMINARCH_BLESSING)));
-            case 4 -> new PrimeGodlingRace(Difficulty.EXTREME, 30_000_000, 10_000_000, 10_000_000, 0,
+            case 4 -> new PrimeGodlingRace(Difficulty.EXTREME, 30_000_000, 10_000_000, 10_000_000, 15_000_000, 15_000_000,
                     withResistances(
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.ECLIPTIC_MASTERY),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.LUMINARCH_BLESSING),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.PRIMORDIAL_OMNIPOTENCE)));
+                            skill(com.primegodling.primegodling.common.data.SkillRegistry.PRIMORDIAL_FORTITUDE)));
             default -> throw new IllegalArgumentException("Unknown stage index: " + index);
         };
         applyModifiers(race, index);
@@ -58,6 +60,8 @@ public final class RaceData {
                 race.addAttr(Attributes.ATTACK_DAMAGE, "pg_mult", 0.20, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 race.addAttr(Attributes.MOVEMENT_SPEED, "pg_speed", 0.05, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "pg_armor", 4.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.PHYSICAL_RESIST_DEGRADATION, "pg_phys_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "pg_dodge_negate", 100.0, AttributeModifier.Operation.ADD_VALUE);
             }
             case 1 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "ce_health", 16.0, AttributeModifier.Operation.ADD_VALUE);
@@ -65,6 +69,8 @@ public final class RaceData {
                 race.addAttr(Attributes.ATTACK_DAMAGE, "ce_mult", 0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 race.addAttr(Attributes.MOVEMENT_SPEED, "ce_speed", 0.08, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "ce_armor", 8.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.PHYSICAL_RESIST_DEGRADATION, "ce_phys_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "ce_dodge_negate", 100.0, AttributeModifier.Operation.ADD_VALUE);
             }
             case 2 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "ew_health", 24.0, AttributeModifier.Operation.ADD_VALUE);
@@ -73,6 +79,9 @@ public final class RaceData {
                 race.addAttr(Attributes.MOVEMENT_SPEED, "ew_speed", 0.10, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "ew_armor", 12.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR_TOUGHNESS, "ew_toughness", 4.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.PHYSICAL_RESIST_DEGRADATION, "ew_phys_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "ew_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "ew_dodge_negate", 100.0, AttributeModifier.Operation.ADD_VALUE);
             }
             case 3 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "lg_health", 40.0, AttributeModifier.Operation.ADD_VALUE);
@@ -81,6 +90,9 @@ public final class RaceData {
                 race.addAttr(Attributes.MOVEMENT_SPEED, "lg_speed", 0.15, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "lg_armor", 16.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR_TOUGHNESS, "lg_toughness", 8.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.PHYSICAL_RESIST_DEGRADATION, "lg_phys_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "lg_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "lg_dodge_negate", 100.0, AttributeModifier.Operation.ADD_VALUE);
             }
             case 4 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "psg_health", 60.0, AttributeModifier.Operation.ADD_VALUE);
@@ -89,6 +101,9 @@ public final class RaceData {
                 race.addAttr(Attributes.MOVEMENT_SPEED, "psg_speed", 0.20, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "psg_armor", 20.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR_TOUGHNESS, "psg_toughness", 12.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.PHYSICAL_RESIST_DEGRADATION, "psg_phys_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "psg_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "psg_dodge_negate", 100.0, AttributeModifier.Operation.ADD_VALUE);
             }
         }
     }

@@ -7,7 +7,7 @@ import com.primegodling.primegodling.common.data.skill.DivineDevourSkill;
 import com.primegodling.primegodling.common.data.skill.EclipticMasterySkill;
 import com.primegodling.primegodling.common.data.skill.LuminarchBlessingSkill;
 import com.primegodling.primegodling.common.data.skill.PrimordialBloomSkill;
-import com.primegodling.primegodling.common.data.skill.PrimordialOmnipotenceSkill;
+import com.primegodling.primegodling.common.data.skill.PrimordialFortitudeSkill;
 import com.primegodling.primegodling.common.data.skill.StellarAscensionSkill;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
@@ -24,7 +24,7 @@ public class ModSkills {
     public static final RegistrySupplier<ManasSkill> STELLAR_ASCENSION;
     public static final RegistrySupplier<ManasSkill> ECLIPTIC_MASTERY;
     public static final RegistrySupplier<ManasSkill> LUMINARCH_BLESSING;
-    public static final RegistrySupplier<ManasSkill> PRIMORDIAL_OMNIPOTENCE;
+    public static final RegistrySupplier<ManasSkill> PRIMORDIAL_FORTITUDE;
     public static final RegistrySupplier<ManasSkill> CREATION_AUTHORITY;
     public static final RegistrySupplier<ManasSkill> DIVINE_DEVOUR;
 
@@ -34,7 +34,7 @@ public class ModSkills {
         STELLAR_ASCENSION = SKILLS.register("stellar_ascension", StellarAscensionSkill::new);
         ECLIPTIC_MASTERY = SKILLS.register("ecliptic_mastery", EclipticMasterySkill::new);
         LUMINARCH_BLESSING = SKILLS.register("luminarch_blessing", LuminarchBlessingSkill::new);
-        PRIMORDIAL_OMNIPOTENCE = SKILLS.register("primordial_omnipotence", PrimordialOmnipotenceSkill::new);
+        PRIMORDIAL_FORTITUDE = SKILLS.register("primordial_fortitude", PrimordialFortitudeSkill::new);
         CREATION_AUTHORITY = SKILLS.register("creation_authority", CreationAuthoritySkill::new);
         DIVINE_DEVOUR = SKILLS.register("divine_devour", DivineDevourSkill::new);
     }

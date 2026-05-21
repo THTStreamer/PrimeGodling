@@ -9,10 +9,10 @@ import io.github.manasmods.manascore.race.api.ManasRace;
 import io.github.manasmods.manascore.race.api.ManasRaceInstance;
 import io.github.manasmods.manascore.skill.api.ManasSkill;
 import io.github.manasmods.manascore.skill.api.SkillAPI;
-import io.github.manasmods.manascore.skill.api.Skills;
 import io.github.manasmods.tensura.config.race.RaceConfig;
 import io.github.manasmods.tensura.race.TensuraRace;
 import io.github.manasmods.tensura.race.template.DefaultRace;
+import io.github.manasmods.tensura.util.EnergyHelper.GainType;
 import io.github.manasmods.tensura.race.template.EvolutionRequirement;
 import io.github.manasmods.tensura.storage.Alignment;
 import io.github.manasmods.tensura.util.EnergyHelper;
@@ -24,6 +24,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
+import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,27 +37,29 @@ public class PrimeGodlingRace extends DefaultRace {
     private final long epThreshold;
     private final double minMagicule;
     private final double maxMagicule;
-    private final double auraCap;
+    private final double minAura;
+    private final double maxAura;
     private ManasRace nextEvolution;
 
     private final List<ExtraModifier> extraModifiers = new ArrayList<>();
 
     private record ExtraModifier(Holder<Attribute> attribute, ResourceLocation id, double amount, AttributeModifier.Operation operation) {}
 
-    public PrimeGodlingRace(Difficulty difficulty, long epThreshold, double minMagicule, double maxMagicule, double auraCap, List<Supplier<ManasSkill>> intrinsicSkillSuppliers) {
+    public PrimeGodlingRace(Difficulty difficulty, long epThreshold, double minMagicule, double maxMagicule, double minAura, double maxAura, List<Supplier<ManasSkill>> intrinsicSkillSuppliers) {
         super(difficulty);
         this.epThreshold = epThreshold;
         this.minMagicule = minMagicule;
         this.maxMagicule = maxMagicule;
-        this.auraCap = auraCap;
+        this.minAura = minAura;
+        this.maxAura = maxAura;
         this.intrinsicSkillSuppliers = new ArrayList<>(intrinsicSkillSuppliers);
     }
 
     @Override
     public RaceConfig.Default getDefaultConfig() {
         return new RaceConfig.Default() {
-            @Override public double getMinAura() { return auraCap; }
-            @Override public double getMaxAura() { return auraCap; }
+            @Override public double getMinAura() { return minAura; }
+            @Override public double getMaxAura() { return maxAura; }
             @Override public double getMinMagicule() { return minMagicule; }
             @Override public double getMaxMagicule() { return maxMagicule; }
             @Override public double getSize() { return 0; }
@@ -94,7 +97,7 @@ public class PrimeGodlingRace extends DefaultRace {
             AttributeInstance attr = entity.getAttribute(em.attribute);
             if (attr != null) {
                 attr.removeModifier(em.id);
-                attr.addTransientModifier(new AttributeModifier(em.id, em.amount, em.operation));
+                attr.addPermanentModifier(new AttributeModifier(em.id, em.amount, em.operation));
             }
         }
     }
@@ -102,11 +105,16 @@ public class PrimeGodlingRace extends DefaultRace {
     @Override
     public void removeAttributeModifiers(ManasRaceInstance instance, LivingEntity entity) {
         super.removeAttributeModifiers(instance, entity);
+        List<AttributeInstance> dirty = new ArrayList<>();
         for (ExtraModifier em : extraModifiers) {
             AttributeInstance attr = entity.getAttribute(em.attribute);
             if (attr != null) {
                 attr.removeModifier(em.id);
+                dirty.add(attr);
             }
+        }
+        if (!dirty.isEmpty() && entity instanceof ServerPlayer player) {
+            player.connection.send(new ClientboundUpdateAttributesPacket(player.getId(), dirty));
         }
     }
 
@@ -133,21 +141,7 @@ public class PrimeGodlingRace extends DefaultRace {
 
     @Override
     public void triggerEvolutionRewards(ManasRaceInstance instance, LivingEntity entity) {
-        // super call omitted — Tensura plays an unwanted evolution sound
-        // super.triggerEvolutionRewards(instance, entity);
-        if (entity instanceof ServerPlayer player) {
-            int stageIndex = 0;
-            for (int i = 0; i < RaceRegistry.EP_THRESHOLDS.length; i++) {
-                if (epThreshold == RaceRegistry.EP_THRESHOLDS[i]) {
-                    stageIndex = i;
-                    break;
-                }
-            }
-            FTBIntegration.onEvolve(player, stageIndex);
-            if (epThreshold == RaceRegistry.EP_STAGE_4) {
-                awakenNexus(player);
-            }
-        }
+        // No-op: evolution rewards are handled in onRaceSet()
     }
 
     private void awakenNexus(ServerPlayer player) {
@@ -159,9 +153,6 @@ public class PrimeGodlingRace extends DefaultRace {
         double newAura = currentMaxAura * 4.0 - newMagicule;
         EnergyHelper.setMaxMagicule(player, newMagicule);
         EnergyHelper.setMaxAura(player, newAura);
-
-        Skills skills = SkillAPI.getSkillsFrom(player);
-        skills.learnSkill(SkillRegistry.CREATION_AUTHORITY);
 
         player.getPersistentData().remove("primegodling:nexus_cores_eaten");
         player.getPersistentData().putBoolean("primegodling:awakened_nexus", true);
@@ -207,7 +198,7 @@ public class PrimeGodlingRace extends DefaultRace {
 
     @Override
     public com.mojang.datafixers.util.Pair<Double, Double> getBaseAuraRange() {
-        return com.mojang.datafixers.util.Pair.of(auraCap, auraCap);
+        return com.mojang.datafixers.util.Pair.of(minAura, maxAura);
     }
 
     @Override
@@ -224,8 +215,31 @@ public class PrimeGodlingRace extends DefaultRace {
     public void onRaceSet(ManasRaceInstance instance, LivingEntity entity) {
         super.onRaceSet(instance, entity);
         ScaledEPRequirement.storeEntryEP(instance, entity);
-        if (nextEvolution == null) {
-            EnergyHelper.gainMagicule(entity, EnergyHelper.getMaxMagicule(entity), EnergyHelper.GainType.NORMAL);
+
+        resetExistenceData(entity);
+
+        EnergyHelper.gainMagicule(entity, EnergyHelper.getMaxMagicule(entity), GainType.NORMAL);
+
+        if (entity instanceof ServerPlayer player) {
+            int stageIndex = stageIndex();
+            FTBIntegration.onEvolve(player, stageIndex);
+
+            if (epThreshold == RaceRegistry.EP_STAGE_4) {
+                SkillAPI.getSkillsFrom(player).learnSkill(SkillRegistry.CREATION_AUTHORITY);
+
+                awakenNexus(player);
+
+                EnergyHelper.gainMagicule(entity, EnergyHelper.getMaxMagicule(entity), GainType.NORMAL);
+            }
         }
+    }
+
+    private int stageIndex() {
+        for (int i = 0; i < RaceRegistry.EP_THRESHOLDS.length; i++) {
+            if (epThreshold == RaceRegistry.EP_THRESHOLDS[i]) {
+                return i;
+            }
+        }
+        return 0;
     }
 }

@@ -19,7 +19,7 @@ public class ServerConfig {
     public static void register() {
         ModContainer container = ModLoadingContext.get().getActiveContainer();
         if (container != null) {
-            container.registerConfig(ModConfig.Type.SERVER, SERVER_SPEC, "primegodling-server.toml");
+            container.registerConfig(ModConfig.Type.SERVER, SERVER_SPEC, "primegodling/server.toml");
         }
     }
 

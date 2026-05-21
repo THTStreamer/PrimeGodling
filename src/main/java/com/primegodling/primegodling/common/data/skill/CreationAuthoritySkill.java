@@ -112,8 +112,9 @@ public class CreationAuthoritySkill extends Skill {
                 lingerTicks, radius * 0.5, 0.5, radius * 0.5, 0.15);
         }
 
-        EnergyHelper.gainMagicule(entity, -energyCost, EnergyHelper.GainType.NORMAL);
-        int cooldown = instance.isMastered(entity) ? 60 : 200;
+        int cooldown = instance.isMastered(entity)
+            ? SkillConfig.COMMON.creationAuthorityMasteredCooldown.get()
+            : SkillConfig.COMMON.creationAuthorityCooldown.get();
         instance.setCoolDown(cooldown, mode);
 
         entity.invulnerableTime = Math.max(entity.invulnerableTime, IMMUNITY_DURATION);

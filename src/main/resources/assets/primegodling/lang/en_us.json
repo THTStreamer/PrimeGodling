@@ -32,8 +32,8 @@
   "primegodling.skill.luminarch_blessing": "Luminarch Blessing",
   "primegodling.skill.luminarch_blessing.description": "Toggle: grants Regeneration, Absorption, and highlights all living entities within 24 blocks through walls (Glowing). Mastery: 48-block range and heals nearby allies.",
 
-  "primegodling.skill.primordial_omnipotence": "Primordial Omnipotence",
-  "primegodling.skill.primordial_omnipotence.description": "Bestows overwhelming divine power, massively boosting all core attributes. Grants Fire Resistance, Water Breathing, fall damage immunity, and 30-50% damage reduction. Greatly accelerates skill learning.",
+  "primegodling.skill.primordial_fortitude": "Primordial Fortitude",
+  "primegodling.skill.primordial_fortitude.description": "Bestows overwhelming divine fortitude, boosting all core attributes. Grants Fire Resistance, Water Breathing, fall damage immunity, and 30-50% damage reduction. Greatly accelerates skill learning.",
 
   "primegodling.skill.creation_authority": "Creation Authority",
   "primegodling.skill.creation_authority.description": "Ultimate Skill. Passively grants +6 Attack, +16 HP, +4 Armor, +4 Toughness. Press to call down primordial lightning that devastates the target area with a massive explosion. Grants brief damage immunity after activation. High energy cost.",

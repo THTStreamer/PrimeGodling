@@ -26,7 +26,7 @@ public class LuminarchBlessingSkill extends Skill {
 
     @Override
     public boolean canTick(ManasSkillInstance instance, LivingEntity entity) {
-        return true;
+        return instance.isToggled();
     }
 
     @Override

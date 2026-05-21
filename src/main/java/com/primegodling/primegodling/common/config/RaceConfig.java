@@ -23,7 +23,7 @@ public class RaceConfig {
     public static void register() {
         ModContainer container = ModLoadingContext.get().getActiveContainer();
         if (container != null) {
-            container.registerConfig(ModConfig.Type.COMMON, COMMON_SPEC, "primegodling-races.toml");
+            container.registerConfig(ModConfig.Type.COMMON, COMMON_SPEC, "primegodling/races.toml");
         }
     }
 
@@ -76,7 +76,7 @@ public class RaceConfig {
     public static void onLoad(ModConfigEvent.Loading event) {
         if (COMMON.configVersion.get() < CONFIG_VERSION) {
             PrimeGodling.LOGGER.warn(
-                    "[{}] primegodling-races.toml is outdated (version {} < {}). " +
+                    "[{}] config/primegodling/races.toml is outdated (version {} < {}). " +
                     "Delete the file to regenerate with current defaults.",
                     PrimeGodling.MOD_ID, COMMON.configVersion.get(), CONFIG_VERSION);
         }

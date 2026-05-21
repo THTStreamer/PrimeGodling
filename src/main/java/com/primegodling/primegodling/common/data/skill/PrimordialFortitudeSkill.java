@@ -13,17 +13,17 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
-public class PrimordialOmnipotenceSkill extends Skill {
+public class PrimordialFortitudeSkill extends Skill {
 
-    private static final ResourceLocation DMG_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "omni_damage");
-    private static final ResourceLocation HP_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "omni_health");
-    private static final ResourceLocation ARMOR_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "omni_armor");
-    private static final ResourceLocation TOUGH_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "omni_toughness");
-    private static final ResourceLocation SPEED_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "omni_speed");
-    private static final ResourceLocation LEARNING_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "omni_learning");
-    private static final ResourceLocation MASTERY_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "omni_mastery");
+    private static final ResourceLocation DMG_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "fort_damage");
+    private static final ResourceLocation HP_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "fort_health");
+    private static final ResourceLocation ARMOR_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "fort_armor");
+    private static final ResourceLocation TOUGH_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "fort_toughness");
+    private static final ResourceLocation SPEED_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "fort_speed");
+    private static final ResourceLocation LEARNING_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "fort_learning");
+    private static final ResourceLocation MASTERY_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "fort_mastery");
 
-    public PrimordialOmnipotenceSkill() {
+    public PrimordialFortitudeSkill() {
         super(SkillType.INTRINSIC);
         addHeldAttributeModifier(Attributes.ATTACK_DAMAGE, DMG_ID,
             10.0, AttributeModifier.Operation.ADD_VALUE);
