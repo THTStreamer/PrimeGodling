@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": { "id": "minecraft:end_crystal" },
+    "title": { "translate": "advancements.primegodling.celestial_godling.title" },
+    "description": { "translate": "advancements.primegodling.celestial_godling.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "primegodling:prime_godling",
+  "criteria": {
+    "evolve_celestial_godling": {
+      "trigger": "tensura:race_awakened",
+      "conditions": {
+        "player_data": {
+          "tensura_data": { "race": "primegodling:celestial_godling" }
+        }
+      }
+    }
+  },
+  "requirements": [["evolve_celestial_godling"]]
+}

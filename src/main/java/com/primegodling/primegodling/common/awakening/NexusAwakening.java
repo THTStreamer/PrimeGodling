@@ -25,9 +25,9 @@ import net.minecraft.world.effect.MobEffects;
 
 public class NexusAwakening {
 
-    private static final int RITUAL_TICKS = 120;
-    private static final int EP_REQUIRED = 30_000_000;
-    private static final int CORES_REQUIRED = 20;
+    private static final int RITUAL_TICKS = 200;
+    private static final int EP_REQUIRED = 1_000_000;
+    private static final int CORES_REQUIRED = 5_000;
 
     public static String startRitual(ServerPlayer player) {
         int nexusEpCost = SkillConfig.COMMON.nexusCoreEpCost.get();
@@ -41,8 +41,8 @@ public class NexusAwakening {
             return "§cYou have no race!";
         }
 
-        if (!currentRaceId.equals(RaceRegistry.ID_LUMINARCH_GOD)) {
-            return "§cYou must be Luminarch God to attempt Divine Nexus awakening.";
+        if (!currentRaceId.equals(RaceRegistry.ID_NEW_GOD)) {
+            return "§cYou must be New God to attempt Divine Nexus awakening.";
         }
 
         double currentEP = EnergyHelper.getBaseMaxEP(player);
@@ -53,6 +53,11 @@ public class NexusAwakening {
         IExistence existence = TensuraStorages.getExistenceFrom(player);
         if (existence == null || existence.getName() == null || existence.getName().isBlank()) {
             return "§cYou must obtain a name before attempting the awakening.";
+        }
+
+        int eaten = player.getPersistentData().getInt("primegodling:nexus_cores_eaten");
+        if (eaten < CORES_REQUIRED) {
+            return "§cYou have consumed " + eaten + "/" + CORES_REQUIRED + " Nexus Cores.";
         }
 
         int demonLordKills = player.getPersistentData().getInt("primegodling:demon_lord_kills");
@@ -89,10 +94,14 @@ public class NexusAwakening {
 
         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, RITUAL_TICKS + 40, 255, false, false, true));
         player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, RITUAL_TICKS + 40, 0, false, false, true));
+        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, RITUAL_TICKS + 40, 4, false, false, true));
+        player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, RITUAL_TICKS + 40, 0, false, false, true));
 
         ServerLevel level = player.serverLevel();
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.PLAYERS, 2.0f, 0.5f);
+                SoundEvents.END_PORTAL_SPAWN, SoundSource.PLAYERS, 3.0f, 1.5f);
+        level.playSound(null, player.getX(), player.getY(), player.getZ(),
+                SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 2.0f, 0.8f);
 
         return "§6✦ The Divine Nexus ritual has begun...";
     }
@@ -105,16 +114,48 @@ public class NexusAwakening {
         player.getPersistentData().putInt("primegodling:nexus_ritual", ticks);
 
         ServerLevel level = player.serverLevel();
+        double px = player.getX();
+        double py = player.getY() + 1.0;
+        double pz = player.getZ();
 
-        if (ticks % 15 == 0) {
-            level.sendParticles(ParticleTypes.SOUL,
-                    player.getX(), player.getY() + 1.0, player.getZ(),
-                    4, 0.5, 0.5, 0.5, 0.05);
-            level.sendParticles(ParticleTypes.FLASH,
-                    player.getX(), player.getY() + 1.0, player.getZ(),
-                    1, 0.5, 0.5, 0.5, 0.0);
-            level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.5f, 0.6f);
+        int remaining = RITUAL_TICKS - ticks;
+
+        // Phase 1 (first 60 ticks): Rising golden particles
+        if (remaining < 60) {
+            level.sendParticles(ParticleTypes.WAX_ON,
+                    px, py, pz, 3, 0.8, 0.3, 0.8, 0.02);
+            level.sendParticles(ParticleTypes.GLOW,
+                    px, py + 0.5, pz, 2, 0.5, 0.5, 0.5, 0.01);
+        }
+        // Phase 2 (60-140 ticks): Swirling divine dome
+        else if (remaining < 140) {
+            for (int i = 0; i < 4; i++) {
+                double angle = (ticks * 0.1 + i * Math.PI / 2);
+                double radius = 2.0 + Math.sin(ticks * 0.05) * 0.5;
+                double sx = px + Math.cos(angle) * radius;
+                double sz = pz + Math.sin(angle) * radius;
+                level.sendParticles(ParticleTypes.END_ROD, sx, py + Math.sin(ticks * 0.08 + i) * 2.0, sz,
+                        1, 0, 0, 0, 0);
+            }
+            level.sendParticles(ParticleTypes.SOUL_FIRE_FLAME,
+                    px, py + 1.5, pz, 2, 0.5, 0.5, 0.5, 0.03);
+            if (remaining % 20 == 0) {
+                level.playSound(null, px, py, pz,
+                        SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.8f, 1.2f);
+            }
+        }
+        // Phase 3 (140-200 ticks): Intensifying light
+        else {
+            level.sendParticles(ParticleTypes.FIREWORK,
+                    px, py + 2.0, pz, 4, 1.0, 1.5, 1.0, 0.05);
+            level.sendParticles(ParticleTypes.END_ROD,
+                    px, py, pz, 6, 1.2, 2.0, 1.2, 0.04);
+            if (remaining % 10 == 0) {
+                level.sendParticles(ParticleTypes.FLASH,
+                        px, py + 2.0, pz, 1, 0, 0, 0, 0);
+                level.playSound(null, px, py, pz,
+                        SoundEvents.BEACON_POWER_SELECT, SoundSource.PLAYERS, 1.2f, 1.5f);
+            }
         }
 
         if (ticks <= 0) {
@@ -161,46 +202,53 @@ public class NexusAwakening {
         double py = player.getY();
         double pz = player.getZ();
 
-        // Phase 1: Golden spiral tornado surrounding the player
+        level.playSound(null, px, py, pz,
+                SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 3.0f, 0.5f);
+
+        // Spiral ascent
         for (int i = 0; i < 180; i++) {
             double t = i / 60.0;
             double angle = i * 0.35;
             double radius = 2.5 + Math.sin(t * Math.PI) * 0.5;
             double sx = px + Math.cos(angle) * radius;
             double sz = pz + Math.sin(angle) * radius;
-            double sy = py + 0.5 + t * 3.0;
-            level.sendParticles(ParticleTypes.END_ROD, sx, sy, sz, 1, 0, 0, 0, 0.01);
+            double sy = py + t * 4.0;
+            level.sendParticles(ParticleTypes.END_ROD, sx, sy, sz, 1, 0, 0, 0, 0);
+            level.sendParticles(ParticleTypes.GLOW, sx, sy + 0.3, sz, 1, 0, 0, 0, 0);
         }
 
-        // Phase 2: Particles converge into the player
+        // Converging sparks
         for (int i = 0; i < 80; i++) {
-            double angle = player.getRandom().nextDouble() * Math.PI * 2;
-            double radius = 1.5 + player.getRandom().nextDouble() * 3.0;
+            double angle = i * 0.25;
+            double radius = 6.0 * (1.0 - i / 80.0);
             double sx = px + Math.cos(angle) * radius;
             double sz = pz + Math.sin(angle) * radius;
-            double sy = py + player.getRandom().nextDouble() * 2.5;
-            double dx = (px - sx) * 0.12;
-            double dy = (py + 0.5 - sy) * 0.12;
-            double dz = (pz - sz) * 0.12;
-            level.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, sx, sy, sz, 1, dx, dy, dz, 0.8);
+            double sy = py + 3.0 + Math.sin(angle * 2) * 1.5;
+            level.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, sx, sy, sz, 1, 0, 0, 0, 0);
         }
 
-        // Phase 3: Explosion outward from player
+        // Grand finale explosion
         for (int i = 0; i < 100; i++) {
-            double dx = (player.getRandom().nextDouble() - 0.5) * 4.0;
-            double dy = (player.getRandom().nextDouble() - 0.5) * 4.0;
-            double dz = (player.getRandom().nextDouble() - 0.5) * 4.0;
-            level.sendParticles(ParticleTypes.END_ROD, px, py + 0.5, pz, 2, dx, dy, dz, 1.5);
+            double angle = i * 0.4;
+            double radius = 8.0 + Math.sin(i * 0.3) * 2.0;
+            double sx = px + Math.cos(angle) * radius;
+            double sz = pz + Math.sin(angle) * radius;
+            double sy = py + 2.0 + Math.sin(i * 0.2) * 3.0;
+            level.sendParticles(ParticleTypes.FIREWORK, sx, sy, sz, 1, 0, 0, 0, 0);
+            level.sendParticles(ParticleTypes.FLASH, sx, sy, sz, 1, 0, 0, 0, 0);
         }
-        level.sendParticles(ParticleTypes.FLASH, px, py + 1.0, pz, 1, 0, 0, 0, 0);
+
+        level.sendParticles(ParticleTypes.FLASH, px, py + 3.0, pz, 1, 0, 0, 0, 0);
+        level.sendParticles(ParticleTypes.END_ROD, px, py + 3.0, pz, 60, 5.0, 3.0, 5.0, 0.2);
+        level.sendParticles(ParticleTypes.GLOW, px, py + 3.0, pz, 40, 4.0, 2.0, 4.0, 0.1);
 
         level.playSound(null, px, py, pz,
                 SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.PLAYERS, 1.5f, 1.0f);
         level.playSound(null, px, py, pz,
-                SoundEvents.ENDER_DRAGON_GROWL, SoundSource.PLAYERS, 2.0f, 0.7f);
+                SoundEvents.ENDER_DRAGON_GROWL, SoundSource.PLAYERS, 2.0f, 0.5f);
 
         player.sendSystemMessage(Component.literal("§6✦ Divine Nexus Awakening Complete!"));
-        player.sendSystemMessage(Component.literal("§eYou are now connected to the primordial source."));
+        player.sendSystemMessage(Component.literal("§eYou are now a Divine Nexus — one with the primordial source."));
 
         FTBIntegration.onNexusAwakening(player);
 
@@ -210,5 +258,9 @@ public class NexusAwakening {
 
     public static boolean isAwakened(ServerPlayer player) {
         return player.getPersistentData().getBoolean("primegodling:awakened_nexus");
+    }
+
+    public static int getRitualTicks() {
+        return RITUAL_TICKS;
     }
 }

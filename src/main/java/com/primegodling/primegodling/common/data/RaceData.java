@@ -21,25 +21,45 @@ public final class RaceData {
 
     public static PrimeGodlingRace createStage(int index) {
         PrimeGodlingRace race = switch (index) {
-            // Stage 0: aura random 200-3,000; magicule 2,500-7,000
-            case 0 -> new PrimeGodlingRace(Difficulty.EASY, 0, 2_500, 7_000, 200, 3_000, allResistances());
-            // Stages 1-4: aura = half of EP threshold
-            case 1 -> new PrimeGodlingRace(Difficulty.INTERMEDIATE, 250_000, 3_000_000, 3_000_000, 125_000, 125_000,
+            case 0 -> new PrimeGodlingRace(Difficulty.EASY, 0,
+                    100, 1_000, 50, 500,
+                    allResistances());
+            case 1 -> new PrimeGodlingRace(Difficulty.INTERMEDIATE, RaceRegistry.EP_STAGE_1,
+                    5_000, 20_000, 2_500, 10_000,
                     withResistances(
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION)));
-            case 2 -> new PrimeGodlingRace(Difficulty.HARD, 1_000_000, 7_000_000, 7_000_000, 500_000, 500_000,
+            case 2 -> new PrimeGodlingRace(Difficulty.HARD, RaceRegistry.EP_STAGE_2,
+                    20_000, 80_000, 10_000, 40_000,
                     withResistances(
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.ECLIPTIC_MASTERY)));
-            case 3 -> new PrimeGodlingRace(Difficulty.HARD, 5_000_000, 10_000_000, 10_000_000, 2_500_000, 2_500_000,
+            case 3 -> new PrimeGodlingRace(Difficulty.HARD, RaceRegistry.EP_STAGE_3,
+                    100_000, 500_000, 50_000, 250_000,
                     withResistances(
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.ECLIPTIC_MASTERY),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.LUMINARCH_BLESSING)));
-            case 4 -> new PrimeGodlingRace(Difficulty.EXTREME, 30_000_000, 10_000_000, 10_000_000, 15_000_000, 15_000_000,
+            case 4 -> new PrimeGodlingRace(Difficulty.EXTREME, RaceRegistry.EP_STAGE_4,
+                    500_000, 2_000_000, 250_000, 1_000_000,
+                    withResistances(
+                            skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
+                            skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION),
+                            skill(com.primegodling.primegodling.common.data.SkillRegistry.ECLIPTIC_MASTERY),
+                            skill(com.primegodling.primegodling.common.data.SkillRegistry.LUMINARCH_BLESSING),
+                            skill(com.primegodling.primegodling.common.data.SkillRegistry.PRIMORDIAL_FORTITUDE)));
+            case 5 -> new PrimeGodlingRace(Difficulty.EXTREME, RaceRegistry.EP_STAGE_5,
+                    2_000_000, 8_000_000, 1_000_000, 4_000_000,
+                    withResistances(
+                            skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
+                            skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION),
+                            skill(com.primegodling.primegodling.common.data.SkillRegistry.ECLIPTIC_MASTERY),
+                            skill(com.primegodling.primegodling.common.data.SkillRegistry.LUMINARCH_BLESSING),
+                            skill(com.primegodling.primegodling.common.data.SkillRegistry.PRIMORDIAL_FORTITUDE)));
+            case 6 -> new PrimeGodlingRace(Difficulty.EXTREME, RaceRegistry.EP_STAGE_6,
+                    8_000_000, 20_000_000, 4_000_000, 10_000_000,
                     withResistances(
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
                             skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION),
@@ -55,50 +75,64 @@ public final class RaceData {
     private static void applyModifiers(PrimeGodlingRace race, int index) {
         switch (index) {
             case 0 -> {
-                race.addAttr(Attributes.MAX_HEALTH, "pg_health", 8.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ATTACK_DAMAGE, "pg_damage", 2.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ATTACK_DAMAGE, "pg_mult", 0.20, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-                race.addAttr(Attributes.MOVEMENT_SPEED, "pg_speed", 0.05, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR, "pg_armor", 4.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "pg_dodge_negate", 0.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.MAX_HEALTH, "hg_health", 3.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "hg_damage", 0.5, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.MOVEMENT_SPEED, "hg_speed", 0.01, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR, "hg_armor", 1.0, AttributeModifier.Operation.ADD_VALUE);
             }
             case 1 -> {
-                race.addAttr(Attributes.MAX_HEALTH, "ce_health", 16.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ATTACK_DAMAGE, "ce_damage", 4.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ATTACK_DAMAGE, "ce_mult", 0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-                race.addAttr(Attributes.MOVEMENT_SPEED, "ce_speed", 0.08, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR, "ce_armor", 8.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "ce_dodge_negate", 0.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.MAX_HEALTH, "dg_health", 6.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "dg_damage", 1.5, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "dg_mult", 0.10, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+                race.addAttr(Attributes.MOVEMENT_SPEED, "dg_speed", 0.03, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR, "dg_armor", 3.0, AttributeModifier.Operation.ADD_VALUE);
             }
             case 2 -> {
-                race.addAttr(Attributes.MAX_HEALTH, "ew_health", 24.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ATTACK_DAMAGE, "ew_damage", 6.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ATTACK_DAMAGE, "ew_mult", 0.30, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-                race.addAttr(Attributes.MOVEMENT_SPEED, "ew_speed", 0.10, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR, "ew_armor", 12.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR_TOUGHNESS, "ew_toughness", 4.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "ew_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "ew_dodge_negate", 0.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.MAX_HEALTH, "pg_health", 10.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "pg_damage", 3.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "pg_mult", 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+                race.addAttr(Attributes.MOVEMENT_SPEED, "pg_speed", 0.05, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR, "pg_armor", 5.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR_TOUGHNESS, "pg_toughness", 2.0, AttributeModifier.Operation.ADD_VALUE);
             }
             case 3 -> {
-                race.addAttr(Attributes.MAX_HEALTH, "lg_health", 40.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ATTACK_DAMAGE, "lg_damage", 10.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ATTACK_DAMAGE, "lg_mult", 0.35, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-                race.addAttr(Attributes.MOVEMENT_SPEED, "lg_speed", 0.15, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR, "lg_armor", 16.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR_TOUGHNESS, "lg_toughness", 8.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "lg_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "lg_dodge_negate", 0.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.MAX_HEALTH, "cg_health", 18.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "cg_damage", 5.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "cg_mult", 0.20, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+                race.addAttr(Attributes.MOVEMENT_SPEED, "cg_speed", 0.08, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR, "cg_armor", 9.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR_TOUGHNESS, "cg_toughness", 3.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "cg_dodge_negate", 0.20, AttributeModifier.Operation.ADD_VALUE);
             }
             case 4 -> {
-                race.addAttr(Attributes.MAX_HEALTH, "psg_health", 60.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ATTACK_DAMAGE, "psg_damage", 16.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.MAX_HEALTH, "eg_health", 28.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "eg_damage", 8.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "eg_mult", 0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+                race.addAttr(Attributes.MOVEMENT_SPEED, "eg_speed", 0.10, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR, "eg_armor", 13.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR_TOUGHNESS, "eg_toughness", 6.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "eg_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "eg_dodge_negate", 0.35, AttributeModifier.Operation.ADD_VALUE);
+            }
+            case 5 -> {
+                race.addAttr(Attributes.MAX_HEALTH, "ng_health", 45.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "ng_damage", 12.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "ng_mult", 0.30, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+                race.addAttr(Attributes.MOVEMENT_SPEED, "ng_speed", 0.15, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR, "ng_armor", 17.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR_TOUGHNESS, "ng_toughness", 10.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "ng_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "ng_dodge_negate", 0.55, AttributeModifier.Operation.ADD_VALUE);
+            }
+            case 6 -> {
+                race.addAttr(Attributes.MAX_HEALTH, "psg_health", 70.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ATTACK_DAMAGE, "psg_damage", 20.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ATTACK_DAMAGE, "psg_mult", 0.40, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-                race.addAttr(Attributes.MOVEMENT_SPEED, "psg_speed", 0.20, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR, "psg_armor", 20.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR_TOUGHNESS, "psg_toughness", 12.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.MOVEMENT_SPEED, "psg_speed", 0.22, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR, "psg_armor", 24.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR_TOUGHNESS, "psg_toughness", 14.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "psg_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "psg_dodge_negate", 0.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "psg_dodge_negate", 0.75, AttributeModifier.Operation.ADD_VALUE);
             }
         }
     }

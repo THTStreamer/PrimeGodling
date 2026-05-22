@@ -13,9 +13,9 @@ import java.util.List;
 
 public class PrimeGodlingConfig {
 
-    private static final String PRIME_GODLING_ID = "primegodling:" + RaceRegistry.PRIME_GODLING;
+    private static final String STARTING_RACE_ID = "primegodling:" + RaceRegistry.HALF_GODLING;
     private static final List<String> EVOLVED_IDS = RaceRegistry.ALL_STAGES_KEY.stream()
-            .filter(s -> !s.equals(RaceRegistry.PRIME_GODLING))
+            .filter(s -> !s.equals(RaceRegistry.HALF_GODLING))
             .map(s -> "primegodling:" + s)
             .toList();
     private static final List<String> SKILL_IDS = RaceRegistry.ALL_SKILL_IDS.stream()
@@ -40,13 +40,12 @@ public class PrimeGodlingConfig {
             LinkedHashSet<String> randomSet = new LinkedHashSet<>(rc.Races.randomRaces);
             LinkedHashSet<String> reincarnationSet = new LinkedHashSet<>(rc.Races.reincarnationRaces);
 
-            // Strip any evolved stages, keep only the base stage
             startingSet.removeAll(EVOLVED_IDS);
             randomSet.removeAll(EVOLVED_IDS);
             reincarnationSet.removeAll(EVOLVED_IDS);
-            startingSet.add(PRIME_GODLING_ID);
-            randomSet.add(PRIME_GODLING_ID);
-            reincarnationSet.add(PRIME_GODLING_ID);
+            startingSet.add(STARTING_RACE_ID);
+            randomSet.add(STARTING_RACE_ID);
+            reincarnationSet.add(STARTING_RACE_ID);
 
             rc.Races.startingRaces = new ArrayList<>(startingSet);
             rc.Races.randomRaces = new ArrayList<>(randomSet);

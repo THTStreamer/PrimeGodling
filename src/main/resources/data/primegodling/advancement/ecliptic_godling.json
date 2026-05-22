@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": { "id": "minecraft:ender_eye" },
+    "title": { "translate": "advancements.primegodling.ecliptic_godling.title" },
+    "description": { "translate": "advancements.primegodling.ecliptic_godling.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "primegodling:celestial_godling",
+  "criteria": {
+    "evolve_ecliptic_godling": {
+      "trigger": "tensura:race_awakened",
+      "conditions": {
+        "player_data": {
+          "tensura_data": { "race": "primegodling:ecliptic_godling" }
+        }
+      }
+    }
+  },
+  "requirements": [["evolve_ecliptic_godling"]]
+}

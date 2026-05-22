@@ -1,6 +1,5 @@
 package com.primegodling.primegodling.common.data.race;
 
-import com.primegodling.primegodling.common.config.ServerConfig;
 import io.github.manasmods.manascore.race.api.ManasRaceInstance;
 import io.github.manasmods.tensura.race.template.EvolutionRequirement;
 import net.minecraft.network.chat.Component;
@@ -9,17 +8,17 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class NexusCoreRequirement extends EvolutionRequirement {
 
-    private static int required() {
-        return ServerConfig.COMMON.nexusCoresRequired.get();
-    }
+    private final int requiredCores;
 
-    public NexusCoreRequirement() {}
+    public NexusCoreRequirement(int requiredCores) {
+        this.requiredCores = requiredCores;
+    }
 
     @Override
     public float getProgress(ManasRaceInstance instance, LivingEntity entity) {
         if (entity instanceof ServerPlayer player) {
             int eaten = player.getPersistentData().getInt("primegodling:nexus_cores_eaten");
-            return Math.min(1.0f, (float) eaten / required());
+            return requiredCores > 0 ? Math.min(1.0f, (float) eaten / requiredCores) : 1.0f;
         }
         return 0;
     }
@@ -29,6 +28,6 @@ public class NexusCoreRequirement extends EvolutionRequirement {
         int eaten = entity instanceof ServerPlayer player
                 ? player.getPersistentData().getInt("primegodling:nexus_cores_eaten")
                 : 0;
-        return Component.translatable("primegodling.evolution.nexus_cores", eaten, required());
+        return Component.translatable("primegodling.evolution.nexus_cores", eaten, requiredCores);
     }
 }

@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": { "id": "minecraft:glass_bottle" },
+    "title": { "translate": "advancements.primegodling.half_godling.title" },
+    "description": { "translate": "advancements.primegodling.half_godling.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "primegodling:root",
+  "criteria": {
+    "become_half_godling": {
+      "trigger": "tensura:reincarnated",
+      "conditions": {
+        "race": "primegodling:half_godling"
+      }
+    }
+  },
+  "requirements": [["become_half_godling"]]
+}

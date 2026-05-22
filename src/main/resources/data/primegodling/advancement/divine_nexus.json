@@ -8,7 +8,7 @@
     "announce_to_chat": true,
     "hidden": false
   },
-  "parent": "primegodling:luminarch_god",
+  "parent": "primegodling:new_god",
   "criteria": {
     "awaken_divine_nexus": {
       "trigger": "minecraft:impossible"

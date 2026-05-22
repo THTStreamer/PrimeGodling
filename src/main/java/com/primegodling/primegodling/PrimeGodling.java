@@ -165,11 +165,18 @@ public class PrimeGodling {
         List<? extends String> entries = NexusDropsConfig.COMMON.mobDrops.get();
         for (String entry : entries) {
             String[] parts = entry.split(";");
-            if (parts.length != 2) continue;
+            if (parts.length < 3) continue;
             if (!parts[0].equals(killedKey)) continue;
             try {
                 double chance = Double.parseDouble(parts[1]);
-                if (RANDOM.nextDouble() < chance) {
+                if (RANDOM.nextDouble() >= chance) break;
+
+                int minAmount = Integer.parseInt(parts[2]);
+                int maxAmount = parts.length >= 4 ? Integer.parseInt(parts[3]) : minAmount;
+                int amount = minAmount >= maxAmount ? minAmount
+                        : minAmount + RANDOM.nextInt(maxAmount - minAmount + 1);
+
+                for (int i = 0; i < amount; i++) {
                     event.getDrops().add(event.getEntity().spawnAtLocation(
                             new ItemStack(ModItems.NEXUS_CORE.get()), 0.0f));
                 }
@@ -210,7 +217,7 @@ public class PrimeGodling {
             LivingEntity killed = event.getEntity();
 
             if (killed instanceof ServerPlayer targetPlayer) {
-                io.github.manasmods.tensura.storage.ep.IExistence targetExistence = io.github.manasmods.tensura.storage.TensuraStorages.getExistenceFrom(targetPlayer);
+                IExistence targetExistence = TensuraStorages.getExistenceFrom(targetPlayer);
                 if (targetExistence != null && targetExistence.isTrueDemonLord()) {
                     int count = killer.getPersistentData().getInt("primegodling:demon_lord_kills") + 1;
                     killer.getPersistentData().putInt("primegodling:demon_lord_kills", count);

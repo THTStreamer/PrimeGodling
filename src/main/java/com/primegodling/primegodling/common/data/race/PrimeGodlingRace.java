@@ -10,6 +10,8 @@ import io.github.manasmods.tensura.config.race.RaceConfig;
 import io.github.manasmods.tensura.race.template.DefaultRace;
 import io.github.manasmods.tensura.race.template.EvolutionRequirement;
 import io.github.manasmods.tensura.storage.Alignment;
+import io.github.manasmods.tensura.storage.TensuraStorages;
+import io.github.manasmods.tensura.storage.ep.IExistence;
 import io.github.manasmods.tensura.util.EnergyHelper;
 import io.github.manasmods.tensura.util.EnergyHelper.GainType;
 import net.minecraft.core.Holder;
@@ -18,10 +20,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-
-import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -123,22 +127,38 @@ public class PrimeGodlingRace extends DefaultRace {
 
     @Override
     public Map<EvolutionRequirement, Float> getEvolutionRequirements(ManasRaceInstance instance, LivingEntity entity) {
+        Map<EvolutionRequirement, Float> reqs = new LinkedHashMap<>();
+
         if (epThreshold <= 0) {
-            return Map.of(new ScaledEPRequirement(5.0, 100_000), 100.0f);
+            reqs.put(new FixedEPRequirement(50_000), 70.0f);
+            reqs.put(new NexusCoreRequirement(10), 30.0f);
+            return reqs;
         }
-        if (epThreshold == 30_000_000) {
-            return Map.of(
-                new ScaledEPRequirement(5.0), 70.0f,
-                new EvolutionRequirement.NamedRequirement(), 15.0f,
-                new NexusCoreRequirement(), 15.0f
-            );
+
+        if (epThreshold == RaceRegistry.EP_STAGE_1) {
+            reqs.put(new FixedEPRequirement(100_000), 70.0f);
+            reqs.put(new NexusCoreRequirement(40), 30.0f);
+        } else if (epThreshold == RaceRegistry.EP_STAGE_2) {
+            reqs.put(new FixedEPRequirement(200_000), 70.0f);
+            reqs.put(new NexusCoreRequirement(160), 30.0f);
+        } else if (epThreshold == RaceRegistry.EP_STAGE_3) {
+            reqs.put(new FixedEPRequirement(400_000), 70.0f);
+            reqs.put(new NexusCoreRequirement(640), 30.0f);
+        } else if (epThreshold == RaceRegistry.EP_STAGE_4) {
+            reqs.put(new FixedEPRequirement(800_000), 60.0f);
+            reqs.put(new NexusCoreRequirement(2_560), 30.0f);
+            reqs.put(new EvolutionRequirement.NamedRequirement(), 10.0f);
+        } else if (epThreshold == RaceRegistry.EP_STAGE_5) {
+            reqs.put(new FixedEPRequirement(1_600_000), 60.0f);
+            reqs.put(new NexusCoreRequirement(10_240), 20.0f);
+            reqs.put(new AwakenedOrTDLOrHeroRequirement(), 20.0f);
         }
-        return Map.of(new ScaledEPRequirement(5.0), 100.0f);
+
+        return reqs;
     }
 
     @Override
     public void triggerEvolutionRewards(ManasRaceInstance instance, LivingEntity entity) {
-        // No-op: evolution rewards are handled in onRaceSet()
     }
 
     @Override
@@ -176,7 +196,6 @@ public class PrimeGodlingRace extends DefaultRace {
     @Override
     public void onRaceSet(ManasRaceInstance instance, LivingEntity entity) {
         super.onRaceSet(instance, entity);
-        ScaledEPRequirement.storeEntryEP(instance, entity);
 
         resetExistenceData(entity);
 
@@ -186,7 +205,7 @@ public class PrimeGodlingRace extends DefaultRace {
             int stageIndex = stageIndex();
             FTBIntegration.onEvolve(player, stageIndex);
 
-            if (epThreshold == RaceRegistry.EP_STAGE_4) {
+            if (epThreshold == RaceRegistry.EP_STAGE_6) {
                 EnergyHelper.gainMagicule(entity, EnergyHelper.getMaxMagicule(entity), GainType.NORMAL);
             }
         }
@@ -201,4 +220,40 @@ public class PrimeGodlingRace extends DefaultRace {
         return 0;
     }
 
+    /**
+     * Requirement: player must be awakened as Divine Nexus, OR be a True Demon Lord, OR be a Hero.
+     */
+    private static class AwakenedOrTDLOrHeroRequirement extends EvolutionRequirement {
+
+        @Override
+        public float getProgress(ManasRaceInstance instance, LivingEntity entity) {
+            if (!(entity instanceof ServerPlayer player)) return 0;
+
+            boolean awakened = player.getPersistentData().getBoolean("primegodling:awakened_nexus");
+            if (awakened) return 1.0f;
+
+            IExistence existence = TensuraStorages.getExistenceFrom(player);
+            if (existence != null) {
+                if (existence.isTrueDemonLord()) return 1.0f;
+                if (existence.isTrueHero()) return 1.0f;
+            }
+
+            return 0;
+        }
+
+        @Override
+        public Component getRequirementComponent(ManasRaceInstance instance, LivingEntity entity) {
+            boolean met = getProgress(instance, entity) >= 1.0f;
+            if (met) return Component.literal("§a✔ Awakening: Divine Nexus / TDL / Hero");
+
+            if (entity instanceof ServerPlayer player) {
+                IExistence existence = TensuraStorages.getExistenceFrom(player);
+                if (existence != null) {
+                    if (existence.isTrueDemonLord()) return Component.literal("§a✔ True Demon Lord");
+                    if (existence.isTrueHero()) return Component.literal("§a✔ True Hero");
+                }
+            }
+            return Component.literal("§cRequires: Divine Nexus Awakening §7OR§c True Demon Lord §7OR§c True Hero");
+        }
+    }
 }

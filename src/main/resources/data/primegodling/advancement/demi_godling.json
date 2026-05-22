@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": { "id": "minecraft:experience_bottle" },
+    "title": { "translate": "advancements.primegodling.demi_godling.title" },
+    "description": { "translate": "advancements.primegodling.demi_godling.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "primegodling:half_godling",
+  "criteria": {
+    "evolve_demi_godling": {
+      "trigger": "tensura:race_awakened",
+      "conditions": {
+        "player_data": {
+          "tensura_data": { "race": "primegodling:demi_godling" }
+        }
+      }
+    }
+  },
+  "requirements": [["evolve_demi_godling"]]
+}

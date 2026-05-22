@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": { "id": "minecraft:beacon" },
+    "title": { "translate": "advancements.primegodling.new_god.title" },
+    "description": { "translate": "advancements.primegodling.new_god.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "primegodling:ecliptic_godling",
+  "criteria": {
+    "evolve_new_god": {
+      "trigger": "tensura:race_awakened",
+      "conditions": {
+        "player_data": {
+          "tensura_data": { "race": "primegodling:new_god" }
+        }
+      }
+    }
+  },
+  "requirements": [["evolve_new_god"]]
+}

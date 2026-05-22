@@ -14,23 +14,29 @@ public class ModRaces {
     private static final DeferredRegister<ManasRace> RACES =
             DeferredRegister.create(PrimeGodling.MOD_ID, RaceRegistry.KEY);
 
+    public static final RegistrySupplier<ManasRace> HALF_GODLING;
+    public static final RegistrySupplier<ManasRace> DEMI_GODLING;
     public static final RegistrySupplier<ManasRace> PRIME_GODLING;
-    public static final RegistrySupplier<ManasRace> CELESTIAL_ESSENCE;
-    public static final RegistrySupplier<ManasRace> ECLIPTIC_WARDEN;
-    public static final RegistrySupplier<ManasRace> LUMINARCH_GOD;
+    public static final RegistrySupplier<ManasRace> CELESTIAL_GODLING;
+    public static final RegistrySupplier<ManasRace> ECLIPTIC_GODLING;
+    public static final RegistrySupplier<ManasRace> NEW_GOD;
     public static final RegistrySupplier<ManasRace> PRIMORDIAL_SUPREME_GOD;
 
     static {
-        PRIME_GODLING = RACES.register("prime_godling",
+        HALF_GODLING = RACES.register("half_godling",
                 () -> RaceData.createStage(0));
-        CELESTIAL_ESSENCE = RACES.register("celestial_essence",
+        DEMI_GODLING = RACES.register("demi_godling",
                 () -> RaceData.createStage(1));
-        ECLIPTIC_WARDEN = RACES.register("ecliptic_warden",
+        PRIME_GODLING = RACES.register("prime_godling",
                 () -> RaceData.createStage(2));
-        LUMINARCH_GOD = RACES.register("luminarch_god",
+        CELESTIAL_GODLING = RACES.register("celestial_godling",
                 () -> RaceData.createStage(3));
-        PRIMORDIAL_SUPREME_GOD = RACES.register("primordial_supreme_god",
+        ECLIPTIC_GODLING = RACES.register("ecliptic_godling",
                 () -> RaceData.createStage(4));
+        NEW_GOD = RACES.register("new_god",
+                () -> RaceData.createStage(5));
+        PRIMORDIAL_SUPREME_GOD = RACES.register("primordial_supreme_god",
+                () -> RaceData.createStage(6));
     }
 
     public static void init() {
@@ -46,10 +52,12 @@ public class ModRaces {
 
     private static List<PrimeGodlingRace> getInstances() {
         return List.of(
+                (PrimeGodlingRace) HALF_GODLING.get(),
+                (PrimeGodlingRace) DEMI_GODLING.get(),
                 (PrimeGodlingRace) PRIME_GODLING.get(),
-                (PrimeGodlingRace) CELESTIAL_ESSENCE.get(),
-                (PrimeGodlingRace) ECLIPTIC_WARDEN.get(),
-                (PrimeGodlingRace) LUMINARCH_GOD.get(),
+                (PrimeGodlingRace) CELESTIAL_GODLING.get(),
+                (PrimeGodlingRace) ECLIPTIC_GODLING.get(),
+                (PrimeGodlingRace) NEW_GOD.get(),
                 (PrimeGodlingRace) PRIMORDIAL_SUPREME_GOD.get()
         );
     }

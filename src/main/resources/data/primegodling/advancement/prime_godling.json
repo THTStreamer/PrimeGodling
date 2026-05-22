@@ -8,14 +8,16 @@
     "announce_to_chat": true,
     "hidden": false
   },
-  "parent": "primegodling:root",
+  "parent": "primegodling:demi_godling",
   "criteria": {
-    "become_prime_godling": {
-      "trigger": "tensura:reincarnated",
+    "evolve_prime_godling": {
+      "trigger": "tensura:race_awakened",
       "conditions": {
-        "race": "primegodling:prime_godling"
+        "player_data": {
+          "tensura_data": { "race": "primegodling:prime_godling" }
+        }
       }
     }
   },
-  "requirements": [["become_prime_godling"]]
+  "requirements": [["evolve_prime_godling"]]
 }
