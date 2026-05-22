@@ -60,8 +60,7 @@ public final class RaceData {
                 race.addAttr(Attributes.ATTACK_DAMAGE, "pg_mult", 0.20, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 race.addAttr(Attributes.MOVEMENT_SPEED, "pg_speed", 0.05, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "pg_armor", 4.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.PHYSICAL_RESIST_DEGRADATION, "pg_phys_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "pg_dodge_negate", 100.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "pg_dodge_negate", 0.0, AttributeModifier.Operation.ADD_VALUE);
             }
             case 1 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "ce_health", 16.0, AttributeModifier.Operation.ADD_VALUE);
@@ -69,8 +68,7 @@ public final class RaceData {
                 race.addAttr(Attributes.ATTACK_DAMAGE, "ce_mult", 0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 race.addAttr(Attributes.MOVEMENT_SPEED, "ce_speed", 0.08, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "ce_armor", 8.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.PHYSICAL_RESIST_DEGRADATION, "ce_phys_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "ce_dodge_negate", 100.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "ce_dodge_negate", 0.0, AttributeModifier.Operation.ADD_VALUE);
             }
             case 2 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "ew_health", 24.0, AttributeModifier.Operation.ADD_VALUE);
@@ -79,9 +77,8 @@ public final class RaceData {
                 race.addAttr(Attributes.MOVEMENT_SPEED, "ew_speed", 0.10, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "ew_armor", 12.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR_TOUGHNESS, "ew_toughness", 4.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.PHYSICAL_RESIST_DEGRADATION, "ew_phys_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "ew_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "ew_dodge_negate", 100.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "ew_dodge_negate", 0.0, AttributeModifier.Operation.ADD_VALUE);
             }
             case 3 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "lg_health", 40.0, AttributeModifier.Operation.ADD_VALUE);
@@ -90,9 +87,8 @@ public final class RaceData {
                 race.addAttr(Attributes.MOVEMENT_SPEED, "lg_speed", 0.15, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "lg_armor", 16.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR_TOUGHNESS, "lg_toughness", 8.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.PHYSICAL_RESIST_DEGRADATION, "lg_phys_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "lg_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "lg_dodge_negate", 100.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "lg_dodge_negate", 0.0, AttributeModifier.Operation.ADD_VALUE);
             }
             case 4 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "psg_health", 60.0, AttributeModifier.Operation.ADD_VALUE);
@@ -101,9 +97,8 @@ public final class RaceData {
                 race.addAttr(Attributes.MOVEMENT_SPEED, "psg_speed", 0.20, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR, "psg_armor", 20.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ARMOR_TOUGHNESS, "psg_toughness", 12.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.PHYSICAL_RESIST_DEGRADATION, "psg_phys_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "psg_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "psg_dodge_negate", 100.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "psg_dodge_negate", 0.0, AttributeModifier.Operation.ADD_VALUE);
             }
         }
     }
@@ -145,19 +140,7 @@ public final class RaceData {
                 (Supplier) ResistanceSkills.ELECTRICITY_RESISTANCE,
                 (Supplier) ResistanceSkills.CORROSION_RESISTANCE,
                 (Supplier) ResistanceSkills.THERMAL_FLUCTUATION_RESISTANCE,
-                (Supplier) ResistanceSkills.PIERCE_RESISTANCE,
-                (Supplier) ResistanceSkills.PHYSICAL_ATTACK_NULLIFICATION,
-                (Supplier) ResistanceSkills.MAGIC_NULLIFICATION,
-                (Supplier) ResistanceSkills.POISON_NULLIFICATION,
-                (Supplier) ResistanceSkills.PARALYSIS_NULLIFICATION,
-                (Supplier) ResistanceSkills.PAIN_NULLIFICATION,
-                (Supplier) ResistanceSkills.ABNORMAL_CONDITION_NULLIFICATION,
-                (Supplier) ResistanceSkills.HEAT_NULLIFICATION,
-                (Supplier) ResistanceSkills.COLD_NULLIFICATION,
-                (Supplier) ResistanceSkills.ELECTRICITY_NULLIFICATION,
-                (Supplier) ResistanceSkills.CORROSION_NULLIFICATION,
-                (Supplier) ResistanceSkills.THERMAL_FLUCTUATION_NULLIFICATION,
-                (Supplier) ResistanceSkills.PIERCE_NULLIFICATION
+                (Supplier) ResistanceSkills.PIERCE_RESISTANCE
         );
     }
 }

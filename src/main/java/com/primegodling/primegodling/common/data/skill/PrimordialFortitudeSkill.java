@@ -68,7 +68,7 @@ public class PrimordialFortitudeSkill extends Skill {
     public boolean onTakenDamage(ManasSkillInstance instance, LivingEntity entity,
             net.minecraft.world.damagesource.DamageSource source, Changeable<Float> damage) {
         if (!entity.level().isClientSide) {
-            float reduction = instance.isMastered(entity) ? 0.5f : 0.3f;
+            float reduction = instance.isMastered(entity) ? 0.95f : 0.9f;
             damage.set(damage.get() * (1.0f - reduction));
         }
         return false;

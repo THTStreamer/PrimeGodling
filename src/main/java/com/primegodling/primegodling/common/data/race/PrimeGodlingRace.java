@@ -1,24 +1,19 @@
 package com.primegodling.primegodling.common.data.race;
 
 import com.primegodling.primegodling.PrimeGodling;
-import com.primegodling.primegodling.common.config.SkillConfig;
 import com.primegodling.primegodling.common.data.RaceRegistry;
-import com.primegodling.primegodling.common.data.SkillRegistry;
 import com.primegodling.primegodling.common.integration.FTBIntegration;
 import io.github.manasmods.manascore.race.api.ManasRace;
 import io.github.manasmods.manascore.race.api.ManasRaceInstance;
 import io.github.manasmods.manascore.skill.api.ManasSkill;
-import io.github.manasmods.manascore.skill.api.SkillAPI;
 import io.github.manasmods.tensura.config.race.RaceConfig;
-import io.github.manasmods.tensura.race.TensuraRace;
 import io.github.manasmods.tensura.race.template.DefaultRace;
-import io.github.manasmods.tensura.util.EnergyHelper.GainType;
 import io.github.manasmods.tensura.race.template.EvolutionRequirement;
 import io.github.manasmods.tensura.storage.Alignment;
 import io.github.manasmods.tensura.util.EnergyHelper;
+import io.github.manasmods.tensura.util.EnergyHelper.GainType;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -128,7 +123,9 @@ public class PrimeGodlingRace extends DefaultRace {
 
     @Override
     public Map<EvolutionRequirement, Float> getEvolutionRequirements(ManasRaceInstance instance, LivingEntity entity) {
-        if (epThreshold <= 0) return Map.of();
+        if (epThreshold <= 0) {
+            return Map.of(new ScaledEPRequirement(5.0, 100_000), 100.0f);
+        }
         if (epThreshold == 30_000_000) {
             return Map.of(
                 new ScaledEPRequirement(5.0), 70.0f,
@@ -142,41 +139,6 @@ public class PrimeGodlingRace extends DefaultRace {
     @Override
     public void triggerEvolutionRewards(ManasRaceInstance instance, LivingEntity entity) {
         // No-op: evolution rewards are handled in onRaceSet()
-    }
-
-    private void awakenNexus(ServerPlayer player) {
-        double nexusEpCost = SkillConfig.COMMON.nexusCoreEpCost.get();
-        double currentMaxMagicule = EnergyHelper.getBaseMaxMagicule(player);
-        double currentMaxAura = EnergyHelper.getBaseMaxAura(player);
-
-        double newMagicule = (currentMaxMagicule - nexusEpCost) * 3.0;
-        double newAura = currentMaxAura * 4.0 - newMagicule;
-        EnergyHelper.setMaxMagicule(player, newMagicule);
-        EnergyHelper.setMaxAura(player, newAura);
-
-        player.getPersistentData().remove("primegodling:nexus_cores_eaten");
-        player.getPersistentData().putBoolean("primegodling:awakened_nexus", true);
-
-        var nexusAdv = player.getServer().getAdvancements()
-                .get(ResourceLocation.parse("primegodling:divine_nexus"));
-        if (nexusAdv != null) {
-            player.getAdvancements().award(nexusAdv, "awaken_divine_nexus");
-        }
-
-        ServerLevel level = player.serverLevel();
-        level.sendParticles(net.minecraft.core.particles.ParticleTypes.TOTEM_OF_UNDYING,
-                player.getX(), player.getY() + 1.0, player.getZ(),
-                40, 1.0, 1.0, 1.0, 0.5);
-        level.sendParticles(net.minecraft.core.particles.ParticleTypes.FLASH,
-                player.getX(), player.getY() + 1.5, player.getZ(),
-                1, 0.0, 0.0, 0.0, 0.0);
-        player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§6✦ Divine Nexus Awakening Complete!"));
-        player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§eYou are now connected to the primordial source."));
-
-        FTBIntegration.onNexusAwakening(player);
-
-        PrimeGodling.LOGGER.info("[{}] Player {} achieved Divine Nexus Awakening!",
-                PrimeGodling.MOD_ID, player.getGameProfile().getName());
     }
 
     @Override
@@ -225,10 +187,6 @@ public class PrimeGodlingRace extends DefaultRace {
             FTBIntegration.onEvolve(player, stageIndex);
 
             if (epThreshold == RaceRegistry.EP_STAGE_4) {
-                SkillAPI.getSkillsFrom(player).learnSkill(SkillRegistry.CREATION_AUTHORITY);
-
-                awakenNexus(player);
-
                 EnergyHelper.gainMagicule(entity, EnergyHelper.getMaxMagicule(entity), GainType.NORMAL);
             }
         }
@@ -242,4 +200,5 @@ public class PrimeGodlingRace extends DefaultRace {
         }
         return 0;
     }
+
 }

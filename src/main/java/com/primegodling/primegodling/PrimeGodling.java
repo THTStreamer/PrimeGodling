@@ -2,6 +2,7 @@ package com.primegodling.primegodling;
 
 import com.primegodling.primegodling.client.ClientProxy;
 import com.primegodling.primegodling.common.ModItems;
+import com.primegodling.primegodling.common.awakening.NexusAwakening;
 import com.primegodling.primegodling.common.config.NexusDropsConfig;
 import com.primegodling.primegodling.common.config.RaceConfig;
 import com.primegodling.primegodling.common.config.ServerConfig;
@@ -95,6 +96,8 @@ public class PrimeGodling {
         Optional<ManasRaceInstance> opt = races.getRace();
         if (opt.isEmpty()) return;
         ManasRaceInstance raceInstance = opt.get();
+
+        NexusAwakening.handleRitualTick(player);
 
         if (!raceInstance.is(TensuraRaceTags.HAS_CREATIVE_FLIGHT)) {
             FLIGHT_DATA.remove(player.getUUID());

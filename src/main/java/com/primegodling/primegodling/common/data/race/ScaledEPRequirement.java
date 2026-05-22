@@ -10,9 +10,23 @@ public class ScaledEPRequirement extends EvolutionRequirement {
 
     private static final String ENTRY_EP_KEY = "primegodling:entry_ep";
     private final double multiplier;
+    private final double maxRequiredEP;
 
     public ScaledEPRequirement(double multiplier) {
+        this(multiplier, 0);
+    }
+
+    public ScaledEPRequirement(double multiplier, double maxRequiredEP) {
         this.multiplier = multiplier;
+        this.maxRequiredEP = maxRequiredEP;
+    }
+
+    private double calcRequired(double entryEP) {
+        double required = entryEP * multiplier;
+        if (maxRequiredEP > 0 && required > maxRequiredEP) {
+            required = maxRequiredEP;
+        }
+        return required;
     }
 
     @Override
@@ -24,7 +38,7 @@ public class ScaledEPRequirement extends EvolutionRequirement {
             entryEP = currentEP;
             if (entryEP <= 0) return 0;
         }
-        double required = entryEP * multiplier;
+        double required = calcRequired(entryEP);
         if (required <= 0) return 1.0f;
         return (float) Math.min(1.0, currentEP / required);
     }
@@ -34,9 +48,9 @@ public class ScaledEPRequirement extends EvolutionRequirement {
         double currentEP = EnergyHelper.getBaseMaxEP(entity);
         double entryEP = readEntryEP(instance);
         if (entryEP <= 0) {
-            return Component.translatable("primegodling.evolution.scaled_ep", (long) currentEP, (long) (currentEP * multiplier));
+            return Component.translatable("primegodling.evolution.scaled_ep", (long) currentEP, (long) calcRequired(currentEP));
         }
-        double required = entryEP * multiplier;
+        double required = calcRequired(entryEP);
         return Component.translatable("primegodling.evolution.scaled_ep", (long) currentEP, (long) required);
     }
 

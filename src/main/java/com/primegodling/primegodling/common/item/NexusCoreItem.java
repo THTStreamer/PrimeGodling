@@ -1,5 +1,6 @@
 package com.primegodling.primegodling.common.item;
 
+import com.primegodling.primegodling.common.awakening.NexusAwakening;
 import com.primegodling.primegodling.common.config.ServerConfig;
 import com.primegodling.primegodling.common.integration.FTBIntegration;
 import net.minecraft.network.chat.Component;
@@ -14,7 +15,7 @@ import net.minecraft.world.level.Level;
 public class NexusCoreItem extends Item {
 
     public NexusCoreItem() {
-        super(new Item.Properties().stacksTo(1));
+        super(new Item.Properties().stacksTo(64));
     }
 
     @Override
@@ -27,9 +28,11 @@ public class NexusCoreItem extends Item {
             int eaten = serverPlayer.getPersistentData().getInt("primegodling:nexus_cores_eaten");
             int required = ServerConfig.COMMON.nexusCoresRequired.get();
             if (eaten >= required) {
-                serverPlayer.displayClientMessage(
-                    Component.literal("§eYou have already absorbed enough Nexus Cores. Evolve in the Evolution menu!"),
-                    true);
+                String result = NexusAwakening.startRitual(serverPlayer);
+                serverPlayer.displayClientMessage(Component.literal(result), true);
+                if (result.startsWith("§6")) {
+                    stack.shrink(1);
+                }
                 return InteractionResultHolder.consume(stack);
             }
             serverPlayer.getPersistentData().putInt("primegodling:nexus_cores_eaten", eaten + 1);

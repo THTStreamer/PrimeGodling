@@ -61,6 +61,6 @@ public class CosmicAwarenessSkill extends Skill {
         if (targeter != null && targeter.isAlive()) {
             targeter.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60, 0, false, false, true));
         }
-        return false;
+        return true;
     }
 }
