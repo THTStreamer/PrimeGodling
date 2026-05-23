@@ -4,11 +4,14 @@ import com.primegodling.primegodling.client.ClientProxy;
 import com.primegodling.primegodling.common.ModItems;
 import com.primegodling.primegodling.common.awakening.NexusAwakening;
 import com.primegodling.primegodling.common.config.NexusDropsConfig;
+import com.primegodling.primegodling.common.command.DivineNexusCommand;
 import com.primegodling.primegodling.common.config.RaceConfig;
+import com.primegodling.primegodling.network.PrimeGodlingNetwork;
 import com.primegodling.primegodling.common.config.ServerConfig;
 import com.primegodling.primegodling.common.config.SkillConfig;
 import com.primegodling.primegodling.common.data.ModRaces;
 import com.primegodling.primegodling.common.data.ModSkills;
+import com.primegodling.primegodling.common.data.ResistanceHelper;
 import com.primegodling.primegodling.common.integration.TensuraIntegration;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.EventResult;
@@ -63,15 +66,19 @@ public class PrimeGodling {
         ModItems.ITEMS.register(bus);
         ModRaces.init();
         ModSkills.init();
+        ResistanceHelper.init();
 
         if (FMLLoader.getDist() == Dist.CLIENT) {
             ClientProxy.init(bus);
         }
         TensuraIntegration.register(bus);
 
+        bus.addListener(PrimeGodlingNetwork::onRegisterPayloadHandlers);
+
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onLivingDeath);
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onLivingDrops);
+        NeoForge.EVENT_BUS.addListener(DivineNexusCommand::onRegisterCommands);
 
         RaceEvents.ACTIVATE_ABILITY.register((raceInstance, entity) -> {
             if (entity instanceof ServerPlayer player && raceInstance.is(TensuraRaceTags.HAS_CREATIVE_FLIGHT)) {

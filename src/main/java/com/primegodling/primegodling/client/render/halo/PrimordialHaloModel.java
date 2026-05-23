@@ -19,6 +19,14 @@ public class PrimordialHaloModel extends EntityModel<Entity> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(
             ResourceLocation.fromNamespaceAndPath("primegodling", "primordial_halo"), "main");
 
+    public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("primegodling", "textures/entity/halo_ring.png");
+
+    private static final int SEGMENTS = 24;
+    private static final float RADIUS = 11.0F;
+    private static final float SEG_W = 2.0F;
+    private static final float SEG_H = 3.0F;
+    private static final float SEG_D = 3.0F;
+
     private final ModelPart ring;
 
     public PrimordialHaloModel(ModelPart root) {
@@ -32,22 +40,15 @@ public class PrimordialHaloModel extends EntityModel<Entity> {
 
         PartDefinition ring = root.addOrReplaceChild("ring", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-        ring.addOrReplaceChild("front",
-                CubeListBuilder.create().texOffs(0, 0)
-                        .addBox(-5.0F, 0.0F, -1.5F, 10.0F, 2.0F, 3.0F),
-                PartPose.offset(0.0F, 0.0F, -6.5F));
-        ring.addOrReplaceChild("back",
-                CubeListBuilder.create().texOffs(0, 0)
-                        .addBox(-5.0F, 0.0F, -1.5F, 10.0F, 2.0F, 3.0F),
-                PartPose.offset(0.0F, 0.0F, 6.5F));
-        ring.addOrReplaceChild("left",
-                CubeListBuilder.create().texOffs(0, 0)
-                        .addBox(-1.5F, 0.0F, -5.0F, 3.0F, 2.0F, 10.0F),
-                PartPose.offset(-6.5F, 0.0F, 0.0F));
-        ring.addOrReplaceChild("right",
-                CubeListBuilder.create().texOffs(0, 0)
-                        .addBox(-1.5F, 0.0F, -5.0F, 3.0F, 2.0F, 10.0F),
-                PartPose.offset(6.5F, 0.0F, 0.0F));
+        for (int i = 0; i < SEGMENTS; i++) {
+            double angle = i * Math.PI * 2 / SEGMENTS;
+            float x = (float) (Math.sin(angle) * RADIUS);
+            float z = (float) (Math.cos(angle) * RADIUS);
+            ring.addOrReplaceChild("seg" + i,
+                    CubeListBuilder.create().texOffs(0, 0)
+                            .addBox(-SEG_W / 2, -SEG_H / 2, -SEG_D / 2, SEG_W, SEG_H, SEG_D),
+                    PartPose.offsetAndRotation(x, 0.0F, z, 0.0F, (float) angle, 0.0F));
+        }
 
         return LayerDefinition.create(mesh, 64, 32);
     }

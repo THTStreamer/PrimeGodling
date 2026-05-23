@@ -2,10 +2,14 @@ package com.primegodling.primegodling.common.data.race;
 
 import com.primegodling.primegodling.PrimeGodling;
 import com.primegodling.primegodling.common.data.RaceRegistry;
+import com.primegodling.primegodling.common.data.ResistanceHelper;
 import com.primegodling.primegodling.common.integration.FTBIntegration;
 import io.github.manasmods.manascore.race.api.ManasRace;
 import io.github.manasmods.manascore.race.api.ManasRaceInstance;
 import io.github.manasmods.manascore.skill.api.ManasSkill;
+import io.github.manasmods.manascore.skill.api.SkillAPI;
+import io.github.manasmods.manascore.skill.api.Skills;
+import io.github.manasmods.manascore.skill.impl.SkillRegistry;
 import io.github.manasmods.tensura.config.race.RaceConfig;
 import io.github.manasmods.tensura.race.template.DefaultRace;
 import io.github.manasmods.tensura.race.template.EvolutionRequirement;
@@ -28,6 +32,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Supplier;
 
 public class PrimeGodlingRace extends DefaultRace {
@@ -129,29 +134,18 @@ public class PrimeGodlingRace extends DefaultRace {
     public Map<EvolutionRequirement, Float> getEvolutionRequirements(ManasRaceInstance instance, LivingEntity entity) {
         Map<EvolutionRequirement, Float> reqs = new LinkedHashMap<>();
 
-        if (epThreshold <= 0) {
-            reqs.put(new FixedEPRequirement(50_000), 70.0f);
-            reqs.put(new NexusCoreRequirement(10), 30.0f);
-            return reqs;
-        }
+        for (int i = 1; i < RaceRegistry.EP_THRESHOLDS.length; i++) {
+            if (epThreshold != RaceRegistry.EP_THRESHOLDS[i]) continue;
 
-        if (epThreshold == RaceRegistry.EP_STAGE_1) {
-            reqs.put(new FixedEPRequirement(100_000), 70.0f);
-            reqs.put(new NexusCoreRequirement(40), 30.0f);
-        } else if (epThreshold == RaceRegistry.EP_STAGE_2) {
-            reqs.put(new FixedEPRequirement(200_000), 70.0f);
-            reqs.put(new NexusCoreRequirement(160), 30.0f);
-        } else if (epThreshold == RaceRegistry.EP_STAGE_3) {
-            reqs.put(new FixedEPRequirement(400_000), 70.0f);
-            reqs.put(new NexusCoreRequirement(640), 30.0f);
-        } else if (epThreshold == RaceRegistry.EP_STAGE_4) {
-            reqs.put(new FixedEPRequirement(800_000), 60.0f);
-            reqs.put(new NexusCoreRequirement(2_560), 30.0f);
-            reqs.put(new EvolutionRequirement.NamedRequirement(), 10.0f);
-        } else if (epThreshold == RaceRegistry.EP_STAGE_5) {
-            reqs.put(new FixedEPRequirement(1_600_000), 60.0f);
-            reqs.put(new NexusCoreRequirement(10_240), 20.0f);
-            reqs.put(new AwakenedOrTDLOrHeroRequirement(), 20.0f);
+            reqs.put(new FixedEPRequirement(RaceRegistry.EP_THRESHOLDS[i]), i <= 3 ? 70.0f : 60.0f);
+            reqs.put(new NexusCoreRequirement(RaceRegistry.CORES_REQUIRED[i]), 30.0f);
+            if (i == 4 || i == 5) {
+                reqs.put(new EvolutionRequirement.NamedRequirement(), 10.0f);
+            }
+            if (i == 6) {
+                reqs.put(new AwakenedOrTDLOrHeroRequirement(), 20.0f);
+            }
+            return reqs;
         }
 
         return reqs;
@@ -175,7 +169,45 @@ public class PrimeGodlingRace extends DefaultRace {
                 skills.add(skill);
             }
         }
+
+        if (entity instanceof ServerPlayer player) {
+            if (epThreshold == RaceRegistry.EP_STAGE_2) {
+                readSkills(player, "primegodling:granted_resistances", skills);
+                readSkills(player, "primegodling:granted_skills", skills);
+            } else if (epThreshold == RaceRegistry.EP_STAGE_3) {
+                readSkills(player, "primegodling:granted_nullifications", skills);
+                readSkills(player, "primegodling:granted_skills_stage3", skills);
+            } else if (epThreshold == RaceRegistry.EP_STAGE_6) {
+                readSkills(player, "primegodling:granted_nullifications_all", skills);
+                String unique = player.getPersistentData().getString("primegodling:granted_unique_skill");
+                if (!unique.isEmpty()) {
+                    ManasSkill s = SkillRegistry.SKILLS.get(ResourceLocation.parse(unique));
+                    if (s != null) skills.add(s);
+                }
+            }
+        }
+
         return skills;
+    }
+
+    private static void readSkills(ServerPlayer player, String key, List<ManasSkill> list) {
+        String raw = player.getPersistentData().getString(key);
+        if (raw.isEmpty()) return;
+        for (String id : raw.split(",")) {
+            id = id.trim();
+            if (!id.isEmpty()) {
+                ManasSkill skill = SkillRegistry.SKILLS.get(ResourceLocation.parse(id));
+                if (skill != null) list.add(skill);
+            }
+        }
+    }
+
+    private static void storeSkills(ServerPlayer player, String key, List<ResourceLocation> ids) {
+        List<String> idStrs = new ArrayList<>();
+        for (ResourceLocation id : ids) {
+            idStrs.add(id.toString());
+        }
+        player.getPersistentData().putString(key, String.join(",", idStrs));
     }
 
     @Override
@@ -207,6 +239,69 @@ public class PrimeGodlingRace extends DefaultRace {
 
             if (epThreshold == RaceRegistry.EP_STAGE_6) {
                 EnergyHelper.gainMagicule(entity, EnergyHelper.getMaxMagicule(entity), GainType.NORMAL);
+            }
+
+            Random random = new Random();
+
+            if (epThreshold == RaceRegistry.EP_STAGE_2 && ResistanceHelper.isInitialized()) {
+                int resCount = com.primegodling.primegodling.common.config.RaceConfig.COMMON.primeGodlingResistanceCount.get();
+                int skillCount = com.primegodling.primegodling.common.config.RaceConfig.COMMON.primeGodlingSkillCount.get();
+                if (resCount > 0) {
+                    List<ResourceLocation> res = ResistanceHelper.getRandomResistances(resCount, random);
+                    storeSkills(player, "primegodling:granted_resistances", res);
+                    player.sendSystemMessage(Component.literal("§b✦ " + resCount + " random resistances granted!"));
+                }
+                if (skillCount > 0) {
+                    List<ResourceLocation> skills = ResistanceHelper.getRandomNonResistanceSkills(skillCount, random);
+                    storeSkills(player, "primegodling:granted_skills", skills);
+                    player.sendSystemMessage(Component.literal("§b✦ " + skillCount + " random skills granted!"));
+                }
+            }
+
+            if (epThreshold == RaceRegistry.EP_STAGE_3 && ResistanceHelper.isInitialized()) {
+                String stored = player.getPersistentData().getString("primegodling:granted_resistances");
+                List<ResourceLocation> nullIds = new ArrayList<>();
+                for (String resStr : stored.split(",")) {
+                    resStr = resStr.trim();
+                    if (resStr.isEmpty()) continue;
+                    ResourceLocation nullId = ResistanceHelper.getNullificationFor(ResourceLocation.parse(resStr));
+                    if (nullId != null) nullIds.add(nullId);
+                }
+                storeSkills(player, "primegodling:granted_nullifications", nullIds);
+                player.getPersistentData().remove("primegodling:granted_resistances");
+                player.sendSystemMessage(Component.literal("§d✦ Resistances evolved to nullifications!"));
+
+                int skillCount = com.primegodling.primegodling.common.config.RaceConfig.COMMON.celestialGodlingSkillCount.get();
+                if (skillCount > 0) {
+                    List<ResourceLocation> chosen = ResistanceHelper.getRandomNonResistanceSkills(skillCount, random);
+                    List<ResourceLocation> granted = new ArrayList<>();
+                    for (ResourceLocation skillId : chosen) {
+                        if (ResistanceHelper.grantOrMasterSkill(player, skillId, random)) {
+                            granted.add(skillId);
+                        }
+                    }
+                    storeSkills(player, "primegodling:granted_skills_stage3", granted);
+                    player.sendSystemMessage(Component.literal("§d✦ " + granted.size() + " skills granted or mastered!"));
+                }
+            }
+
+            if (epThreshold == RaceRegistry.EP_STAGE_6 && ResistanceHelper.isInitialized()) {
+                List<ResourceLocation> allNulls = ResistanceHelper.getAllNullifications();
+                storeSkills(player, "primegodling:granted_nullifications_all", allNulls);
+                player.sendSystemMessage(Component.literal("§5✦ All nullifications granted!"));
+
+                Skills skills = SkillAPI.getSkillsFrom(player);
+                if (skills != null) {
+                    skills.learnSkill(com.primegodling.primegodling.common.data.SkillRegistry.CREATION_AUTHORITY);
+                    player.sendSystemMessage(Component.literal("§5✦ Ultimate Skill: Creation Authority acquired!"));
+                }
+
+                List<ResourceLocation> uniques = ResistanceHelper.getRandomUniqueSkills(1, random);
+                if (!uniques.isEmpty()) {
+                    String uniqueStr = uniques.get(0).toString();
+                    player.getPersistentData().putString("primegodling:granted_unique_skill", uniqueStr);
+                    player.sendSystemMessage(Component.literal("§5✦ A unique skill has been bestowed!"));
+                }
             }
         }
     }

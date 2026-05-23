@@ -1,17 +1,15 @@
 package com.primegodling.primegodling.common.data;
 
 import com.primegodling.primegodling.common.data.race.PrimeGodlingRace;
+import com.primegodling.primegodling.common.data.ModSkills;
 import io.github.manasmods.manascore.race.api.ManasRace.Difficulty;
 import io.github.manasmods.manascore.skill.api.ManasSkill;
-import io.github.manasmods.manascore.skill.impl.SkillRegistry;
 import io.github.manasmods.tensura.registry.attribute.TensuraAttributes;
-import io.github.manasmods.tensura.registry.skill.ResistanceSkills;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -23,49 +21,37 @@ public final class RaceData {
         PrimeGodlingRace race = switch (index) {
             case 0 -> new PrimeGodlingRace(Difficulty.EASY, 0,
                     100, 1_000, 50, 500,
-                    allResistances());
+                    List.of());
             case 1 -> new PrimeGodlingRace(Difficulty.INTERMEDIATE, RaceRegistry.EP_STAGE_1,
                     5_000, 20_000, 2_500, 10_000,
-                    withResistances(
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION)));
+                    List.of());
             case 2 -> new PrimeGodlingRace(Difficulty.HARD, RaceRegistry.EP_STAGE_2,
                     20_000, 80_000, 10_000, 40_000,
-                    withResistances(
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.ECLIPTIC_MASTERY)));
+                    List.<Supplier<ManasSkill>>of(
+                            () -> ModSkills.PRIMORDIAL_BLOOM.get(),
+                            () -> ModSkills.COSMIC_AWARENESS.get()
+                    ));
             case 3 -> new PrimeGodlingRace(Difficulty.HARD, RaceRegistry.EP_STAGE_3,
                     100_000, 500_000, 50_000, 250_000,
-                    withResistances(
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.ECLIPTIC_MASTERY),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.LUMINARCH_BLESSING)));
+                    List.<Supplier<ManasSkill>>of(
+                            () -> ModSkills.STELLAR_ASCENSION.get(),
+                            () -> ModSkills.ECLIPTIC_MASTERY.get()
+                    ));
             case 4 -> new PrimeGodlingRace(Difficulty.EXTREME, RaceRegistry.EP_STAGE_4,
                     500_000, 2_000_000, 250_000, 1_000_000,
-                    withResistances(
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.ECLIPTIC_MASTERY),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.LUMINARCH_BLESSING),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.PRIMORDIAL_FORTITUDE)));
+                    List.<Supplier<ManasSkill>>of(
+                            () -> ModSkills.LUMINARCH_BLESSING.get()
+                    ));
             case 5 -> new PrimeGodlingRace(Difficulty.EXTREME, RaceRegistry.EP_STAGE_5,
                     2_000_000, 8_000_000, 1_000_000, 4_000_000,
-                    withResistances(
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.ECLIPTIC_MASTERY),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.LUMINARCH_BLESSING),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.PRIMORDIAL_FORTITUDE)));
+                    List.<Supplier<ManasSkill>>of(
+                            () -> ModSkills.PRIMORDIAL_FORTITUDE.get()
+                    ));
             case 6 -> new PrimeGodlingRace(Difficulty.EXTREME, RaceRegistry.EP_STAGE_6,
                     8_000_000, 20_000_000, 4_000_000, 10_000_000,
-                    withResistances(
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.COSMIC_AWARENESS),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.STELLAR_ASCENSION),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.ECLIPTIC_MASTERY),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.LUMINARCH_BLESSING),
-                            skill(com.primegodling.primegodling.common.data.SkillRegistry.PRIMORDIAL_FORTITUDE)));
+                    List.<Supplier<ManasSkill>>of(
+                            () -> ModSkills.DIVINE_DEVOUR.get()
+                    ));
             default -> throw new IllegalArgumentException("Unknown stage index: " + index);
         };
         applyModifiers(race, index);
@@ -135,46 +121,5 @@ public final class RaceData {
                 race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "psg_dodge_negate", 0.75, AttributeModifier.Operation.ADD_VALUE);
             }
         }
-    }
-
-    private static Supplier<ManasSkill> skill(ResourceLocation id) {
-        return () -> SkillRegistry.SKILLS.get(id);
-    }
-
-    @SafeVarargs
-    private static List<Supplier<ManasSkill>> withResistances(Supplier<ManasSkill>... extras) {
-        List<Supplier<ManasSkill>> result = new ArrayList<>(allResistances());
-        for (Supplier<ManasSkill> s : extras) {
-            if (s != null) result.add(s);
-        }
-        return result;
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static List<Supplier<ManasSkill>> allResistances() {
-        return Arrays.asList(
-                (Supplier) ResistanceSkills.PHYSICAL_ATTACK_RESISTANCE,
-                (Supplier) ResistanceSkills.MAGIC_RESISTANCE,
-                (Supplier) ResistanceSkills.FLAME_ATTACK_RESISTANCE,
-                (Supplier) ResistanceSkills.WATER_ATTACK_RESISTANCE,
-                (Supplier) ResistanceSkills.WIND_ATTACK_RESISTANCE,
-                (Supplier) ResistanceSkills.EARTH_ATTACK_RESISTANCE,
-                (Supplier) ResistanceSkills.LIGHT_ATTACK_RESISTANCE,
-                (Supplier) ResistanceSkills.DARKNESS_ATTACK_RESISTANCE,
-                (Supplier) ResistanceSkills.SPIRITUAL_ATTACK_RESISTANCE,
-                (Supplier) ResistanceSkills.HOLY_ATTACK_RESISTANCE,
-                (Supplier) ResistanceSkills.GRAVITY_ATTACK_RESISTANCE,
-                (Supplier) ResistanceSkills.SPATIAL_ATTACK_RESISTANCE,
-                (Supplier) ResistanceSkills.POISON_RESISTANCE,
-                (Supplier) ResistanceSkills.PARALYSIS_RESISTANCE,
-                (Supplier) ResistanceSkills.PAIN_RESISTANCE,
-                (Supplier) ResistanceSkills.ABNORMAL_CONDITION_RESISTANCE,
-                (Supplier) ResistanceSkills.HEAT_RESISTANCE,
-                (Supplier) ResistanceSkills.COLD_RESISTANCE,
-                (Supplier) ResistanceSkills.ELECTRICITY_RESISTANCE,
-                (Supplier) ResistanceSkills.CORROSION_RESISTANCE,
-                (Supplier) ResistanceSkills.THERMAL_FLUCTUATION_RESISTANCE,
-                (Supplier) ResistanceSkills.PIERCE_RESISTANCE
-        );
     }
 }

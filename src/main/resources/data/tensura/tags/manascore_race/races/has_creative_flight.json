@@ -1,10 +1,9 @@
 {
   "replace": false,
   "values": [
-    "primegodling:prime_godling",
-    "primegodling:celestial_essence",
-    "primegodling:ecliptic_warden",
-    "primegodling:luminarch_god",
+    "primegodling:celestial_godling",
+    "primegodling:ecliptic_godling",
+    "primegodling:new_god",
     "primegodling:primordial_supreme_god"
   ]
 }

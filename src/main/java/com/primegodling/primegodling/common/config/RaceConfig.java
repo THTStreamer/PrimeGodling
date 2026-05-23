@@ -9,7 +9,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class RaceConfig {
-    public static final int CONFIG_VERSION = 2;
+    public static final int CONFIG_VERSION = 3;
 
     public static final ModConfigSpec COMMON_SPEC;
     public static final Common COMMON;
@@ -44,22 +44,39 @@ public class RaceConfig {
         public final ModConfigSpec.IntValue flightMaintenanceCostSub;
         public final ModConfigSpec.IntValue flightMaintenanceIntervalSub;
 
+        // New: random resistance / skill configs
+        public final ModConfigSpec.IntValue primeGodlingResistanceCount;
+        public final ModConfigSpec.IntValue primeGodlingSkillCount;
+        public final ModConfigSpec.IntValue celestialGodlingSkillCount;
+
         Common(ModConfigSpec.Builder builder) {
             builder.push("_meta").comment("Internal metadata — do not edit");
             configVersion = builder.defineInRange("config_version", CONFIG_VERSION, 1, Integer.MAX_VALUE);
             builder.pop();
 
-            builder.push("races").comment("Base race stats for primegodling:prime_godling");
-            primeGodlingMinEp = builder.defineInRange("prime_godling_min_ep", 5000, Integer.MIN_VALUE, Integer.MAX_VALUE);
-            primeGodlingMaxEp = builder.defineInRange("prime_godling_max_ep", 25000, Integer.MIN_VALUE, Integer.MAX_VALUE);
-            primeGodlingMagiculeCap = builder.defineInRange("prime_godling_magicule_cap", 1_500_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            builder.push("races").comment("Base race stats for primegodling:half_godling");
+            primeGodlingMinEp = builder.defineInRange("half_godling_min_ep", 100, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            primeGodlingMaxEp = builder.defineInRange("half_godling_max_ep", 4000, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            primeGodlingMagiculeCap = builder.defineInRange("half_godling_magicule_cap", 1_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
             builder.pop();
 
             builder.push("evolution").comment("EP thresholds for each evolution stage");
-            stage2CelestialEssenceEp = builder.defineInRange("stage2_celestial_essence_ep", 50_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
-            stage3EclipticWardenEp = builder.defineInRange("stage3_ecliptic_warden_ep", 250_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
-            stage4LuminarchGodEp = builder.defineInRange("stage4_luminarch_god_ep", 1_000_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
-            stage5PrimordialSupremeGodEp = builder.defineInRange("stage5_primordial_supreme_god_ep", 3_000_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            stage2CelestialEssenceEp = builder.defineInRange("stage1_demi_godling_ep", 50_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            stage3EclipticWardenEp = builder.defineInRange("stage2_prime_godling_ep", 100_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            stage4LuminarchGodEp = builder.defineInRange("stage3_celestial_godling_ep", 200_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            stage5PrimordialSupremeGodEp = builder.defineInRange("stage4_ecliptic_godling_ep", 400_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            builder.pop();
+
+            builder.push("random_rewards").comment("Random resistance and skill grants at evolution milestones");
+            primeGodlingResistanceCount = builder
+                    .comment("Number of random resistances granted when reaching Prime Godling (stage 2)")
+                    .defineInRange("prime_godling_resistance_count", 3, 0, 22);
+            primeGodlingSkillCount = builder
+                    .comment("Number of random Intrinsic/Common/Extra skills granted when reaching Prime Godling (stage 2)")
+                    .defineInRange("prime_godling_skill_count", 3, 0, 20);
+            celestialGodlingSkillCount = builder
+                    .comment("Number of random Intrinsic/Common/Extra skills granted/mastered when reaching Celestial Godling (stage 3)")
+                    .defineInRange("celestial_godling_skill_count", 2, 0, 20);
             builder.pop();
 
             builder.push("creative_flight").comment("Magicule costs for creative flight");
