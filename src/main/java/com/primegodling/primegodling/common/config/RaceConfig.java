@@ -44,7 +44,10 @@ public class RaceConfig {
         public final ModConfigSpec.IntValue flightMaintenanceCostSub;
         public final ModConfigSpec.IntValue flightMaintenanceIntervalSub;
 
-        // New: random resistance / skill configs
+        // EP gain multiplier (applied to all EP gained while any Prime Godling race is active)
+        public final ModConfigSpec.DoubleValue epGainMultiplier;
+
+        // Random resistance / skill configs
         public final ModConfigSpec.IntValue primeGodlingResistanceCount;
         public final ModConfigSpec.IntValue primeGodlingSkillCount;
         public final ModConfigSpec.IntValue celestialGodlingSkillCount;
@@ -77,6 +80,12 @@ public class RaceConfig {
             celestialGodlingSkillCount = builder
                     .comment("Number of random Intrinsic/Common/Extra skills granted/mastered when reaching Celestial Godling (stage 3)")
                     .defineInRange("celestial_godling_skill_count", 2, 0, 20);
+            builder.pop();
+
+            builder.push("ep_gain").comment("EP gain multiplier for Prime Godling races");
+            epGainMultiplier = builder
+                    .comment("Multiplier applied to EP gained (lower = slower progression, default 0.5 = half speed)")
+                    .defineInRange("ep_gain_multiplier", 0.5, 0.01, 10.0);
             builder.pop();
 
             builder.push("creative_flight").comment("Magicule costs for creative flight");

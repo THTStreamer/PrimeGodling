@@ -19,7 +19,7 @@ public final class RaceData {
 
     public static PrimeGodlingRace createStage(int index) {
         PrimeGodlingRace race = switch (index) {
-            case 0 -> new PrimeGodlingRace(Difficulty.EASY, 0,
+            case 0 -> new PrimeGodlingRace(Difficulty.HARD, 0,
                     100, 1_000, 50, 500,
                     List.of());
             case 1 -> new PrimeGodlingRace(Difficulty.INTERMEDIATE, RaceRegistry.EP_STAGE_1,

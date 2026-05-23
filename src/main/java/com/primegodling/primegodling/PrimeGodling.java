@@ -54,6 +54,10 @@ public class PrimeGodling {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     private static final Map<UUID, FlightData> FLIGHT_DATA = new HashMap<>();
+    /** Tracks each player's last-known base max EP and race for applying the gain multiplier. */
+    private static final Map<UUID, EpSnapshot> LAST_EP = new HashMap<>();
+
+    private record EpSnapshot(double ep, ResourceLocation raceId) {};
 
     public PrimeGodling(IEventBus bus) {
         RaceConfig.register();
@@ -103,15 +107,39 @@ public class PrimeGodling {
         Optional<ManasRaceInstance> opt = races.getRace();
         if (opt.isEmpty()) return;
         ManasRaceInstance raceInstance = opt.get();
+        UUID uuid = player.getUUID();
 
         NexusAwakening.handleRitualTick(player);
+
+        // EP gain multiplier: reduce EP accumulation for Prime Godling races
+        ResourceLocation currentRaceId = raceInstance.getRaceId();
+        if (currentRaceId.getNamespace().equals(MOD_ID)) {
+            double currentMaxEP = EnergyHelper.getBaseMaxEP(player);
+            EpSnapshot snap = LAST_EP.get(uuid);
+            if (snap != null && currentMaxEP > snap.ep && snap.raceId.equals(currentRaceId)) {
+                double gained = currentMaxEP - snap.ep;
+                double multiplier = RaceConfig.COMMON.epGainMultiplier.get();
+                double allowed = snap.ep + gained * multiplier;
+                double maxMagicule = EnergyHelper.getBaseMaxMagicule(player);
+                double maxAura = EnergyHelper.getBaseMaxAura(player);
+                double total = maxMagicule + maxAura;
+                if (total > 0) {
+                    double mRatio = maxMagicule / total;
+                    double aRatio = maxAura / total;
+                    double reduction = currentMaxEP - allowed;
+                    EnergyHelper.setMaxMagicule(player, maxMagicule - reduction * mRatio);
+                    EnergyHelper.setMaxAura(player, maxAura - reduction * aRatio);
+                    currentMaxEP = EnergyHelper.getBaseMaxEP(player);
+                }
+            }
+            LAST_EP.put(uuid, new EpSnapshot(currentMaxEP, currentRaceId));
+        }
 
         if (!raceInstance.is(TensuraRaceTags.HAS_CREATIVE_FLIGHT)) {
             FLIGHT_DATA.remove(player.getUUID());
             return;
         }
 
-        UUID uuid = player.getUUID();
         FlightData fd = FLIGHT_DATA.computeIfAbsent(uuid, k -> new FlightData());
 
         boolean hasSub = hasNamedSubordinate(player);
