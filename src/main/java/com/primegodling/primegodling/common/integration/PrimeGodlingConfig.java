@@ -23,17 +23,28 @@ public class PrimeGodlingConfig {
             .toList();
 
     public static void init(IEventBus modBus) {
+        tryInject("init");
         modBus.addListener(PrimeGodlingConfig::onConfigLoad);
     }
 
     private static void onConfigLoad(ModConfigEvent.Loading event) {
-        applyInjection();
+        tryInject("config_load");
     }
 
     static void applyInjection() {
+        tryInject("common_setup");
+    }
+
+    private static void tryInject(String phase) {
         try {
             ReincarnationConfig rc = ConfigRegistry.getConfig(ReincarnationConfig.class);
-            if (rc == null) return;
+            if (rc == null) {
+                PrimeGodling.LOGGER.info("[{}] tryInject({}): ReincarnationConfig not available yet",
+                        PrimeGodling.MOD_ID, phase);
+                return;
+            }
+
+            List<String> before = new ArrayList<>(rc.Races.startingRaces);
 
             LinkedHashSet<String> startingSet = new LinkedHashSet<>(rc.Races.startingRaces);
             LinkedHashSet<String> randomSet = new LinkedHashSet<>(rc.Races.randomRaces);
@@ -54,12 +65,11 @@ public class PrimeGodlingConfig {
             skillSet.addAll(SKILL_IDS);
             rc.Skills.startingSkills = new ArrayList<>(skillSet);
 
-            PrimeGodling.LOGGER.info("[{}] Injected into Tensura config. startingRaces={}, startingSkills={}",
-                    PrimeGodling.MOD_ID, rc.Races.startingRaces.size(), rc.Skills.startingSkills.size());
+            PrimeGodling.LOGGER.info("[{}] Injected into Tensura config (phase={}). startingRaces: {} -> {}",
+                    PrimeGodling.MOD_ID, phase, before, rc.Races.startingRaces);
 
         } catch (Exception e) {
-            PrimeGodling.LOGGER.error("[{}] Failed to inject races into Tensura config",
-                    PrimeGodling.MOD_ID, e);
+            PrimeGodling.LOGGER.error("[{}] tryInject({}) failed", PrimeGodling.MOD_ID, phase, e);
         }
     }
 }
