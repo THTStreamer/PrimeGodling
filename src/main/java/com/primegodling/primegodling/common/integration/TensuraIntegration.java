@@ -18,6 +18,9 @@ public class TensuraIntegration {
             PrimeGodling.LOGGER.info("[PrimeGodling] Linking race evolution chain…");
             ModRaces.linkEvolutions();
 
+            PrimeGodling.LOGGER.info("[PrimeGodling] Injecting races into Tensura config…");
+            PrimeGodlingConfig.applyInjection();
+
             PrimeGodling.LOGGER.info("[PrimeGodling] Common setup complete.");
         });
     }

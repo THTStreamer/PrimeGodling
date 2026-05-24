@@ -7,8 +7,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.primegodling.primegodling.network.SyncAwakenedPayload;
+import io.github.manasmods.manascore.race.api.ManasRaceInstance;
+import io.github.manasmods.manascore.race.api.RaceAPI;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -54,7 +57,9 @@ public class DivineNexusCommand {
                     .executes(ctx -> {
                         ServerPlayer target = EntityArgument.getPlayer(ctx, "entity");
                         int amount = IntegerArgumentType.getInteger(ctx, "amount");
-                        target.getPersistentData().putInt("primegodling:nexus_cores_eaten", amount);
+                        CompoundTag tag = RaceAPI.getRaceFrom(target)
+                                .getRace().map(ManasRaceInstance::getOrCreateTag).orElse(null);
+                        if (tag != null) tag.putInt("nexus_cores_eaten", amount);
                         ctx.getSource().sendSuccess(() -> Component.literal("§aSet nexus cores eaten to " + amount + " for " + target.getName().getString()), true);
                         return 1;
                     })
@@ -66,9 +71,13 @@ public class DivineNexusCommand {
                     .executes(ctx -> {
                         ServerPlayer target = EntityArgument.getPlayer(ctx, "entity");
                         int amount = IntegerArgumentType.getInteger(ctx, "amount");
-                        int current = target.getPersistentData().getInt("primegodling:nexus_cores_eaten");
-                        target.getPersistentData().putInt("primegodling:nexus_cores_eaten", current + amount);
-                        ctx.getSource().sendSuccess(() -> Component.literal("§aAdded " + amount + " nexus cores to " + target.getName().getString() + " (now " + (current + amount) + ")"), true);
+                        CompoundTag tag = RaceAPI.getRaceFrom(target)
+                                .getRace().map(ManasRaceInstance::getOrCreateTag).orElse(null);
+                        if (tag != null) {
+                            int current = tag.getInt("nexus_cores_eaten");
+                            tag.putInt("nexus_cores_eaten", current + amount);
+                            ctx.getSource().sendSuccess(() -> Component.literal("§aAdded " + amount + " nexus cores to " + target.getName().getString() + " (now " + (current + amount) + ")"), true);
+                        }
                         return 1;
                     })
                 )

@@ -16,11 +16,22 @@ public class PrimeGodlingNetwork {
                 SyncAwakenedPayload.STREAM_CODEC,
                 PrimeGodlingNetwork::handleSyncAwakened
         );
+        registrar.playToClient(
+                SyncNexusCoresPayload.TYPE,
+                SyncNexusCoresPayload.STREAM_CODEC,
+                PrimeGodlingNetwork::handleSyncNexusCores
+        );
     }
 
     private static void handleSyncAwakened(SyncAwakenedPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             ClientAwakenedCache.set(payload.playerUuid(), payload.awakened());
+        });
+    }
+
+    private static void handleSyncNexusCores(SyncNexusCoresPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            ClientNexusCoresCache.set(payload.playerUuid(), payload.eaten(), payload.spent());
         });
     }
 }

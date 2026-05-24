@@ -1,5 +1,6 @@
 package com.primegodling.primegodling.client.render.halo;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
@@ -9,7 +10,11 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import com.primegodling.primegodling.PrimeGodling;
+import io.github.manasmods.manascore.race.api.ManasRaceInstance;
+import io.github.manasmods.manascore.race.api.RaceAPI;
+import io.github.manasmods.manascore.race.api.Races;
 import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.GameRenderer;
@@ -24,8 +29,15 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Optional;
 
 public class HaloMeshRenderer {
+
+    private static final ResourceLocation PSG_RACE_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "primordial_supreme_god");
+    private static final float GLOW_SCALE = 0.63F;
+    private static final float MAIN_SCALE = 0.6F;
+    private static final int GLOW_ALPHA = 35;
+    private static final int HALO_ALPHA = 100;
 
     private static boolean registered = false;
     private static MeshFileData meshData;
@@ -75,6 +87,13 @@ public class HaloMeshRenderer {
         }
     }
 
+    private static boolean isPrimordialSupremeGod(AbstractClientPlayer player) {
+        Races races = RaceAPI.getRaceFrom(player);
+        if (races == null) return false;
+        Optional<ManasRaceInstance> opt = races.getRace();
+        return opt.isPresent() && opt.get().getRaceId().equals(PSG_RACE_ID);
+    }
+
     private static void onRenderLevelStage(RenderLevelStageEvent event) {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_ENTITIES) return;
 
@@ -88,51 +107,79 @@ public class HaloMeshRenderer {
 
         Camera camera = event.getCamera();
         Vec3 camPos = camera.getPosition();
+        DeltaTracker delta = event.getPartialTick();
+        float partialTick = delta.getGameTimeDeltaPartialTick(true);
 
         for (Entity entity : mc.level.players()) {
             if (!(entity instanceof AbstractClientPlayer player)) continue;
             if (player.isSpectator()) continue;
             if (player.isInvisible()) continue;
+            if (!isPrimordialSupremeGod(player)) continue;
 
-            Vec3 playerPos = player.position();
-
-            PoseStack poseStack = event.getPoseStack();
-            poseStack.pushPose();
-            poseStack.translate(playerPos.x - camPos.x, playerPos.y - camPos.y + 2.3, playerPos.z - camPos.z);
-            poseStack.scale(0.6F, 0.6F, 0.6F);
-            poseStack.mulPose(Axis.YP.rotationDegrees(-player.tickCount * 2.0F));
-
-            var pose = poseStack.last();
-
-            float[] pos = meshData.positions;
-            float[] norm = meshData.normals;
-            int[] idx = meshData.indices;
+            Vec3 smoothPos = player.getPosition(partialTick);
+            float rotAngle = -(player.tickCount + partialTick) * 2.0F;
 
             RenderSystem.setShader(() -> GameRenderer.getPositionColorShader());
-            RenderSystem.enableDepthTest();
-            RenderSystem.depthMask(true);
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
 
-            var mesh = Tesselator.getInstance().begin(
-                    VertexFormat.Mode.TRIANGLES,
-                    DefaultVertexFormat.POSITION_COLOR
-            );
+            // ── Pass 1: glow / bloom ─────────────────────────────────────
+            {
+                PoseStack poseStack = event.getPoseStack();
+                poseStack.pushPose();
+                poseStack.translate(smoothPos.x - camPos.x, smoothPos.y - camPos.y + 2.3, smoothPos.z - camPos.z);
+                poseStack.scale(GLOW_SCALE, GLOW_SCALE, GLOW_SCALE);
+                poseStack.mulPose(Axis.YP.rotationDegrees(rotAngle));
 
-            for (int i = 0; i < idx.length; i += 3) {
-                addPosColor(mesh, pose, pos, norm, idx[i]);
-                addPosColor(mesh, pose, pos, norm, idx[i + 1]);
-                addPosColor(mesh, pose, pos, norm, idx[i + 2]);
+                RenderSystem.enableDepthTest();
+                RenderSystem.depthMask(true);
+                RenderSystem.enableBlend();
+                RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+
+                renderMesh(poseStack.last(), meshData, GLOW_ALPHA);
+
+                poseStack.popPose();
             }
 
-            BufferUploader.drawWithShader(mesh.buildOrThrow());
+            // ── Pass 2: main halo ────────────────────────────────────────
+            {
+                PoseStack poseStack = event.getPoseStack();
+                poseStack.pushPose();
+                poseStack.translate(smoothPos.x - camPos.x, smoothPos.y - camPos.y + 2.3, smoothPos.z - camPos.z);
+                poseStack.scale(MAIN_SCALE, MAIN_SCALE, MAIN_SCALE);
+                poseStack.mulPose(Axis.YP.rotationDegrees(rotAngle));
 
-            poseStack.popPose();
+                RenderSystem.enableDepthTest();
+                RenderSystem.depthMask(true);
+                RenderSystem.enableBlend();
+                RenderSystem.defaultBlendFunc();
+
+                renderMesh(poseStack.last(), meshData, HALO_ALPHA);
+
+                poseStack.popPose();
+            }
         }
     }
 
+    private static void renderMesh(PoseStack.Pose pose, MeshFileData mesh, int alpha) {
+        float[] pos = mesh.positions;
+        float[] norm = mesh.normals;
+        int[] idx = mesh.indices;
+
+        var buffer = Tesselator.getInstance().begin(
+                VertexFormat.Mode.TRIANGLES,
+                DefaultVertexFormat.POSITION_COLOR
+        );
+
+        for (int i = 0; i < idx.length; i += 3) {
+            addPosColor(buffer, pose, pos, norm, idx[i], alpha);
+            addPosColor(buffer, pose, pos, norm, idx[i + 1], alpha);
+            addPosColor(buffer, pose, pos, norm, idx[i + 2], alpha);
+        }
+
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
+    }
+
     private static void addPosColor(BufferBuilder buffer, PoseStack.Pose pose,
-                                    float[] pos, float[] norm, int vi) {
+                                    float[] pos, float[] norm, int vi, int alpha) {
         float x = pos[vi * 3];
         float y = pos[vi * 3 + 1];
         float z = pos[vi * 3 + 2];
@@ -141,7 +188,7 @@ public class HaloMeshRenderer {
         int r2 = Math.min(255, (int)(255 * brightness));
         int g2 = Math.min(255, (int)(200 * brightness));
         int b2 = Math.min(255, (int)(80 * brightness));
-        buffer.addVertex(pose, x, y, z).setColor(r2, g2, b2, 255);
+        buffer.addVertex(pose, x, y, z).setColor(r2, g2, b2, alpha);
     }
 
     private record MeshFileData(float[] positions, float[] normals, int[] indices) {}

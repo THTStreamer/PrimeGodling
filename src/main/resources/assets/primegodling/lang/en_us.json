@@ -49,11 +49,11 @@
   "primegodling.skill.divine_devour.description": "Unique Skill. Press the skill key while looking at a mob to attempt to steal one of its skills. 10% chance per use. Cooldown: 10 ticks (3 when mastered).",
 
   "awakening.primegodling.divine_nexus.name": "Divine Nexus",
-  "awakening.primegodling.divine_nexus.desc": "The third path alongside True Demon Lord and True Hero. Requires New God, 1M EP, and 5,000 Nexus Cores.",
+  "awakening.primegodling.divine_nexus.desc": "The third path alongside True Demon Lord and True Hero. Requires New God, 1M EP, and 1,000 Nexus Cores.",
 
   "item.primegodling.nexus_core": "Nexus Core",
   "item.primegodling.nexus_core.desc": "A crystallised fragment of raw creation energy. Use to unlock the Divine Nexus awakening.",
-  "item.primegodling.nexus_core.tooltip": "New God only. Consume 5,000 to open the Divine Nexus path.",
+  "item.primegodling.nexus_core.tooltip": "New God only. Consume 1,000 to open the Divine Nexus path.",
 
   "advancements.primegodling.root.title": "Prime Godling",
   "advancements.primegodling.root.description": "The path of the primordial gods begins",

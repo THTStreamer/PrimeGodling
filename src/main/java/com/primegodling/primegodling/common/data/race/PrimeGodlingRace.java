@@ -4,6 +4,7 @@ import com.primegodling.primegodling.PrimeGodling;
 import com.primegodling.primegodling.common.data.RaceRegistry;
 import com.primegodling.primegodling.common.data.ResistanceHelper;
 import com.primegodling.primegodling.common.integration.FTBIntegration;
+import com.primegodling.primegodling.network.SyncNexusCoresPayload;
 import io.github.manasmods.manascore.race.api.ManasRace;
 import io.github.manasmods.manascore.race.api.ManasRaceInstance;
 import io.github.manasmods.manascore.skill.api.ManasSkill;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
+import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -223,6 +225,27 @@ public class PrimeGodlingRace extends DefaultRace {
     @Override
     public Alignment getAlignment() {
         return Alignment.HOLY;
+    }
+
+    @Override
+    public void onRaceEvolution(ManasRaceInstance oldInstance, LivingEntity entity, ManasRaceInstance newInstance) {
+        if (entity instanceof ServerPlayer player) {
+            ManasRace newRace = newInstance.getRace();
+            if (newRace instanceof PrimeGodlingRace pgr) {
+                long newEp = pgr.getEpThreshold();
+                for (int i = 0; i < RaceRegistry.EP_THRESHOLDS.length; i++) {
+                    if (RaceRegistry.EP_THRESHOLDS[i] == newEp) {
+                        var tag = oldInstance.getOrCreateTag();
+                        int spent = tag.getInt("nexus_cores_spent");
+                        spent += RaceRegistry.CORES_REQUIRED[i];
+                        tag.putInt("nexus_cores_spent", spent);
+                        int eaten = tag.getInt("nexus_cores_eaten");
+                        PacketDistributor.sendToPlayer(player, new SyncNexusCoresPayload(player.getUUID(), eaten, spent));
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     @Override

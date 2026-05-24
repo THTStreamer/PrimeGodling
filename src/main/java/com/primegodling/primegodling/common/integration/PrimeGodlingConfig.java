@@ -23,7 +23,6 @@ public class PrimeGodlingConfig {
             .toList();
 
     public static void init(IEventBus modBus) {
-        applyInjection();
         modBus.addListener(PrimeGodlingConfig::onConfigLoad);
     }
 
@@ -31,7 +30,7 @@ public class PrimeGodlingConfig {
         applyInjection();
     }
 
-    private static void applyInjection() {
+    static void applyInjection() {
         try {
             ReincarnationConfig rc = ConfigRegistry.getConfig(ReincarnationConfig.class);
             if (rc == null) return;

@@ -5,6 +5,7 @@ import com.primegodling.primegodling.common.config.SkillConfig;
 import com.primegodling.primegodling.common.data.RaceRegistry;
 import com.primegodling.primegodling.common.data.SkillRegistry;
 import com.primegodling.primegodling.common.integration.FTBIntegration;
+import io.github.manasmods.manascore.race.api.ManasRaceInstance;
 import io.github.manasmods.manascore.race.api.RaceAPI;
 import io.github.manasmods.manascore.skill.api.SkillAPI;
 import io.github.manasmods.manascore.skill.api.Skills;
@@ -14,6 +15,7 @@ import io.github.manasmods.tensura.storage.ep.IExistence;
 import io.github.manasmods.tensura.util.EnergyHelper;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -27,7 +29,7 @@ public class NexusAwakening {
 
     private static final int RITUAL_TICKS = 200;
     private static final int EP_REQUIRED = 1_000_000;
-    private static final int CORES_REQUIRED = 5_000;
+    private static final int CORES_REQUIRED = 1_000;
 
     public static String startRitual(ServerPlayer player) {
         int nexusEpCost = SkillConfig.COMMON.nexusCoreEpCost.get();
@@ -55,7 +57,11 @@ public class NexusAwakening {
             return "§cYou must obtain a name before attempting the awakening.";
         }
 
-        int eaten = player.getPersistentData().getInt("primegodling:nexus_cores_eaten");
+        CompoundTag nexusTag = RaceAPI.getRaceFrom(player)
+                .getRace()
+                .map(ManasRaceInstance::getOrCreateTag)
+                .orElse(null);
+        int eaten = nexusTag != null ? nexusTag.getInt("nexus_cores_eaten") : 0;
         if (eaten < CORES_REQUIRED) {
             return "§cYou have consumed " + eaten + "/" + CORES_REQUIRED + " Nexus Cores.";
         }
@@ -87,7 +93,7 @@ public class NexusAwakening {
             return "§cYou need at least " + nexusEpCost + " magicule to fuel the awakening. You have " + (int) currentMaxMagicule + ".";
         }
 
-        player.getPersistentData().remove("primegodling:nexus_cores_eaten");
+        if (nexusTag != null) nexusTag.remove("nexus_cores_eaten");
         player.getPersistentData().putInt("primegodling:nexus_ritual", RITUAL_TICKS);
         player.getPersistentData().putDouble("primegodling:ritual_max_magicule", currentMaxMagicule);
         player.getPersistentData().putDouble("primegodling:ritual_max_aura", EnergyHelper.getBaseMaxAura(player));
