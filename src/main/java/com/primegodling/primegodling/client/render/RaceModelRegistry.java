@@ -1,5 +1,7 @@
 package com.primegodling.primegodling.client.render;
 
+import com.primegodling.primegodling.common.ModEntities;
+import io.github.manasmods.tensura.client.entity.beam.BeamProjectileRenderer;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
@@ -19,6 +21,6 @@ public class RaceModelRegistry {
     }
 
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        // Add entity renderer registrations when entity types are defined.
+        event.registerEntityRenderer(ModEntities.CREATION_BEAM.get(), BeamProjectileRenderer::new);
     }
 }

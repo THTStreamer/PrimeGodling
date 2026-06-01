@@ -65,14 +65,14 @@ public class RaceRegistry {
             EP_STAGE_4, EP_STAGE_5, EP_STAGE_6
     };
 
-    // Nexus Cores required per evolution (10 base, x4 each)
+    // Nexus Cores required per evolution (1/10th of original)
     public static final int CORES_STAGE_0 = 0;
-    public static final int CORES_STAGE_1 = 10;
-    public static final int CORES_STAGE_2 = 40;
-    public static final int CORES_STAGE_3 = 160;
-    public static final int CORES_STAGE_4 = 640;
-    public static final int CORES_STAGE_5 = 2_560;
-    public static final int CORES_STAGE_6 = 10_240;
+    public static final int CORES_STAGE_1 = 1;
+    public static final int CORES_STAGE_2 = 4;
+    public static final int CORES_STAGE_3 = 16;
+    public static final int CORES_STAGE_4 = 64;
+    public static final int CORES_STAGE_5 = 256;
+    public static final int CORES_STAGE_6 = 1_024;
     public static final int[] CORES_REQUIRED = {
             CORES_STAGE_0, CORES_STAGE_1, CORES_STAGE_2, CORES_STAGE_3,
             CORES_STAGE_4, CORES_STAGE_5, CORES_STAGE_6

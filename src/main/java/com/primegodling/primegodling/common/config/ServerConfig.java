@@ -30,7 +30,7 @@ public class ServerConfig {
             builder.push("general").comment("General mod settings");
             craftingEnabled = builder
                     .comment("Enable the Nexus Core crafting recipe (echo shards + diamonds + nether star)")
-                    .define("crafting_enabled", true);
+                    .define("crafting_enabled", false);
             builder.pop();
         }
     }

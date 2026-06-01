@@ -1,6 +1,7 @@
 package com.primegodling.primegodling;
 
 import com.primegodling.primegodling.client.ClientProxy;
+import com.primegodling.primegodling.common.ModEntities;
 import com.primegodling.primegodling.common.ModItems;
 import com.primegodling.primegodling.common.awakening.NexusAwakening;
 import com.primegodling.primegodling.common.config.NexusDropsConfig;
@@ -12,6 +13,7 @@ import com.primegodling.primegodling.common.config.SkillConfig;
 import com.primegodling.primegodling.common.data.ModRaces;
 import com.primegodling.primegodling.common.data.ModSkills;
 import com.primegodling.primegodling.common.data.ResistanceHelper;
+import com.primegodling.primegodling.common.data.skill.CreationAuthoritySkill;
 import com.primegodling.primegodling.common.integration.TensuraIntegration;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.EventResult;
@@ -28,6 +30,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -37,7 +40,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.slf4j.Logger;
 
 import java.util.HashMap;
@@ -68,9 +71,12 @@ public class PrimeGodling {
         bus.addListener(RaceConfig::onLoad);
 
         ModItems.ITEMS.register(bus);
+        ModEntities.ENTITY_TYPES.register(bus);
         ModRaces.init();
         ModSkills.init();
         ResistanceHelper.init();
+        bus.addListener(PrimeGodling::onCreativeTabContents);
+        NeoForge.EVENT_BUS.addListener(PrimeGodling::onAddReloadListeners);
 
         if (FMLLoader.getDist() == Dist.CLIENT) {
             ClientProxy.init(bus);
@@ -82,6 +88,7 @@ public class PrimeGodling {
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onLivingDeath);
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onLivingDrops);
+        NeoForge.EVENT_BUS.addListener(PrimeGodling::onServerTick);
         NeoForge.EVENT_BUS.addListener(DivineNexusCommand::onRegisterCommands);
 
         RaceEvents.ACTIVATE_ABILITY.register((raceInstance, entity) -> {
@@ -183,6 +190,52 @@ public class PrimeGodling {
         }
 
         fd.wasFlying = isFlying;
+    }
+
+    private static void onServerTick(ServerTickEvent.Post event) {
+        CreationAuthoritySkill.tickCasts(event.getServer());
+    }
+
+    private static void onCreativeTabContents(net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            event.accept(ModItems.NEXUS_CORE.get());
+        }
+    }
+
+    private static void onAddReloadListeners(net.neoforged.neoforge.event.AddReloadListenerEvent event) {
+        var recipeManager = event.getServerResources().getRecipeManager();
+        event.addListener((prepBarrier, resourceManager, prepProfiler, reloadProfiler, backgroundExecutor, gameExecutor) -> {
+            return prepBarrier.wait(null).thenRunAsync(() -> {
+                if (!ServerConfig.COMMON.craftingEnabled.get()) {
+                    removeRecipe(recipeManager);
+                }
+            }, gameExecutor);
+        });
+    }
+
+    private static void removeRecipe(net.minecraft.world.item.crafting.RecipeManager manager) {
+        try {
+            var recipeId = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("primegodling", "nexus_core");
+            java.lang.reflect.Field byNameField = net.minecraft.world.item.crafting.RecipeManager.class.getDeclaredField("byName");
+            byNameField.setAccessible(true);
+            @SuppressWarnings("unchecked")
+            java.util.Map<net.minecraft.resources.ResourceLocation, java.util.Optional<?>> byName =
+                (java.util.Map<net.minecraft.resources.ResourceLocation, java.util.Optional<?>>) byNameField.get(manager);
+            byName.remove(recipeId);
+
+            java.lang.reflect.Field recipesField = net.minecraft.world.item.crafting.RecipeManager.class.getDeclaredField("recipes");
+            recipesField.setAccessible(true);
+            Object recipes = recipesField.get(manager);
+            if (recipes instanceof java.util.Map<?, ?> map) {
+                for (var entry : map.entrySet()) {
+                    if (entry.getValue() instanceof java.util.Map<?, ?> typeMap) {
+                        typeMap.remove(recipeId);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("Failed to remove nexus core recipe", e);
+        }
     }
 
     private static final Random RANDOM = new Random();

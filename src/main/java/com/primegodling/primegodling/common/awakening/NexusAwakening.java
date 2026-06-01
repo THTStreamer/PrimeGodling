@@ -29,7 +29,7 @@ public class NexusAwakening {
 
     private static final int RITUAL_TICKS = 200;
     private static final int EP_REQUIRED = 1_000_000;
-    private static final int CORES_REQUIRED = 1_000;
+    private static final int CORES_REQUIRED = 1000;
 
     public static String startRitual(ServerPlayer player) {
         int nexusEpCost = SkillConfig.COMMON.nexusCoreEpCost.get();
