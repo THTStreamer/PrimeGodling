@@ -11,12 +11,7 @@
   "parent": "primegodling:celestial_godling",
   "criteria": {
     "evolve_ecliptic_godling": {
-      "trigger": "tensura:race_awakened",
-      "conditions": {
-        "player_data": {
-          "tensura_data": { "race": "primegodling:ecliptic_godling" }
-        }
-      }
+      "trigger": "minecraft:impossible"
     }
   },
   "requirements": [["evolve_ecliptic_godling"]]

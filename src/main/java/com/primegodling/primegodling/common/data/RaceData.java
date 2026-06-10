@@ -1,6 +1,7 @@
 package com.primegodling.primegodling.common.data;
 
 import com.primegodling.primegodling.common.data.race.PrimeGodlingRace;
+import com.primegodling.primegodling.common.config.RaceConfig;
 import com.primegodling.primegodling.common.data.ModSkills;
 import io.github.manasmods.manascore.race.api.ManasRace.Difficulty;
 import io.github.manasmods.manascore.skill.api.ManasSkill;
@@ -18,36 +19,37 @@ public final class RaceData {
     private RaceData() {}
 
     public static PrimeGodlingRace createStage(int index) {
+        long epThreshold = RaceConfig.getEvolutionThreshold(index);
         PrimeGodlingRace race = switch (index) {
-            case 0 -> new PrimeGodlingRace(Difficulty.HARD, 0,
+            case 0 -> new PrimeGodlingRace(Difficulty.HARD, epThreshold,
                     100, 1_000, 50, 500,
                     List.of());
-            case 1 -> new PrimeGodlingRace(Difficulty.INTERMEDIATE, RaceRegistry.EP_STAGE_1,
+            case 1 -> new PrimeGodlingRace(Difficulty.INTERMEDIATE, epThreshold,
                     5_000, 20_000, 2_500, 10_000,
                     List.of());
-            case 2 -> new PrimeGodlingRace(Difficulty.HARD, RaceRegistry.EP_STAGE_2,
+            case 2 -> new PrimeGodlingRace(Difficulty.HARD, epThreshold,
                     20_000, 80_000, 10_000, 40_000,
                     List.<Supplier<ManasSkill>>of(
                             () -> ModSkills.PRIMORDIAL_BLOOM.get(),
                             () -> ModSkills.COSMIC_AWARENESS.get()
                     ));
-            case 3 -> new PrimeGodlingRace(Difficulty.HARD, RaceRegistry.EP_STAGE_3,
+            case 3 -> new PrimeGodlingRace(Difficulty.HARD, epThreshold,
                     100_000, 500_000, 50_000, 250_000,
                     List.<Supplier<ManasSkill>>of(
                             () -> ModSkills.STELLAR_ASCENSION.get(),
                             () -> ModSkills.ECLIPTIC_MASTERY.get()
                     ));
-            case 4 -> new PrimeGodlingRace(Difficulty.EXTREME, RaceRegistry.EP_STAGE_4,
+            case 4 -> new PrimeGodlingRace(Difficulty.EXTREME, epThreshold,
                     500_000, 2_000_000, 250_000, 1_000_000,
                     List.<Supplier<ManasSkill>>of(
                             () -> ModSkills.LUMINARCH_BLESSING.get()
                     ));
-            case 5 -> new PrimeGodlingRace(Difficulty.EXTREME, RaceRegistry.EP_STAGE_5,
+            case 5 -> new PrimeGodlingRace(Difficulty.EXTREME, epThreshold,
                     2_000_000, 8_000_000, 1_000_000, 4_000_000,
                     List.<Supplier<ManasSkill>>of(
                             () -> ModSkills.PRIMORDIAL_FORTITUDE.get()
                     ));
-            case 6 -> new PrimeGodlingRace(Difficulty.EXTREME, RaceRegistry.EP_STAGE_6,
+            case 6 -> new PrimeGodlingRace(Difficulty.EXTREME, epThreshold,
                     8_000_000, 20_000_000, 4_000_000, 10_000_000,
                     List.<Supplier<ManasSkill>>of(
                             () -> ModSkills.DIVINE_DEVOUR.get()

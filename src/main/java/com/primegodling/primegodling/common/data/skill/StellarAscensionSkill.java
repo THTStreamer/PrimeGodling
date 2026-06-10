@@ -7,6 +7,7 @@ import io.github.manasmods.tensura.util.EnergyHelper;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -81,6 +82,15 @@ public class StellarAscensionSkill extends Skill {
         if (!entity.level().isClientSide()) {
             instance.addHeldAttributeModifiers(entity, 0);
             instance.setToggled(true);
+        }
+    }
+
+    @Override
+    public void onRespawn(ManasSkillInstance instance, ServerPlayer player, boolean wasDead) {
+        if (!wasDead) return;
+        if (player.level().isClientSide()) return;
+        if (instance.isToggled()) {
+            instance.addHeldAttributeModifiers(player, 0);
         }
     }
 

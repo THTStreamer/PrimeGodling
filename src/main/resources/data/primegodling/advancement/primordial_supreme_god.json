@@ -11,12 +11,7 @@
   "parent": "primegodling:new_god",
   "criteria": {
     "evolve_primordial_supreme_god": {
-      "trigger": "tensura:race_awakened",
-      "conditions": {
-        "player_data": {
-          "tensura_data": { "race": "primegodling:primordial_supreme_god" }
-        }
-      }
+      "trigger": "minecraft:impossible"
     }
   },
   "requirements": [["evolve_primordial_supreme_god"]]

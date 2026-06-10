@@ -11,12 +11,7 @@
   "parent": "primegodling:demi_godling",
   "criteria": {
     "evolve_prime_godling": {
-      "trigger": "tensura:race_awakened",
-      "conditions": {
-        "player_data": {
-          "tensura_data": { "race": "primegodling:prime_godling" }
-        }
-      }
+      "trigger": "minecraft:impossible"
     }
   },
   "requirements": [["evolve_prime_godling"]]

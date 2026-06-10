@@ -11,10 +11,7 @@
   "parent": "primegodling:root",
   "criteria": {
     "become_half_godling": {
-      "trigger": "tensura:reincarnated",
-      "conditions": {
-        "race": "primegodling:half_godling"
-      }
+      "trigger": "minecraft:impossible"
     }
   },
   "requirements": [["become_half_godling"]]

@@ -19,6 +19,10 @@ import com.mojang.logging.LogUtils;
 import dev.architectury.event.EventResult;
 import io.github.manasmods.manascore.race.api.ManasRaceInstance;
 import io.github.manasmods.manascore.race.api.RaceAPI;
+import com.primegodling.primegodling.network.SyncAwakenedPayload;
+import com.primegodling.primegodling.network.SyncKillCountersPayload;
+import com.primegodling.primegodling.network.SyncNexusCoresPayload;
+import net.neoforged.neoforge.network.PacketDistributor;
 import io.github.manasmods.manascore.race.api.RaceEvents;
 import io.github.manasmods.manascore.race.api.Races;
 import io.github.manasmods.tensura.data.TensuraRaceTags;
@@ -39,6 +43,7 @@ import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.slf4j.Logger;
@@ -89,6 +94,7 @@ public class PrimeGodling {
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onLivingDrops);
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onServerTick);
+        NeoForge.EVENT_BUS.addListener(PrimeGodling::onPlayerLoggedIn);
         NeoForge.EVENT_BUS.addListener(DivineNexusCommand::onRegisterCommands);
 
         RaceEvents.ACTIVATE_ABILITY.register((raceInstance, entity) -> {
@@ -104,6 +110,28 @@ public class PrimeGodling {
             }
             return EventResult.pass();
         });
+    }
+
+    private static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (player.level().isClientSide()) return;
+
+        boolean awakened = player.getPersistentData().getBoolean("primegodling:awakened_nexus");
+        PacketDistributor.sendToPlayer(player, new SyncAwakenedPayload(player.getUUID(), awakened));
+
+        var nexusTag = RaceAPI.getRaceFrom(player)
+                .getRace()
+                .map(race -> race.getOrCreateTag())
+                .orElse(null);
+        int eaten = nexusTag != null ? nexusTag.getInt("nexus_cores_eaten") : 0;
+        int spent = nexusTag != null ? nexusTag.getInt("nexus_cores_spent") : 0;
+        PacketDistributor.sendToPlayer(player, new SyncNexusCoresPayload(player.getUUID(), eaten, spent));
+
+        int demonLordKills = player.getPersistentData().getInt("primegodling:demon_lord_kills");
+        boolean rimuruKilled = player.getPersistentData().getBoolean("primegodling:rimuru_killed");
+        boolean hinataKilled = player.getPersistentData().getBoolean("primegodling:hinata_killed");
+        int hostileMobKills = player.getPersistentData().getInt("primegodling:hostile_mob_kills");
+        PacketDistributor.sendToPlayer(player, new SyncKillCountersPayload(player.getUUID(), demonLordKills, rimuruKilled, hinataKilled, hostileMobKills));
     }
 
     private static void onPlayerTick(PlayerTickEvent.Post event) {
@@ -206,8 +234,12 @@ public class PrimeGodling {
         var recipeManager = event.getServerResources().getRecipeManager();
         event.addListener((prepBarrier, resourceManager, prepProfiler, reloadProfiler, backgroundExecutor, gameExecutor) -> {
             return prepBarrier.wait(null).thenRunAsync(() -> {
-                if (!ServerConfig.COMMON.craftingEnabled.get()) {
-                    removeRecipe(recipeManager);
+                try {
+                    if (!ServerConfig.COMMON.craftingEnabled.get()) {
+                        removeRecipe(recipeManager);
+                    }
+                } catch (IllegalStateException e) {
+                    PrimeGodling.LOGGER.warn("[{}] Config not yet loaded, skipping recipe removal", PrimeGodling.MOD_ID);
                 }
             }, gameExecutor);
         });
@@ -303,6 +335,7 @@ public class PrimeGodling {
     private static void onLivingDeath(LivingDeathEvent event) {
         if (event.getSource().getEntity() instanceof ServerPlayer killer) {
             LivingEntity killed = event.getEntity();
+            boolean changed = false;
 
             if (killed instanceof ServerPlayer targetPlayer) {
                 IExistence targetExistence = TensuraStorages.getExistenceFrom(targetPlayer);
@@ -311,6 +344,7 @@ public class PrimeGodling {
                     killer.getPersistentData().putInt("primegodling:demon_lord_kills", count);
                     killer.sendSystemMessage(net.minecraft.network.chat.Component.literal(
                         "§dYou killed an Awakened Demon Lord! §7(" + count + "/3)"));
+                    changed = true;
                 }
             }
 
@@ -319,17 +353,28 @@ public class PrimeGodling {
             if (killedId.equals(ResourceLocation.parse("tensura:hinata_sakaguchi"))) {
                 killer.getPersistentData().putBoolean("primegodling:hinata_killed", true);
                 killer.sendSystemMessage(net.minecraft.network.chat.Component.literal("§dYou killed Hinata Sakaguchi!"));
+                changed = true;
             }
             if (killedId.equals(ResourceLocation.parse("tensura:rimuru"))
                     || killedId.equals(ResourceLocation.parse("tensura:rimuru_tempest"))
                     || killedId.equals(ResourceLocation.parse("tensura:true_dragon_rimuru"))) {
                 killer.getPersistentData().putBoolean("primegodling:rimuru_killed", true);
                 killer.sendSystemMessage(net.minecraft.network.chat.Component.literal("§dYou killed Rimuru Tempest!"));
+                changed = true;
             }
 
             if (killed instanceof Monster) {
                 int count = killer.getPersistentData().getInt("primegodling:hostile_mob_kills") + 1;
                 killer.getPersistentData().putInt("primegodling:hostile_mob_kills", count);
+                changed = true;
+            }
+
+            if (changed) {
+                int dl = killer.getPersistentData().getInt("primegodling:demon_lord_kills");
+                boolean rim = killer.getPersistentData().getBoolean("primegodling:rimuru_killed");
+                boolean hin = killer.getPersistentData().getBoolean("primegodling:hinata_killed");
+                int hm = killer.getPersistentData().getInt("primegodling:hostile_mob_kills");
+                PacketDistributor.sendToPlayer(killer, new SyncKillCountersPayload(killer.getUUID(), dl, rim, hin, hm));
             }
         }
     }

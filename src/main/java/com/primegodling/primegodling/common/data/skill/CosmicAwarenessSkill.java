@@ -1,5 +1,6 @@
 package com.primegodling.primegodling.common.data.skill;
 
+import com.primegodling.primegodling.common.config.SkillConfig;
 import io.github.manasmods.manascore.network.api.util.Changeable;
 import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
 import io.github.manasmods.tensura.ability.skill.Skill;
@@ -11,7 +12,9 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class CosmicAwarenessSkill extends Skill {
 
-    private static final double PRESENCE_RANGE = 200.0;
+    private double getPresenceRange() {
+        return SkillConfig.COMMON.cosmicAwarenessRange.get();
+    }
 
     public CosmicAwarenessSkill() {
         super(SkillType.INTRINSIC);
@@ -36,7 +39,7 @@ public class CosmicAwarenessSkill extends Skill {
             return;
         }
         for (LivingEntity e : entity.level().getEntitiesOfClass(LivingEntity.class,
-                entity.getBoundingBox().inflate(PRESENCE_RANGE),
+                entity.getBoundingBox().inflate(getPresenceRange()),
                 e -> e.hasEffect(MobEffects.INVISIBILITY) && e.isAlive())) {
             e.addEffect(new MobEffectInstance(MobEffects.GLOWING, 30, 0, false, false, true));
         }
@@ -45,13 +48,13 @@ public class CosmicAwarenessSkill extends Skill {
     @Override
     public void onToggleOn(ManasSkillInstance instance, LivingEntity entity) {
         if (entity.level().isClientSide) return;
-        AttributeHelper.addPresenceSense(entity, PRESENCE_RANGE);
+        AttributeHelper.addPresenceSense(entity, getPresenceRange());
     }
 
     @Override
     public void onToggleOff(ManasSkillInstance instance, LivingEntity entity) {
         if (entity.level().isClientSide) return;
-        AttributeHelper.removePresenceSense(entity, PRESENCE_RANGE);
+        AttributeHelper.removePresenceSense(entity, getPresenceRange());
     }
 
     @Override

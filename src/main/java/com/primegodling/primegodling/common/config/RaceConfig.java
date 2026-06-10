@@ -35,7 +35,8 @@ public class RaceConfig {
         public final ModConfigSpec.IntValue stage2CelestialEssenceEp;
         public final ModConfigSpec.IntValue stage3EclipticWardenEp;
         public final ModConfigSpec.IntValue stage4LuminarchGodEp;
-        public final ModConfigSpec.IntValue stage5PrimordialSupremeGodEp;
+        public final ModConfigSpec.IntValue stage5NewGodEp;
+        public final ModConfigSpec.IntValue stage6PrimordialSupremeGodEp;
 
         public final ModConfigSpec.IntValue flightActivationCost;
         public final ModConfigSpec.IntValue flightMaintenanceCost;
@@ -67,7 +68,8 @@ public class RaceConfig {
             stage2CelestialEssenceEp = builder.defineInRange("stage1_demi_godling_ep", 50_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
             stage3EclipticWardenEp = builder.defineInRange("stage2_prime_godling_ep", 100_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
             stage4LuminarchGodEp = builder.defineInRange("stage3_celestial_godling_ep", 200_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
-            stage5PrimordialSupremeGodEp = builder.defineInRange("stage4_ecliptic_godling_ep", 400_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            stage5NewGodEp = builder.defineInRange("stage4_ecliptic_godling_ep", 400_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            stage6PrimordialSupremeGodEp = builder.defineInRange("stage5_new_god_ep", 800_000, Integer.MIN_VALUE, Integer.MAX_VALUE);
             builder.pop();
 
             builder.push("random_rewards").comment("Random resistance and skill grants at evolution milestones");
@@ -106,5 +108,17 @@ public class RaceConfig {
                     "Delete the file to regenerate with current defaults.",
                     PrimeGodling.MOD_ID, COMMON.configVersion.get(), CONFIG_VERSION);
         }
+    }
+
+    public static long getEvolutionThreshold(int stageIndex) {
+        return switch (stageIndex) {
+            case 0 -> 0;
+            case 1 -> COMMON.stage2CelestialEssenceEp.get();
+            case 2 -> COMMON.stage3EclipticWardenEp.get();
+            case 3 -> COMMON.stage4LuminarchGodEp.get();
+            case 4 -> COMMON.stage5NewGodEp.get();
+            case 5 -> COMMON.stage6PrimordialSupremeGodEp.get();
+            default -> 0;
+        };
     }
 }

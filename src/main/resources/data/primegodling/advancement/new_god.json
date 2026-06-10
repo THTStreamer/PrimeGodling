@@ -11,12 +11,7 @@
   "parent": "primegodling:ecliptic_godling",
   "criteria": {
     "evolve_new_god": {
-      "trigger": "tensura:race_awakened",
-      "conditions": {
-        "player_data": {
-          "tensura_data": { "race": "primegodling:new_god" }
-        }
-      }
+      "trigger": "minecraft:impossible"
     }
   },
   "requirements": [["evolve_new_god"]]

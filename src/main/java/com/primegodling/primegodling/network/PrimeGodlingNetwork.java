@@ -21,6 +21,11 @@ public class PrimeGodlingNetwork {
                 SyncNexusCoresPayload.STREAM_CODEC,
                 PrimeGodlingNetwork::handleSyncNexusCores
         );
+        registrar.playToClient(
+                SyncKillCountersPayload.TYPE,
+                SyncKillCountersPayload.STREAM_CODEC,
+                PrimeGodlingNetwork::handleSyncKillCounters
+        );
     }
 
     private static void handleSyncAwakened(SyncAwakenedPayload payload, IPayloadContext context) {
@@ -32,6 +37,12 @@ public class PrimeGodlingNetwork {
     private static void handleSyncNexusCores(SyncNexusCoresPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             ClientNexusCoresCache.set(payload.playerUuid(), payload.eaten(), payload.spent());
+        });
+    }
+
+    private static void handleSyncKillCounters(SyncKillCountersPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            ClientKillCountersCache.set(payload.playerUuid(), payload.demonLordKills(), payload.rimuruKilled(), payload.hinataKilled(), payload.hostileMobKills());
         });
     }
 }

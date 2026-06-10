@@ -29,7 +29,7 @@ public class PrimordialBloomSkill extends Skill {
         double maxMagicule = EnergyHelper.getMaxMagicule(entity);
         if (maxMagicule <= 0) return;
         int regenPercent = SkillConfig.COMMON.primordialBloomRegenRate.get();
-        double regenPerCall = (maxMagicule * regenPercent / 100.0) * 5.0;
+        double regenPerCall = maxMagicule * regenPercent / 100.0;
         EnergyHelper.gainMagicule(entity, regenPerCall, EnergyHelper.GainType.NORMAL);
 
         if (entity.tickCount % BLOOM_INTERVAL != 0) return;

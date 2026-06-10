@@ -19,6 +19,7 @@ import io.github.manasmods.tensura.storage.TensuraStorages;
 import io.github.manasmods.tensura.storage.ep.IExistence;
 import io.github.manasmods.tensura.util.EnergyHelper;
 import io.github.manasmods.tensura.util.EnergyHelper.GainType;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -259,6 +260,7 @@ public class PrimeGodlingRace extends DefaultRace {
         if (entity instanceof ServerPlayer player) {
             int stageIndex = stageIndex();
             FTBIntegration.onEvolve(player, stageIndex);
+            grantStageAdvancement(player, stageIndex);
 
             if (epThreshold == RaceRegistry.EP_STAGE_6) {
                 EnergyHelper.gainMagicule(entity, EnergyHelper.getMaxMagicule(entity), GainType.NORMAL);
@@ -267,14 +269,16 @@ public class PrimeGodlingRace extends DefaultRace {
             Random random = new Random();
 
             if (epThreshold == RaceRegistry.EP_STAGE_2 && ResistanceHelper.isInitialized()) {
+                String existingRes = player.getPersistentData().getString("primegodling:granted_resistances");
+                String existingSkills = player.getPersistentData().getString("primegodling:granted_skills");
                 int resCount = com.primegodling.primegodling.common.config.RaceConfig.COMMON.primeGodlingResistanceCount.get();
                 int skillCount = com.primegodling.primegodling.common.config.RaceConfig.COMMON.primeGodlingSkillCount.get();
-                if (resCount > 0) {
+                if (resCount > 0 && existingRes.isEmpty()) {
                     List<ResourceLocation> res = ResistanceHelper.getRandomResistances(resCount, random);
                     storeSkills(player, "primegodling:granted_resistances", res);
                     player.sendSystemMessage(Component.literal("§b✦ " + resCount + " random resistances granted!"));
                 }
-                if (skillCount > 0) {
+                if (skillCount > 0 && existingSkills.isEmpty()) {
                     List<ResourceLocation> skills = ResistanceHelper.getRandomNonResistanceSkills(skillCount, random);
                     storeSkills(player, "primegodling:granted_skills", skills);
                     player.sendSystemMessage(Component.literal("§b✦ " + skillCount + " random skills granted!"));
@@ -282,20 +286,24 @@ public class PrimeGodlingRace extends DefaultRace {
             }
 
             if (epThreshold == RaceRegistry.EP_STAGE_3 && ResistanceHelper.isInitialized()) {
-                String stored = player.getPersistentData().getString("primegodling:granted_resistances");
-                List<ResourceLocation> nullIds = new ArrayList<>();
-                for (String resStr : stored.split(",")) {
-                    resStr = resStr.trim();
-                    if (resStr.isEmpty()) continue;
-                    ResourceLocation nullId = ResistanceHelper.getNullificationFor(ResourceLocation.parse(resStr));
-                    if (nullId != null) nullIds.add(nullId);
+                String existingNulls = player.getPersistentData().getString("primegodling:granted_nullifications");
+                if (existingNulls.isEmpty()) {
+                    String stored = player.getPersistentData().getString("primegodling:granted_resistances");
+                    List<ResourceLocation> nullIds = new ArrayList<>();
+                    for (String resStr : stored.split(",")) {
+                        resStr = resStr.trim();
+                        if (resStr.isEmpty()) continue;
+                        ResourceLocation nullId = ResistanceHelper.getNullificationFor(ResourceLocation.parse(resStr));
+                        if (nullId != null) nullIds.add(nullId);
+                    }
+                    storeSkills(player, "primegodling:granted_nullifications", nullIds);
+                    player.getPersistentData().remove("primegodling:granted_resistances");
+                    player.sendSystemMessage(Component.literal("§d✦ Resistances evolved to nullifications!"));
                 }
-                storeSkills(player, "primegodling:granted_nullifications", nullIds);
-                player.getPersistentData().remove("primegodling:granted_resistances");
-                player.sendSystemMessage(Component.literal("§d✦ Resistances evolved to nullifications!"));
 
+                String existingStage3Skills = player.getPersistentData().getString("primegodling:granted_skills_stage3");
                 int skillCount = com.primegodling.primegodling.common.config.RaceConfig.COMMON.celestialGodlingSkillCount.get();
-                if (skillCount > 0) {
+                if (skillCount > 0 && existingStage3Skills.isEmpty()) {
                     List<ResourceLocation> chosen = ResistanceHelper.getRandomNonResistanceSkills(skillCount, random);
                     List<ResourceLocation> granted = new ArrayList<>();
                     for (ResourceLocation skillId : chosen) {
@@ -309,21 +317,27 @@ public class PrimeGodlingRace extends DefaultRace {
             }
 
             if (epThreshold == RaceRegistry.EP_STAGE_6 && ResistanceHelper.isInitialized()) {
-                List<ResourceLocation> allNulls = ResistanceHelper.getAllNullifications();
-                storeSkills(player, "primegodling:granted_nullifications_all", allNulls);
-                player.sendSystemMessage(Component.literal("§5✦ All nullifications granted!"));
+                String existingAllNulls = player.getPersistentData().getString("primegodling:granted_nullifications_all");
+                if (existingAllNulls.isEmpty()) {
+                    List<ResourceLocation> allNulls = ResistanceHelper.getAllNullifications();
+                    storeSkills(player, "primegodling:granted_nullifications_all", allNulls);
+                    player.sendSystemMessage(Component.literal("§5✦ All nullifications granted!"));
+                }
 
                 Skills skills = SkillAPI.getSkillsFrom(player);
-                if (skills != null) {
+                if (skills != null && skills.getSkill(com.primegodling.primegodling.common.data.SkillRegistry.CREATION_AUTHORITY).isEmpty()) {
                     skills.learnSkill(com.primegodling.primegodling.common.data.SkillRegistry.CREATION_AUTHORITY);
                     player.sendSystemMessage(Component.literal("§5✦ Ultimate Skill: Creation Authority acquired!"));
                 }
 
-                List<ResourceLocation> uniques = ResistanceHelper.getRandomUniqueSkills(1, random);
-                if (!uniques.isEmpty()) {
-                    String uniqueStr = uniques.get(0).toString();
-                    player.getPersistentData().putString("primegodling:granted_unique_skill", uniqueStr);
-                    player.sendSystemMessage(Component.literal("§5✦ A unique skill has been bestowed!"));
+                String existingUnique = player.getPersistentData().getString("primegodling:granted_unique_skill");
+                if (existingUnique.isEmpty()) {
+                    List<ResourceLocation> uniques = ResistanceHelper.getRandomUniqueSkills(1, random);
+                    if (!uniques.isEmpty()) {
+                        String uniqueStr = uniques.get(0).toString();
+                        player.getPersistentData().putString("primegodling:granted_unique_skill", uniqueStr);
+                        player.sendSystemMessage(Component.literal("§5✦ A unique skill has been bestowed!"));
+                    }
                 }
             }
         }
@@ -372,6 +386,25 @@ public class PrimeGodlingRace extends DefaultRace {
                 }
             }
             return Component.literal("§cRequires: Divine Nexus Awakening §7OR§c True Demon Lord §7OR§c True Hero");
+        }
+    }
+
+    private static final String[] STAGE_ADVANCEMENT_IDS = {
+        "half_godling", "demi_godling", "prime_godling", "celestial_godling",
+        "ecliptic_godling", "new_god", "primordial_supreme_god"
+    };
+
+    private static final String[] STAGE_ADVANCEMENT_CRITERIA = {
+        "become_half_godling", "evolve_demi_godling", "evolve_prime_godling", "evolve_celestial_godling",
+        "evolve_ecliptic_godling", "evolve_new_god", "evolve_primordial_supreme_god"
+    };
+
+    private static void grantStageAdvancement(ServerPlayer player, int stageIndex) {
+        if (stageIndex < 0 || stageIndex >= STAGE_ADVANCEMENT_IDS.length) return;
+        AdvancementHolder adv = player.getServer().getAdvancements()
+            .get(ResourceLocation.parse("primegodling:" + STAGE_ADVANCEMENT_IDS[stageIndex]));
+        if (adv != null) {
+            player.getAdvancements().award(adv, STAGE_ADVANCEMENT_CRITERIA[stageIndex]);
         }
     }
 }

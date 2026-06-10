@@ -93,6 +93,15 @@ public class NexusAwakening {
             return "§cYou need at least " + nexusEpCost + " magicule to fuel the awakening. You have " + (int) currentMaxMagicule + ".";
         }
 
+        int minSkills = SkillConfig.COMMON.divineNexusMinSkills.get();
+        Skills skillStorage = SkillAPI.getSkillsFrom(player);
+        if (skillStorage != null) {
+            int uniqueCount = skillStorage.getLearnedSkills().size();
+            if (uniqueCount < minSkills) {
+                return "§cYou need at least " + minSkills + " unique skills. You have " + uniqueCount + ".";
+            }
+        }
+
         if (nexusTag != null) nexusTag.remove("nexus_cores_eaten");
         player.getPersistentData().putInt("primegodling:nexus_ritual", RITUAL_TICKS);
         player.getPersistentData().putDouble("primegodling:ritual_max_magicule", currentMaxMagicule);

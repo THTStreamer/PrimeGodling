@@ -15,6 +15,7 @@ import com.primegodling.primegodling.common.entity.CreationBeamProjectile;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -78,6 +79,13 @@ public class CreationAuthoritySkill extends Skill {
         if (!entity.level().isClientSide()) {
             instance.addHeldAttributeModifiers(entity, 0);
         }
+    }
+
+    @Override
+    public void onRespawn(ManasSkillInstance instance, ServerPlayer player, boolean wasDead) {
+        if (!wasDead) return;
+        if (player.level().isClientSide()) return;
+        instance.addHeldAttributeModifiers(player, 0);
     }
 
     @Override

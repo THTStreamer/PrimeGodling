@@ -6,6 +6,7 @@ import io.github.manasmods.tensura.ability.skill.Skill;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -38,6 +39,13 @@ public class EclipticMasterySkill extends Skill {
         if (!entity.level().isClientSide()) {
             instance.addHeldAttributeModifiers(entity, 0);
         }
+    }
+
+    @Override
+    public void onRespawn(ManasSkillInstance instance, ServerPlayer player, boolean wasDead) {
+        if (!wasDead) return;
+        if (player.level().isClientSide()) return;
+        instance.addHeldAttributeModifiers(player, 0);
     }
 
     @Override

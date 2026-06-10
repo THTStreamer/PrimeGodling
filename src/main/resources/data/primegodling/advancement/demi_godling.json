@@ -11,12 +11,7 @@
   "parent": "primegodling:half_godling",
   "criteria": {
     "evolve_demi_godling": {
-      "trigger": "tensura:race_awakened",
-      "conditions": {
-        "player_data": {
-          "tensura_data": { "race": "primegodling:demi_godling" }
-        }
-      }
+      "trigger": "minecraft:impossible"
     }
   },
   "requirements": [["evolve_demi_godling"]]
