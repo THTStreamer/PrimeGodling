@@ -63,8 +63,11 @@ public class DivineDevourSkill extends Skill {
         if (storage != null) {
             for (ManasSkillInstance skillInst : storage.getLearnedSkills()) {
                 ManasSkill skill = skillInst.getSkill();
-                if (skill != null) {
-                    targetSkills.add(skill);
+                if (skill instanceof Skill tensuraSkill) {
+                    Skill.SkillType type = tensuraSkill.getType();
+                    if (type != Skill.SkillType.UNIQUE && type != Skill.SkillType.ULTIMATE) {
+                        targetSkills.add(skill);
+                    }
                 }
             }
         }

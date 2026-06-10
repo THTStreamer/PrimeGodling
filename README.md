@@ -113,7 +113,7 @@ To evolve, you need:
 
 | Skill | Type | How to Obtain | Description |
 |-------|------|---------------|-------------|
-| **Divine Devour** | UNIQUE | Random skill generation (any race) | Press the skill key while looking at a mob to attempt to steal one of its skills. 10% chance per use. Cooldown: 10 ticks (0.5s) / 5 ticks mastered (0.25s). |
+| **Divine Devour** | UNIQUE | Random skill generation (any race) | Press the skill key while looking at a mob to attempt to steal one of its Intrinsic, Common, or Extra skills. 10% chance per use. Cannot copy Unique or Ultimate skills. Cooldown: 10 ticks (0.5s) / 5 ticks mastered (0.25s). |
 
 > **Note:** Divine Devour is **not restricted to any race**. It is included in Tensura's universal unique skill pool and can be randomly granted to any player on first join or character reset, regardless of race. This is intentional by design.
 
