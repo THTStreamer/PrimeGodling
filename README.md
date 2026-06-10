@@ -1,25 +1,371 @@
+# Prime Godling - Tensura: Reincarnated Addon
 
-Installation information
-=======
+A **Minecraft 1.21.1 NeoForge** addon for [Tensura: Reincarnated](https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated) that adds the **Godling** race -- a 7-stage evolution line culminating in the **Primordial Supreme God**, with a brand-new **Divine Nexus** awakening path that stands alongside True Demon Lord and True Hero as a third endgame option.
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+---
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+## Table of Contents
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
+- [Dependencies](#dependencies)
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+- [Evolution Chain](#evolution-chain)
+- [Skills](#skills)
+- [Creative Flight](#creative-flight)
+- [Nexus Cores](#nexus-cores)
+- [Divine Nexus Awakening](#divine-nexus-awakening)
+- [Configuration](#configuration)
+- [Known Issues](#known-issues)
+- [FAQ](#faq)
 
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
+---
 
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+## Dependencies
+
+| Mod | Version | Required |
+|-----|---------|----------|
+| [Minecraft](https://www.minecraft.net/) | 1.21.1 | Yes |
+| [NeoForge](https://neoforged.net/) | 21.1.230+ | Yes |
+| [Tensura: Reincarnated](https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated) | 2.0.0.8+ | Yes |
+| [ManasCore](https://www.curseforge.com/minecraft/mc-mods/manascore) | 4.0.0.2+ | Yes |
+| [GeckoLib](https://www.curseforge.com/minecraft/mc-mods/geckolib) | 4.8.4+ | Yes |
+
+> **Note:** All dependencies must be installed for the mod to function. ManasCore and GeckoLib are pulled in automatically by Tensura: Reincarnated in most modpack setups.
+
+---
+
+## Installation
+
+1. Install Minecraft 1.21.1 with NeoForge 21.1.230 or later.
+2. Download the latest `PrimeGodling-1.21.1-x.x.x.jar` from the [Releases](https://github.com/THTStreamer/PrimeGodling/releases) page.
+3. Place the JAR into your Minecraft `mods/` folder alongside Tensura: Reincarnated, ManasCore, and GeckoLib.
+4. Launch the game. The mod appears in the mod list as **Prime Godling**.
+
+---
+
+## Getting Started
+
+### Choosing the Race
+
+When you create a new world and join, the Tensura reincarnation screen will appear. Select **Half Godling** from the starter race list to begin your journey. You can also use the command:
+
+```
+/tensura edit <player> race primegodling:half_godling
+```
+
+### Starting Stats
+
+| Stat | Value |
+|------|-------|
+| Starting EP Range | 100 - 4,000 |
+| Starting Magicule | 100 - 1,000 |
+| Difficulty | HARD |
+| Starting Skills | None (granted at later stages) |
+
+> **Tip:** EP is gained by killing mobs with EP. Your EP gain rate is multiplied by 0.5x (configurable) to balance the powerful late-game kit.
+
+---
+
+## Evolution Chain
+
+The Godling line has **7 stages**. Each evolution requires hitting an EP threshold **and** consuming a certain number of **Nexus Cores** (see [Nexus Cores](#nexus-cores)).
+
+| Stage | Race | EP Required | Nexus Cores | Magicule Range | Aura Range | Key Reward |
+|-------|------|-------------|-------------|----------------|------------|------------|
+| 0 | Half Godling | 0 | 0 | 100 - 1,000 | 50 - 500 | Base stats |
+| 1 | Demi Godling | 50,000 | 1 | 5,000 - 20,000 | 2,500 - 10,000 | +HP, +DMG, +Speed |
+| 2 | Prime Godling | 100,000 | 4 | 20,000 - 80,000 | 10,000 - 40,000 | Primordial Bloom, Cosmic Awareness, random resistances + skills |
+| 3 | Celestial Godling | 200,000 | 16 | 100,000 - 500,000 | 50,000 - 250,000 | Stellar Ascension, Ecliptic Mastery, resistances evolve to nullifications |
+| 4 | Ecliptic Godling | 400,000 | 64 | 500,000 - 2,000,000 | 250,000 - 1,000,000 | Luminarch Blessing, Dodge Negate, Resistance Degradation |
+| 5 | New God | 800,000 | 256 | 2,000,000 - 8,000,000 | 1,000,000 - 4,000,000 | Primordial Fortitude (90-95% damage reduction) |
+| 6 | Primordial Supreme God | 1,600,000 | 1,024 | 8,000,000 - 20,000,000 | 4,000,000 - 10,000,000 | Divine Devour, all nullifications, Creation Authority |
+
+### Evolution Requirements
+
+To evolve, you need:
+1. **Enough EP** -- kill mobs with EP to accumulate the required amount.
+2. **Nexus Cores** -- craft them or loot them from mobs (see below).
+3. **Named player** -- required for Stage 4+ evolutions.
+4. **Awakening** -- Stage 6 requires you to have completed the Divine Nexus awakening, OR be a True Demon Lord, OR be a True Hero.
+
+---
+
+## Skills
+
+### Unique & Intrinsic Skills (granted at evolution milestones)
+
+| Skill | Type | Stage | Description |
+|-------|------|-------|-------------|
+| **Primordial Bloom** | UNIQUE | 2 | Passively regenerates magicules at 3%/s. Periodically spawns blooming particles. Mastery: grants Regeneration to nearby players. |
+| **Cosmic Awareness** | INTRINSIC | 2 | Toggle: grants presence sense, detects invisible entities, and marks entities that target you. Drains energy while active. |
+| **Stellar Ascension** | INTRINSIC | 3 | Toggle: boosts attack damage and max health with a celestial aura. Deals bonus magic damage on attack. Mastery: slow falling. |
+| **Ecliptic Mastery** | INTRINSIC | 3 | Passively grants bonus armor and toughness. Reflects damage back to attackers. Has a chance to negate incoming damage. Mastery doubles the effect. |
+| **Luminarch Blessing** | INTRINSIC | 4 | Toggle: grants Regeneration, Absorption, and highlights all living entities within 24 blocks through walls (Glowing). Mastery: 48-block range and heals nearby allies. |
+| **Primordial Fortitude** | INTRINSIC | 5 | Boosts all core attributes. Grants Fire Resistance, Water Breathing, fall damage immunity, and 90-95% damage reduction. Greatly accelerates skill learning. |
+
+### Ultimate & Unique Skills (granted at endgame)
+
+| Skill | Type | Stage | Description |
+|-------|------|-------|-------------|
+| **Creation Authority** | ULTIMATE | 6 | Passively grants +6 Attack, +16 HP, +4 Armor, +4 Toughness. Press to call down primordial lightning that devastates the target area with a massive explosion. Grants brief damage immunity after activation. Cooldown: 200 ticks (10s) / 60 ticks mastered (3s). |
+| **Divine Devour** | UNIQUE | 6 | Press the skill key while looking at a mob to attempt to steal one of its skills. 10% chance per use. Cooldown: 10 ticks (0.5s) / 5 ticks mastered (0.25s). |
+
+### Random Skill Grants
+
+At certain evolution milestones, you receive random skills from the Tensura skill pool:
+
+- **Stage 2 (Prime Godling):** 3 random resistances + 3 random non-resistance skills (configurable).
+- **Stage 3 (Celestial Godling):** Your resistances evolve into nullifications + 2 random skills granted or mastered (configurable).
+- **Stage 6 (Primordial Supreme God):** All 22 nullifications granted + Creation Authority + 1 random Unique/Ultimate skill.
+
+---
+
+## Creative Flight
+
+All Godling races grant **creative flight** (the `HAS_CREATIVE_FLIGHT` tag). Press the **R key** (default) to toggle flight on/off.
+
+### Flight Costs
+
+| Cost | Alone | With Named Subordinate Nearby |
+|------|-------|-------------------------------|
+| Activation | 40 magicules | 20 magicules |
+| Maintenance | 10 magicules every 10 ticks | 2 magicules every 100 ticks |
+
+> **Tip:** Having a named subordinate nearby halves both activation and maintenance costs. A "named subordinate" is any living entity within 32 blocks that has a custom name and is your subordinate (via Tensura's subordinate system).
+
+Flight automatically disables when your magicules drop below the activation cost.
+
+---
+
+## Nexus Cores
+
+Nexus Cores are the currency required for each evolution. You need them in addition to EP.
+
+### Crafting
+
+Nexus Core crafting is **disabled by default**. Server admins must enable it in the server config (`config/primegodling/server.toml`):
+
+```toml
+# config/primegodling/server.toml
+general {
+  crafting_enabled = true
+}
+```
+
+**Recipe** (shaped crafting):
+
+```
+E D E
+D N D
+E D E
+```
+
+| Slot | Ingredient |
+|------|------------|
+| E | Echo Shard |
+| D | Diamond |
+| N | Nether Star |
+
+> **Result:** 1 Nexus Core per craft.
+
+### Mob Drops
+
+Nexus Cores also drop from certain Tensura mobs. The drop table is configurable in `config/primegodling/nexus-drops.toml`.
+
+**Default drop table:**
+
+| Mob | Drop Chance | Amount |
+|-----|-------------|--------|
+| Rimuru Tempest | 100% | 1 |
+| Hinata Sakaguchi | 100% | 1 |
+| Ifrit | 100% | 1 |
+| Dragon | 100% | 1 |
+| True Dragon Rimuru | 100% | 1 |
+| Charybdis | 100% | 1 |
+| Wyrm | 50% | 1 |
+| Ogre | 25% | 1 |
+| Armorsaurus | 2% | 1 |
+| Black Wolf | 2% | 1 |
+| Goblin | 1% | 1 |
+| Orc | 2% | 1 |
+| Lizardman | 2% | 1 |
+
+### Nexus Core Consumption
+
+Nexus Cores are consumed when you evolve. The amount spent is tracked separately from the amount eaten (required for the Divine Nexus awakening). You can check your progress via the Tensura status screen.
+
+---
+
+## Divine Nexus Awakening
+
+The **Divine Nexus** is a third awakening path alongside **True Demon Lord** and **True Hero**. It is the intended endgame for Godling players.
+
+### Requirements
+
+To begin the Divine Nexus ritual, you must meet **all** of the following:
+
+| Requirement | Details |
+|-------------|---------|
+| **Race** | Must be a **New God** (Stage 5) |
+| **EP** | At least 1,000,000 EP |
+| **Named** | Your character must have a name |
+| **Nexus Cores Consumed** | At least 1,000 Nexus Cores eaten |
+| **Kill Requirements** | Kill 3 Awakened Demon Lords **OR** (Kill Rimuru Tempest + Kill Hinata Sakaguchi + Kill 50,000 hostile mobs) |
+| **Unique Skills** | At least 5 unique skills learned |
+| **Magicule** | Enough magicule to fuel the awakening (configurable, default 10,000) |
+
+### Starting the Ritual
+
+Right-click with a **Nexus Core** in hand when all requirements are met. The ritual takes **200 ticks (10 seconds)** to complete.
+
+During the ritual:
+- You are slowed and given Slow Falling, Fire Resistance, and Damage Resistance.
+- Three phases of escalating particle effects play (golden particles, swirling divine dome, intensifying light).
+- You cannot move or act during the ritual.
+
+### Awakening Rewards
+
+| Reward | Value |
+|--------|-------|
+| Magicule Multiplier | 3x your pre-awakening max |
+| Aura Multiplier | 4x your pre-awakening max |
+| Alignment | MAJIN (gold name in Tensura menus) |
+| Ultimate Skill | Creation Authority (learned automatically) |
+| Evolution | Forces evolution to **Primordial Supreme God** |
+| Advancement | "Divine Nexus" advancement granted |
+
+### Kill Tracking
+
+Your kill progress is tracked automatically:
+- **Demon Lord kills:** Kill any player with True Demon Lord status.
+- **Rimuru kill:** Kill `tensura:rimuru`, `tensura:rimuru_tempest`, or `tensura:true_dragon_rimuru`.
+- **Hinata kill:** Kill `tensura:hinata_sakaguchi`.
+- **Hostile mob kills:** Kill any `Monster` entity.
+
+Progress is synced to your client and displayed in chat when you make progress.
+
+---
+
+## Configuration
+
+All config files are located in `config/primegodling/`:
+
+| File | Type | Purpose |
+|------|------|---------|
+| `races.toml` | COMMON | EP thresholds, magicule/aura ranges, flight costs, EP gain multiplier, random reward counts |
+| `skills.toml` | COMMON | Primordial Bloom regen rate, Cosmic Awareness range, Divine Nexus requirements, Creation Authority cooldowns |
+| `server.toml` | SERVER | Nexus Core crafting recipe toggle |
+| `nexus-drops.toml` | SERVER | Per-mob Nexus Core drop chances |
+
+### Key Config Values
+
+```toml
+# races.toml
+evolution {
+  stage1_demi_godling_ep = 50000
+  stage2_prime_godling_ep = 100000
+  stage3_celestial_godling_ep = 200000
+  stage4_ecliptic_godling_ep = 400000
+  stage5_new_god_ep = 800000
+}
+
+ep_gain {
+  ep_gain_multiplier = 0.5  # Half EP gain speed
+}
+
+creative_flight {
+  activation_cost = 40
+  maintenance_cost = 10
+  maintenance_interval_ticks = 10
+  activation_cost_subordinate = 20
+  maintenance_cost_subordinate = 2
+  maintenance_interval_ticks_subordinate = 100
+}
+
+random_rewards {
+  prime_godling_resistance_count = 3
+  prime_godling_skill_count = 3
+  celestial_godling_skill_count = 2
+}
+```
+
+```toml
+# skills.toml
+primordial_bloom {
+  regen_rate_percent_per_second = 3
+}
+
+divine_nexus {
+  min_unique_skills = 5
+  min_ep_required = 150000
+  nexus_core_ep_cost = 10000
+}
+
+creation_authority {
+  cooldown_ticks = 200
+  mastered_cooldown_ticks = 60
+  energy_cost = 5000.0
+}
+```
+
+---
+
+## Known Issues
+
+- No dedicated texture for the Primordial Fortitude skill icon yet.
+- `ScaledEPRequirement.java` and `ServerProxy.java` contain dead code from earlier development.
+- `FLIGHT_DATA` and `LAST_EP` maps are not cleaned on player logout (minor memory concern on long-running servers).
+- The Divine Nexus advancement reward loot table awards a placeholder item.
+
+See [ROADMAP.md](ROADMAP.md) for the full list of planned fixes and improvements.
+
+---
+
+## FAQ
+
+**Q: How do I check my EP?**
+A: Use the Tensura commands: `/tensura get stat <player> ep` and `/tensura get stat <player> magicule`.
+
+**Q: Can I become both a True Demon Lord and a Divine Nexus?**
+A: You can be a TDL or Hero *before* awakening as Divine Nexus. The `AwakenedOrTDLOrHeroRequirement` accepts any of the three. Once you are a Primordial Supreme God, you retain the MAJIN alignment from the Divine Nexus awakening.
+
+**Q: Can I use this with other Tensura addons?**
+A: Yes. Prime Godling injects its races additively into the Tensura config. It does not remove or modify existing races.
+
+**Q: Does the mod work on a dedicated server?**
+A: Yes. All logic is server-side. Client-only code (rendering, halos) is properly separated.
+
+**Q: How do I reset my race?**
+A: Use `/tensura reset <player>` to reset your race and re-enter the reincarnation screen.
+
+---
+
+## Building from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/THTStreamer/PrimeGodling.git
+cd PrimeGodling
+
+# Build the JAR
+gradlew build
+```
+
+The output JAR will be in `build/libs/`.
+
+> **Requires:** JDK 21, Gradle 9.x+
+
+---
+
+## License
+
+All Rights Reserved. See [LICENSE](TEMPLATE_LICENSE.txt) for details.
+
+---
+
+## Credits
+
+- **THTStreamer** -- Author and maintainer
+- **ManasMods** -- Tensura: Reincarnated and ManasCore
+- **NeoForged** -- NeoForge mod loader
+- **Community Addons** -- TR Addon, Ragnarok Races (inspiration for addon patterns)
