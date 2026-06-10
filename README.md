@@ -366,7 +366,7 @@ The output JAR will be in `build/libs/`.
 
 ## License
 
-All Rights Reserved. See [LICENSE](TEMPLATE_LICENSE.txt) for details.
+All Rights Reserved. See [LICENSE.txt](LICENSE.txt) for details.
 
 ---
 

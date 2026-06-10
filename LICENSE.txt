@@ -1,0 +1,220 @@
+Prime Godling License Agreement
+================================
+
+Copyright (c) 2026 THTStreamer. All Rights Reserved.
+
+This license governs the use, modification, and distribution of the
+Prime Godling mod ("the Mod") for Minecraft. By downloading, installing,
+using, or distributing the Mod, you agree to the terms of this license.
+
+---
+
+1. DEFINITIONS
+--------------
+
+  "Mod" refers to the Prime Godling software, including but not limited
+  to all source code, compiled binaries, assets, textures, models,
+  sounds, configurations, and documentation.
+
+  "Author" refers to THTStreamer, the original creator and copyright
+  holder of the Mod.
+
+  "Derivative Work" refers to any modified version of the Mod, any
+  addon that depends on or extends the Mod's functionality, or any
+  work that incorporates substantial portions of the Mod's code or
+  assets.
+
+  "Distribution" refers to making the Mod or Derivative Works available
+  to third parties through any medium, including but not limited to
+  file sharing, mod hosting platforms, modpacks, or server installations.
+
+---
+
+2. PERMITTED USES
+-----------------
+
+  a. Personal Use: You may install, use, and modify the Mod for your
+     own personal gameplay on single-player worlds and multiplayer
+     servers you own or have permission to use.
+
+  b. Streaming and Content Creation: You may create and distribute
+     videos, streams, screenshots, and other media featuring the Mod,
+     provided you give reasonable credit to the Author.
+
+  c. Server Hosting: You may install the Mod on multiplayer servers,
+     provided the server is freely accessible to players or used for
+     non-commercial purposes. Commercial server hosting requires
+     written permission from the Author.
+
+  d. Backup and Archival: You may make copies of the Mod for backup,
+     archival, or personal storage purposes.
+
+---
+
+3. RESTRICTIONS
+---------------
+
+  a. Commercial Use: You may not sell, sublicense, or otherwise
+     commercially distribute the Mod or any Derivative Work without
+     prior written permission from the Author. This includes but is
+     not limited to:
+       - Selling the Mod or Derivative Works directly
+       - Including the Mod in paid modpacks or subscription services
+       - Using the Mod in commercial server hosting without a license
+       - Monetizing Derivative Works through any means
+
+  b. Unauthorized Distribution: You may not distribute the Mod or
+     Derivative Works on platforms or websites not authorized by the
+     Author, except as permitted under Section 4 ( CurseForge Distribution).
+
+  c. Decompilation and Reverse Engineering: You may not reverse engineer,
+     decompile, or disassemble the compiled Mod for the purpose of
+     creating competing works or circumventing intended functionality.
+
+  d. Removal of Attribution: You may not remove or obscure any copyright
+     notices, attribution labels, or license references embedded in the
+     Mod.
+
+  e. Impersonation: You may not distribute modified versions of the Mod
+     in a manner that implies the Author endorses or created your version.
+
+---
+
+4. CURSEFORGE DISTRIBUTION
+--------------------------
+
+  The Mod is officially distributed through CurseForge at:
+  https://www.curseforge.com/minecraft/mc-mods/prime-godling
+
+  a. You may download the Mod from CurseForge for personal use in
+     accordance with this license and CurseForge's Terms of Service.
+
+  b. You may include the Mod in CurseForge modpacks, provided:
+       - The modpack is freely available (not behind a paywall)
+       - The Mod's original CurseForge page is credited
+       - No modifications are made to the Mod's source code or assets
+         within the modpack without the Author's permission
+
+  c. You may not redistribute the Mod on CurseForge or any other
+     platform as a standalone file without the Author's permission.
+
+---
+
+5. DERIVATIVE WORKS
+-------------------
+
+  a. If you create a Derivative Work (such as an addon or modification),
+     you must:
+       - Clearly indicate that your work is a derivative and not the
+         official version of the Mod
+       - Retain all original copyright notices and attribution
+       - Not use the "Prime Godling" name or branding in a way that
+         suggests official endorsement without permission
+
+  b. Source Code: If you distribute a Derivative Work that includes
+     compiled binaries, you must make the corresponding source code
+     available under this same license or a compatible open-source
+     license, upon request.
+
+  c. The Author reserves the right to approve or deny any Derivative
+     Work that uses the Mod's name, branding, or identity.
+
+---
+
+6. INTELLECTUAL PROPERTY
+-------------------------
+
+  a. The Mod is protected by copyright law and international copyright
+     treaties. All rights not expressly granted in this license are
+     reserved by the Author.
+
+  b. The "Prime Godling" name, logo, and branding are trademarks of
+     THTStreamer. You may not use these trademarks in connection with
+     any product or service without prior written permission.
+
+  c. The Author retains all rights to the Mod's design, mechanics,
+     narrative elements, and creative expression.
+
+---
+
+7. TERMINATION
+--------------
+
+  a. This license is effective as long as you comply with its terms.
+
+  b. If you violate any term of this license, your rights under this
+     license terminate automatically. You must cease all use and
+     distribution of the Mod and any Derivative Works immediately.
+
+  c. The Author may revoke this license at any time by providing
+     written notice. Upon revocation, you must cease all use and
+     distribution.
+
+---
+
+8. DISCLAIMER OF WARRANTIES
+----------------------------
+
+  THE MOD IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS
+  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
+  NONINFRINGEMENT. THE AUTHOR DOES NOT WARRANT THAT THE MOD WILL BE
+  ERROR-FREE, UNINTERRUPTED, OR COMPATIBLE WITH ALL HARDWARE AND
+  SOFTWARE CONFIGURATIONS.
+
+---
+
+9. LIMITATION OF LIABILITY
+---------------------------
+
+  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING
+  BUT NOT LIMITED TO LOSS OF DATA, LOSS OF GAME PROGRESS, OR
+  BUSINESS INTERRUPTION) ARISING OUT OF THE USE OR INABILITY TO USE
+  THE MOD, EVEN IF THE AUTHOR HAS BEEN ADVISED OF THE POSSIBILITY OF
+  SUCH DAMAGES.
+
+---
+
+10. GOVERNING LAW
+-----------------
+
+  This license shall be governed by and construed in accordance with
+  the laws of the United States. Any disputes arising under this
+  license shall be resolved in the courts of competent jurisdiction
+  within the United States.
+
+---
+
+11. SEVERABILITY
+----------------
+
+  If any provision of this license is found to be unenforceable or
+  invalid, that provision shall be limited or eliminated to the
+  minimum extent necessary, and the remaining provisions shall remain
+  in full force and effect.
+
+---
+
+12. ENTIRE AGREEMENT
+--------------------
+
+  This license constitutes the entire agreement between the Author and
+  you regarding the use of the Mod, and supersedes all prior
+  agreements or understandings, whether written or oral.
+
+---
+
+CONTACT
+-------
+
+  For licensing inquiries, permissions, or questions about this
+  license, contact THTStreamer through:
+    - GitHub: https://github.com/THTStreamer/PrimeGodling/issues
+    - CurseForge: https://www.curseforge.com/minecraft/mc-mods/prime-godling
+
+---
+
+By installing or using the Prime Godling Mod, you acknowledge that you
+have read, understood, and agree to be bound by the terms of this
+license.
