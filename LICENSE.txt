@@ -30,7 +30,109 @@ using, or distributing the Mod, you agree to the terms of this license.
 
 ---
 
-2. PERMITTED USES
+2. ATTRIBUTION AND CREDITS
+---------------------------
+
+  The Mod builds upon and draws inspiration from the following projects.
+  The Author respectfully acknowledges and credits these works:
+
+  a. Base Mod:
+     - Tensura: Reincarnated
+       by ManasMods (ManasCore Team)
+       https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated
+       The foundational Tensura mod for Minecraft. All race, skill,
+       EP, magicule, and awakening systems in the Mod are built on
+       Tensura: Reincarnated's architecture. The Mod's race and skill
+       registries extend Tensura's framework, and its commands and
+       configuration integrate with Tensura's systems.
+
+  b. Core Libraries:
+     - ManasCore
+       by ManasMods
+       https://www.curseforge.com/minecraft/mc-mods/manascore
+       The shared API providing race registry, skill registry, player
+       capabilities, config injection, and event infrastructure used
+       by the Mod. ManasCore is the backbone of the Mod's integration
+       with Tensura: Reincarnated.
+
+     - GeckoLib
+       by GeckoStudio
+       https://www.curseforge.com/minecraft/mc-mods/geckolib
+       The model and animation library used for custom entity and
+       player model rendering.
+
+     - Architectury
+       by Architectury Team
+       https://www.curseforge.com/minecraft/mc-mods/architectury-api
+       The cross-platform registry API used for DeferredRegister
+       and mod event bus integration.
+
+  c. Addon Inspiration:
+     The following Tensura addons served as reference implementations
+     for the Mod's addon architecture, config injection patterns, and
+     race/skill registration approaches:
+
+     - TR Addon
+       by blocker315
+       https://www.modrinth.com/mod/tr-addon
+       Demonstrated the pattern for injecting custom races into
+       Tensura's config system, using custom skill namespaces, and
+       integrating with ManasCore's race and skill APIs.
+
+     - Ragnarok Races
+       by dominickwd04
+       https://www.curseforge.com/minecraft/mc-mods/ragnarok-races
+       Provided reference for config-driven race definitions,
+       intrinsic skill assignments per race stage, and evolution
+       requirement implementations.
+
+     - Mysticism
+       by Memoires
+       Referenced for awakening path integration patterns and
+       skill progression design within the Tensura framework.
+
+  d. Modding Framework:
+     - NeoForge
+       by NeoForged
+       https://neoforged.net/
+       The mod loader and API powering the Mod's runtime, event
+       system, registry management, and network packet handling.
+
+     - NeoForge MDK (Mod Development Kit)
+       by NeoForged
+       https://github.com/NeoForged/MDK
+       The project template used as the base for the Mod's Gradle
+       build configuration. The MDK template files are licensed
+       under the MIT License (see TEMPLATE_LICENSE.txt if present).
+
+  e. Community Resources:
+     - Tensura Wiki (tensura.wiki.gg)
+       Referenced for race evolution data, EP thresholds, magicule
+       values, skill descriptions, and awakening mechanics from the
+       Tensura: Reincarnated mod.
+
+     - Forge/NeoForge Documentation
+       https://docs.neoforged.net/
+       Official modding documentation used throughout development.
+
+     - Jabelar's Modding Tutorials
+       Referenced for Java modding patterns and best practices.
+
+  f. The Author acknowledges that all original Tensura content
+     (races, skills, characters, entities, and mechanics) are the
+     intellectual property of Fuse (the original light novel author)
+     and the respective mod developers. The Mod does not claim
+     ownership of any Tensura: Reincarnated content, ManasCore APIs,
+     or third-party library code.
+
+  g. Any trademarks, service marks, or trade names of Tensura,
+     ManasMods, GeckoLib, NeoForged, or other credited projects are
+     the property of their respective owners and are used in this
+     Mod for identification and compatibility purposes only.
+
+---
+
+3. PERMITTED USES
 -----------------
 
   a. Personal Use: You may install, use, and modify the Mod for your
@@ -51,7 +153,7 @@ using, or distributing the Mod, you agree to the terms of this license.
 
 ---
 
-3. RESTRICTIONS
+4. RESTRICTIONS
 ---------------
 
   a. Commercial Use: You may not sell, sublicense, or otherwise
@@ -65,7 +167,7 @@ using, or distributing the Mod, you agree to the terms of this license.
 
   b. Unauthorized Distribution: You may not distribute the Mod or
      Derivative Works on platforms or websites not authorized by the
-     Author, except as permitted under Section 4 ( CurseForge Distribution).
+     Author, except as permitted under Section 5 (CurseForge Distribution).
 
   c. Decompilation and Reverse Engineering: You may not reverse engineer,
      decompile, or disassemble the compiled Mod for the purpose of
@@ -80,7 +182,7 @@ using, or distributing the Mod, you agree to the terms of this license.
 
 ---
 
-4. CURSEFORGE DISTRIBUTION
+5. CURSEFORGE DISTRIBUTION
 --------------------------
 
   The Mod is officially distributed through CurseForge at:
@@ -100,7 +202,7 @@ using, or distributing the Mod, you agree to the terms of this license.
 
 ---
 
-5. DERIVATIVE WORKS
+6. DERIVATIVE WORKS
 -------------------
 
   a. If you create a Derivative Work (such as an addon or modification),
@@ -121,7 +223,7 @@ using, or distributing the Mod, you agree to the terms of this license.
 
 ---
 
-6. INTELLECTUAL PROPERTY
+7. INTELLECTUAL PROPERTY
 -------------------------
 
   a. The Mod is protected by copyright law and international copyright
@@ -137,7 +239,7 @@ using, or distributing the Mod, you agree to the terms of this license.
 
 ---
 
-7. TERMINATION
+8. TERMINATION
 --------------
 
   a. This license is effective as long as you comply with its terms.
@@ -152,7 +254,7 @@ using, or distributing the Mod, you agree to the terms of this license.
 
 ---
 
-8. DISCLAIMER OF WARRANTIES
+9. DISCLAIMER OF WARRANTIES
 ----------------------------
 
   THE MOD IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS
@@ -164,7 +266,7 @@ using, or distributing the Mod, you agree to the terms of this license.
 
 ---
 
-9. LIMITATION OF LIABILITY
+10. LIMITATION OF LIABILITY
 ---------------------------
 
   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
@@ -176,7 +278,7 @@ using, or distributing the Mod, you agree to the terms of this license.
 
 ---
 
-10. GOVERNING LAW
+11. GOVERNING LAW
 -----------------
 
   This license shall be governed by and construed in accordance with
@@ -186,7 +288,7 @@ using, or distributing the Mod, you agree to the terms of this license.
 
 ---
 
-11. SEVERABILITY
+12. SEVERABILITY
 ----------------
 
   If any provision of this license is found to be unenforceable or
@@ -196,7 +298,7 @@ using, or distributing the Mod, you agree to the terms of this license.
 
 ---
 
-12. ENTIRE AGREEMENT
+13. ENTIRE AGREEMENT
 --------------------
 
   This license constitutes the entire agreement between the Author and
