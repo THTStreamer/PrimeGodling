@@ -78,7 +78,7 @@ The Godling line has **7 stages**. Each evolution requires hitting an EP thresho
 | 3 | Celestial Godling | 200,000 | 16 | 100,000 - 500,000 | 50,000 - 250,000 | Stellar Ascension, Ecliptic Mastery, resistances evolve to nullifications |
 | 4 | Ecliptic Godling | 400,000 | 64 | 500,000 - 2,000,000 | 250,000 - 1,000,000 | Luminarch Blessing, Dodge Negate, Resistance Degradation |
 | 5 | New God | 800,000 | 256 | 2,000,000 - 8,000,000 | 1,000,000 - 4,000,000 | Primordial Fortitude (90-95% damage reduction) |
-| 6 | Primordial Supreme God | 1,600,000 | 1,024 | 8,000,000 - 20,000,000 | 4,000,000 - 10,000,000 | Divine Devour, all nullifications, Creation Authority |
+| 6 | Primordial Supreme God | 1,600,000 | 1,024 | 8,000,000 - 20,000,000 | 4,000,000 - 10,000,000 | All nullifications, Creation Authority |
 
 ### Evolution Requirements
 
@@ -108,7 +108,14 @@ To evolve, you need:
 | Skill | Type | Stage | Description |
 |-------|------|-------|-------------|
 | **Creation Authority** | ULTIMATE | 6 | Passively grants +6 Attack, +16 HP, +4 Armor, +4 Toughness. Press to call down primordial lightning that devastates the target area with a massive explosion. Grants brief damage immunity after activation. Cooldown: 200 ticks (10s) / 60 ticks mastered (3s). |
-| **Divine Devour** | UNIQUE | 6 | Press the skill key while looking at a mob to attempt to steal one of its skills. 10% chance per use. Cooldown: 10 ticks (0.5s) / 5 ticks mastered (0.25s). |
+
+### Universal Skills (available to any race)
+
+| Skill | Type | How to Obtain | Description |
+|-------|------|---------------|-------------|
+| **Divine Devour** | UNIQUE | Random skill generation (any race) | Press the skill key while looking at a mob to attempt to steal one of its skills. 10% chance per use. Cooldown: 10 ticks (0.5s) / 5 ticks mastered (0.25s). |
+
+> **Note:** Divine Devour is **not restricted to any race**. It is included in Tensura's universal unique skill pool and can be randomly granted to any player on first join or character reset, regardless of race. This is intentional by design.
 
 ### Random Skill Grants
 
@@ -116,7 +123,7 @@ At certain evolution milestones, you receive random skills from the Tensura skil
 
 - **Stage 2 (Prime Godling):** 3 random resistances + 3 random non-resistance skills (configurable).
 - **Stage 3 (Celestial Godling):** Your resistances evolve into nullifications + 2 random skills granted or mastered (configurable).
-- **Stage 6 (Primordial Supreme God):** All 22 nullifications granted + Creation Authority + 1 random Unique/Ultimate skill.
+- **Stage 6 (Primordial Supreme God):** All 22 nullifications granted + Creation Authority + 1 random Unique/Ultimate skill (from the universal pool, which includes Divine Devour).
 
 ---
 
