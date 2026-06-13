@@ -1,4 +1,4 @@
-# Prime Godling - Tensura: Reincarnated Addon
+# Primordial Ascent - Tensura: Reincarnated Addon
 
 A **Minecraft 1.21.1 NeoForge** addon for [Tensura: Reincarnated](https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated) that adds the **Godling** race -- a 7-stage evolution line culminating in the **Primordial Supreme God**, with a brand-new **Divine Nexus** awakening path that stands alongside True Demon Lord and True Hero as a third endgame option.
 
@@ -39,7 +39,7 @@ A **Minecraft 1.21.1 NeoForge** addon for [Tensura: Reincarnated](https://www.cu
 1. Install Minecraft 1.21.1 with NeoForge 21.1.230 or later.
 2. Download the latest `PrimeGodling-1.21.1-x.x.x.jar` from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/prime-godling/files).
 3. Place the JAR into your Minecraft `mods/` folder alongside Tensura: Reincarnated, ManasCore, and GeckoLib.
-4. Launch the game. The mod appears in the mod list as **Prime Godling**.
+4. Launch the game. The mod appears in the mod list as **Primordial Ascent**.
 
 ---
 
@@ -337,7 +337,7 @@ A: Use the Tensura commands: `/tensura get stat <player> ep` and `/tensura get s
 A: You can be a TDL or Hero *before* awakening as Divine Nexus. The `AwakenedOrTDLOrHeroRequirement` accepts any of the three. Once you are a Primordial Supreme God, you retain the MAJIN alignment from the Divine Nexus awakening.
 
 **Q: Can I use this with other Tensura addons?**
-A: Yes. Prime Godling injects its races additively into the Tensura config. It does not remove or modify existing races.
+A: Yes. Primordial Ascent injects its races additively into the Tensura config. It does not remove or modify existing races.
 
 **Q: Does the mod work on a dedicated server?**
 A: Yes. All logic is server-side. Client-only code (rendering, halos) is properly separated.

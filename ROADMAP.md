@@ -1,4 +1,4 @@
-# Prime Godling v0.2.0+ — Development Roadmap
+# Primordial Ascent v0.2.0+ — Development Roadmap
 
 Based on the full codebase audit of v0.2.0.
 

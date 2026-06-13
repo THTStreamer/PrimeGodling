@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the **Prime Godling** mod are documented in this file.
+All notable changes to the **Primordial Ascent** mod are documented in this file.
 
 ---
 
@@ -21,7 +21,7 @@ All notable changes to the **Prime Godling** mod are documented in this file.
 ### Changed
 - **Version Bump**: Updated from `0.2.0` to `0.2.1-BugFix`.
 - **README Rewrite**: Complete rewrite with comprehensive player guide covering installation, evolution chain, skills, flight, nexus cores, awakening, and configuration.
-- **License**: Replaced NeoForged template license with custom Prime Godling license including attribution to Tensura, ManasCore, GeckoLib, TR Addon, Ragnarok Races, Mysticism, and NeoForge.
+- **License**: Replaced NeoForged template license with custom Primordial Ascent license including attribution to Tensura, ManasCore, GeckoLib, TR Addon, Ragnarok Races, Mysticism, and NeoForge.
 - **CurseForge Link**: Updated download link from GitHub Releases to CurseForge files page.
 
 ---

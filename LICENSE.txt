@@ -1,10 +1,10 @@
-Prime Godling License Agreement
-================================
+Primordial Ascent License Agreement
+====================================
 
 Copyright (c) 2026 THTStreamer. All Rights Reserved.
 
 This license governs the use, modification, and distribution of the
-Prime Godling mod ("the Mod") for Minecraft. By downloading, installing,
+Primordial Ascent mod ("the Mod") for Minecraft. By downloading, installing,
 using, or distributing the Mod, you agree to the terms of this license.
 
 ---
@@ -12,7 +12,7 @@ using, or distributing the Mod, you agree to the terms of this license.
 1. DEFINITIONS
 --------------
 
-  "Mod" refers to the Prime Godling software, including but not limited
+  "Mod" refers to the Primordial Ascent software, including but not limited
   to all source code, compiled binaries, assets, textures, models,
   sounds, configurations, and documentation.
 
@@ -210,7 +210,7 @@ using, or distributing the Mod, you agree to the terms of this license.
        - Clearly indicate that your work is a derivative and not the
          official version of the Mod
        - Retain all original copyright notices and attribution
-       - Not use the "Prime Godling" name or branding in a way that
+       - Not use the "Primordial Ascent" name or branding in a way that
          suggests official endorsement without permission
 
   b. Source Code: If you distribute a Derivative Work that includes
@@ -230,7 +230,7 @@ using, or distributing the Mod, you agree to the terms of this license.
      treaties. All rights not expressly granted in this license are
      reserved by the Author.
 
-  b. The "Prime Godling" name, logo, and branding are trademarks of
+   b. The "Primordial Ascent" name, logo, and branding are trademarks of
      THTStreamer. You may not use these trademarks in connection with
      any product or service without prior written permission.
 
@@ -317,6 +317,6 @@ CONTACT
 
 ---
 
-By installing or using the Prime Godling Mod, you acknowledge that you
+By installing or using the Primordial Ascent Mod, you acknowledge that you
 have read, understood, and agree to be bound by the terms of this
 license.

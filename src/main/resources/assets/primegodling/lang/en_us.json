@@ -76,8 +76,8 @@
   "advancements.primegodling.divine_nexus.description": "Awaken the Divine Nexus — become one with the primordial source",
   "advancements.primegodling.divine_nexus.reward": "You are now connected to the primordial source. Creation Authority granted.",
 
-  "primegodling.configuration.title": "Prime Godling — Configuration",
-  "primegodling.configuration.section.primegodling-common.toml": "Prime Godling — Race & Skill Configs",
+  "primegodling.configuration.title": "Primordial Ascent \u2014 Configuration",
+  "primegodling.configuration.section.primegodling-common.toml": "Primordial Ascent \u2014 Race & Skill Configs",
   "primegodling.configuration.races": "Race Settings",
   "primegodling.configuration.skills": "Skill & Awakening Settings"
 }
