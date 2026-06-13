@@ -15,13 +15,13 @@ public class TensuraIntegration {
     private static void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
 
-            PrimeGodling.LOGGER.info("[PrimeGodling] Linking race evolution chain…");
+            PrimeGodling.LOGGER.info("[PrimordialAscent] Linking race evolution chain…");
             ModRaces.linkEvolutions();
 
-            PrimeGodling.LOGGER.info("[PrimeGodling] Injecting races into Tensura config…");
+            PrimeGodling.LOGGER.info("[PrimordialAscent] Injecting races into Tensura config…");
             PrimeGodlingConfig.applyInjection();
 
-            PrimeGodling.LOGGER.info("[PrimeGodling] Common setup complete.");
+            PrimeGodling.LOGGER.info("[PrimordialAscent] Common setup complete.");
         });
     }
 }

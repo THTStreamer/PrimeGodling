@@ -37,7 +37,7 @@ A **Minecraft 1.21.1 NeoForge** addon for [Tensura: Reincarnated](https://www.cu
 ## Installation
 
 1. Install Minecraft 1.21.1 with NeoForge 21.1.230 or later.
-2. Download the latest `PrimeGodling-1.21.1-x.x.x.jar` from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/prime-godling/files).
+2. Download the latest `PrimordialAscent-1.21.1-x.x.x.jar` from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/prime-godling/files).
 3. Place the JAR into your Minecraft `mods/` folder alongside Tensura: Reincarnated, ManasCore, and GeckoLib.
 4. Launch the game. The mod appears in the mod list as **Primordial Ascent**.
 
