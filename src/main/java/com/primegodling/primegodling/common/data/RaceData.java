@@ -1,7 +1,6 @@
 package com.primegodling.primegodling.common.data;
 
 import com.primegodling.primegodling.common.data.race.PrimeGodlingRace;
-import com.primegodling.primegodling.common.config.RaceConfig;
 import com.primegodling.primegodling.common.data.ModSkills;
 import io.github.manasmods.manascore.race.api.ManasRace.Difficulty;
 import io.github.manasmods.manascore.skill.api.ManasSkill;
@@ -19,7 +18,7 @@ public final class RaceData {
     private RaceData() {}
 
     public static PrimeGodlingRace createStage(int index) {
-        long epThreshold = RaceConfig.getEvolutionThreshold(index);
+        long epThreshold = RaceRegistry.EP_THRESHOLDS[index];
         PrimeGodlingRace race = switch (index) {
             case 0 -> new PrimeGodlingRace(Difficulty.HARD, epThreshold,
                     100, 1_000, 50, 500,
