@@ -28,15 +28,15 @@ public class PrimordialFortitudeSkill extends Skill {
     public PrimordialFortitudeSkill() {
         super(SkillType.INTRINSIC);
         addHeldAttributeModifier(Attributes.ATTACK_DAMAGE, DMG_ID,
-            SkillConfig.COMMON.primordialFortitudeAttackBonus.get(), AttributeModifier.Operation.ADD_VALUE);
+            10.0, AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.MAX_HEALTH, HP_ID,
-            SkillConfig.COMMON.primordialFortitudeHealthBonus.get(), AttributeModifier.Operation.ADD_VALUE);
+            40.0, AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.ARMOR, ARMOR_ID,
-            SkillConfig.COMMON.primordialFortitudeArmor.get(), AttributeModifier.Operation.ADD_VALUE);
+            12.0, AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.ARMOR_TOUGHNESS, TOUGH_ID,
-            SkillConfig.COMMON.primordialFortitudeToughness.get(), AttributeModifier.Operation.ADD_VALUE);
+            8.0, AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.MOVEMENT_SPEED, SPEED_ID,
-            SkillConfig.COMMON.primordialFortitudeSpeedMultiplier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+            0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
     @Override

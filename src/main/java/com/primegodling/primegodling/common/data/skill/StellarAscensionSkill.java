@@ -23,9 +23,9 @@ public class StellarAscensionSkill extends Skill {
     public StellarAscensionSkill() {
         super(SkillType.INTRINSIC);
         addHeldAttributeModifier(Attributes.ATTACK_DAMAGE, STRENGTH_ID,
-            SkillConfig.COMMON.stellarAscensionAttackBonus.get(), AttributeModifier.Operation.ADD_VALUE);
+            4.0, AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.MAX_HEALTH, HEALTH_ID,
-            SkillConfig.COMMON.stellarAscensionHealthBonus.get(), AttributeModifier.Operation.ADD_VALUE);
+            20.0, AttributeModifier.Operation.ADD_VALUE);
     }
 
     @Override

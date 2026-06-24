@@ -20,9 +20,9 @@ public class EclipticMasterySkill extends Skill {
     public EclipticMasterySkill() {
         super(SkillType.INTRINSIC);
         addHeldAttributeModifier(Attributes.ARMOR, ARMOR_ID,
-            SkillConfig.COMMON.eclipticMasteryArmor.get(), AttributeModifier.Operation.ADD_VALUE);
+            6.0, AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.ARMOR_TOUGHNESS, TOUGHNESS_ID,
-            SkillConfig.COMMON.eclipticMasteryToughness.get(), AttributeModifier.Operation.ADD_VALUE);
+            4.0, AttributeModifier.Operation.ADD_VALUE);
     }
 
     @Override
