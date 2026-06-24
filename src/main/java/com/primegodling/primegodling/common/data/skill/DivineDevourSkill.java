@@ -22,7 +22,6 @@ import java.util.List;
 
 public class DivineDevourSkill extends Skill {
 
-    private static final double SUCCESS_CHANCE = 0.10;
     private static final int COOLDOWN_NORMAL = 10;
     private static final int COOLDOWN_MASTERED = 5;
     private static final double RANGE = 32.0;
@@ -92,7 +91,8 @@ public class DivineDevourSkill extends Skill {
         }
 
         if (entity.level() instanceof ServerLevel serverLevel) {
-            if (player.getRandom().nextDouble() < SUCCESS_CHANCE) {
+            double successChance = SkillConfig.COMMON.devourSuccessChance.get();
+            if (player.getRandom().nextDouble() < successChance) {
                 ManasSkill stolen = targetSkills.get(player.getRandom().nextInt(targetSkills.size()));
                 if (SkillHelper.learnSkill(player, stolen)) {
                     serverLevel.sendParticles(ParticleTypes.SOUL,
