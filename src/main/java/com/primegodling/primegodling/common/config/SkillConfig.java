@@ -45,6 +45,11 @@ public class SkillConfig {
         public final ModConfigSpec.BooleanValue awakeningRequireHinata;
         public final ModConfigSpec.ConfigValue<List<? extends String>> awakeningBossMobs;
 
+        // Divine Devour settings
+        public final ModConfigSpec.BooleanValue devourAllowUnique;
+        public final ModConfigSpec.BooleanValue devourAllowUltimate;
+        public final ModConfigSpec.ConfigValue<List<? extends String>> devourSkillBlacklist;
+
         Common(ModConfigSpec.Builder builder) {
             builder.push("primordial_bloom").comment("Primordial Bloom — Unique Skill settings");
             primordialBloomRegenRate = builder.defineInRange("regen_rate_percent_per_second", 3, 1, 50);
@@ -86,6 +91,22 @@ public class SkillConfig {
                     .defineListAllowEmpty("boss_mobs", SkillConfig::defaultBossMobs, obj -> obj instanceof String s && s.contains(":"));
             builder.pop();
 
+            builder.push("divine_devour").comment("Divine Devour — Unique Skill settings");
+            devourAllowUnique = builder
+                    .comment("Allow Divine Devour to copy UNIQUE skills from targets",
+                            "Default: false (only Common/Intrinsic/Extra skills can be copied)")
+                    .define("allow_unique_skills", false);
+            devourAllowUltimate = builder
+                    .comment("Allow Divine Devour to copy ULTIMATE skills from targets",
+                            "Default: false (only Common/Intrinsic/Extra skills can be copied)")
+                    .define("allow_ultimate_skills", false);
+            devourSkillBlacklist = builder
+                    .comment("List of skills that Divine Devour cannot copy.",
+                            "Format: \"modid:skill_id\" (e.g. \"tensura:predation\")",
+                            "These skills will never be stolen regardless of allow_unique_skills or allow_ultimate_skills.")
+                    .defineListAllowEmpty("skill_blacklist", SkillConfig::defaultDevourBlacklist, obj -> obj instanceof String s && s.contains(":"));
+            builder.pop();
+
             builder.push("luminarch_blessing").comment("Luminarch Blessing — Toggleable Intrinsic Skill settings");
             luminarchBlessingCost = builder.defineInRange("energy_cost_per_tick", 200, 0, 10000);
             builder.pop();
@@ -99,6 +120,11 @@ public class SkillConfig {
     }
 
     private static List<String> defaultBossMobs() {
+        List<String> list = new ArrayList<>();
+        return list;
+    }
+
+    private static List<String> defaultDevourBlacklist() {
         List<String> list = new ArrayList<>();
         return list;
     }

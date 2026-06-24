@@ -1,5 +1,6 @@
 package com.primegodling.primegodling.common.data.skill;
 
+import com.primegodling.primegodling.common.config.SkillConfig;
 import io.github.manasmods.manascore.skill.api.ManasSkill;
 import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
 import io.github.manasmods.manascore.skill.api.SkillAPI;
@@ -58,6 +59,10 @@ public class DivineDevourSkill extends Skill {
         int cooldown = instance.isMastered(entity) ? COOLDOWN_MASTERED : COOLDOWN_NORMAL;
         instance.setCoolDown(cooldown, mode);
 
+        boolean allowUnique = SkillConfig.COMMON.devourAllowUnique.get();
+        boolean allowUltimate = SkillConfig.COMMON.devourAllowUltimate.get();
+        List<String> blacklist = new ArrayList<>(SkillConfig.COMMON.devourSkillBlacklist.get());
+
         List<ManasSkill> targetSkills = new ArrayList<>();
         var storage = SkillAPI.getSkillsFrom(target);
         if (storage != null) {
@@ -65,7 +70,12 @@ public class DivineDevourSkill extends Skill {
                 ManasSkill skill = skillInst.getSkill();
                 if (skill instanceof Skill tensuraSkill) {
                     Skill.SkillType type = tensuraSkill.getType();
-                    if (type != Skill.SkillType.UNIQUE && type != Skill.SkillType.ULTIMATE) {
+                    boolean allowed = switch (type) {
+                        case UNIQUE -> allowUnique;
+                        case ULTIMATE -> allowUltimate;
+                        default -> true;
+                    };
+                    if (allowed && !blacklist.contains(skill.getRegistryName().toString())) {
                         targetSkills.add(skill);
                     }
                 }

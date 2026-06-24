@@ -46,7 +46,7 @@
   "primegodling.skill.creation_authority.description": "Ultimate Skill. Passively grants +6 Attack, +16 HP, +4 Armor, +4 Toughness. Press to call down primordial lightning that devastates the target area with a massive explosion. Grants brief damage immunity after activation. High energy cost.",
 
   "primegodling.skill.divine_devour": "Divine Devour",
-  "primegodling.skill.divine_devour.description": "Unique Skill. Press the skill key while looking at a mob to attempt to steal one of its Intrinsic, Common, or Extra skills. 10% chance per use. Cannot copy Unique or Ultimate skills. Cooldown: 10 ticks (0.5s) / 5 ticks mastered (0.25s).",
+  "primegodling.skill.divine_devour.description": "Unique Skill. Press the skill key while looking at a mob to attempt to steal one of its skills. 10% chance per use. Cooldown: 10 ticks (0.5s) / 5 ticks mastered (0.25s).",
 
   "awakening.primegodling.divine_nexus.name": "Divine Nexus",
   "awakening.primegodling.divine_nexus.desc": "The third path alongside True Demon Lord and True Hero. Requires New God, 1M EP, and 1,000 Nexus Cores.",
