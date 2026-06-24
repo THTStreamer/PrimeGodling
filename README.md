@@ -220,6 +220,8 @@ To begin the Divine Nexus ritual, you must meet **all** of the following:
 | **Unique Skills** | At least 5 unique skills learned |
 | **Magicule** | Enough magicule to fuel the awakening (configurable, default 10,000) |
 
+> **Default Kill Requirements:** 3 Awakened Demon Lords **OR** (Kill Hinata Sakaguchi + Kill 50,000 hostile mobs). All values can be changed in `config/primegodling/skills.toml` under `[divine_nexus_awakening]`. The Hinata kill is optional if `require_hinata_kill = false`.
+
 ### Starting the Ritual
 
 Right-click with a **Nexus Core** in hand when all requirements are met. The ritual takes **200 ticks (10 seconds)** to complete.
