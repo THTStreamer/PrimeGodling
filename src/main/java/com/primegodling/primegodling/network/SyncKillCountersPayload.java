@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.UUID;
 
-public record SyncKillCountersPayload(UUID playerUuid, int demonLordKills, boolean rimuruKilled, boolean hinataKilled, int hostileMobKills) implements CustomPacketPayload {
+public record SyncKillCountersPayload(UUID playerUuid, int demonLordKills, boolean hinataKilled, int hostileMobKills) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<SyncKillCountersPayload> TYPE = new CustomPacketPayload.Type<>(
             ResourceLocation.fromNamespaceAndPath("primegodling", "sync_kill_counters"));
@@ -16,11 +16,10 @@ public record SyncKillCountersPayload(UUID playerUuid, int demonLordKills, boole
             (buf, p) -> {
                 buf.writeUUID(p.playerUuid);
                 buf.writeVarInt(p.demonLordKills);
-                buf.writeBoolean(p.rimuruKilled);
                 buf.writeBoolean(p.hinataKilled);
                 buf.writeVarInt(p.hostileMobKills);
             },
-            buf -> new SyncKillCountersPayload(buf.readUUID(), buf.readVarInt(), buf.readBoolean(), buf.readBoolean(), buf.readVarInt())
+            buf -> new SyncKillCountersPayload(buf.readUUID(), buf.readVarInt(), buf.readBoolean(), buf.readVarInt())
     );
 
     @Override

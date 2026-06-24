@@ -42,7 +42,7 @@ public class PrimeGodlingNetwork {
 
     private static void handleSyncKillCounters(SyncKillCountersPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            ClientKillCountersCache.set(payload.playerUuid(), payload.demonLordKills(), payload.rimuruKilled(), payload.hinataKilled(), payload.hostileMobKills());
+            ClientKillCountersCache.set(payload.playerUuid(), payload.demonLordKills(), payload.hinataKilled(), payload.hostileMobKills());
         });
     }
 }

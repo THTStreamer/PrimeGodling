@@ -64,11 +64,8 @@ public class NexusDropsConfig {
     private static List<String> defaultDrops() {
         List<String> list = new ArrayList<>();
         // Bosses — guaranteed 1 drop each
-        list.add("tensura:rimuru;1.0;1;1");
         list.add("tensura:hinata_sakaguchi;1.0;1;1");
         list.add("tensura:ifrit;1.0;1;1");
-        list.add("tensura:dragon;1.0;1;1");
-        list.add("tensura:true_dragon_rimuru;1.0;1;1");
         list.add("tensura:charybdis;1.0;1;1");
         // Mini-bosses — high chance
         list.add("tensura:wyrm;0.50;1;1");

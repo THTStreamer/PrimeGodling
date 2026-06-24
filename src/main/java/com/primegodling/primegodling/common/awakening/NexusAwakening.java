@@ -25,14 +25,19 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 
+import java.util.List;
+
 public class NexusAwakening {
 
     private static final int RITUAL_TICKS = 200;
-    private static final int EP_REQUIRED = 1_000_000;
-    private static final int CORES_REQUIRED = 1000;
 
     public static String startRitual(ServerPlayer player) {
         int nexusEpCost = SkillConfig.COMMON.nexusCoreEpCost.get();
+        int epRequired = SkillConfig.COMMON.awakeningEpRequired.get();
+        int coresRequired = SkillConfig.COMMON.awakeningCoresRequired.get();
+        int demonLordKillsRequired = SkillConfig.COMMON.awakeningDemonLordKills.get();
+        int hostileMobKillsRequired = SkillConfig.COMMON.awakeningHostileMobKills.get();
+        boolean requireHinata = SkillConfig.COMMON.awakeningRequireHinata.get();
 
         ResourceLocation currentRaceId = RaceAPI.getRaceFrom(player)
                 .getRace()
@@ -48,8 +53,8 @@ public class NexusAwakening {
         }
 
         double currentEP = EnergyHelper.getBaseMaxEP(player);
-        if (currentEP < EP_REQUIRED) {
-            return "§cYou need at least " + EP_REQUIRED + " EP. You have " + (int) currentEP + " EP.";
+        if (currentEP < epRequired) {
+            return "§cYou need at least " + epRequired + " EP. You have " + (int) currentEP + " EP.";
         }
 
         IExistence existence = TensuraStorages.getExistenceFrom(player);
@@ -62,28 +67,42 @@ public class NexusAwakening {
                 .map(ManasRaceInstance::getOrCreateTag)
                 .orElse(null);
         int eaten = nexusTag != null ? nexusTag.getInt("nexus_cores_eaten") : 0;
-        if (eaten < CORES_REQUIRED) {
-            return "§cYou have consumed " + eaten + "/" + CORES_REQUIRED + " Nexus Cores.";
+        if (eaten < coresRequired) {
+            return "§cYou have consumed " + eaten + "/" + coresRequired + " Nexus Cores.";
         }
 
         int demonLordKills = player.getPersistentData().getInt("primegodling:demon_lord_kills");
-        boolean rimuruKilled = player.getPersistentData().getBoolean("primegodling:rimuru_killed");
         boolean hinataKilled = player.getPersistentData().getBoolean("primegodling:hinata_killed");
         int hostileMobKills = player.getPersistentData().getInt("primegodling:hostile_mob_kills");
 
-        boolean killReqMet = demonLordKills >= 3 || (rimuruKilled && hinataKilled && hostileMobKills >= 50000);
+        // Check boss mobs from config
+        List<String> bossMobs = new java.util.ArrayList<>(SkillConfig.COMMON.awakeningBossMobs.get());
+        boolean allBossMobsKilled = true;
+        for (String mobId : bossMobs) {
+            if (!player.getPersistentData().getBoolean("primegodling:killed_" + mobId)) {
+                allBossMobsKilled = false;
+                break;
+            }
+        }
+
+        boolean hinataReqMet = !requireHinata || hinataKilled;
+        boolean killReqMet = demonLordKills >= demonLordKillsRequired
+                || (hinataReqMet && allBossMobsKilled && hostileMobKills >= hostileMobKillsRequired);
+
         if (!killReqMet) {
-            if (demonLordKills < 3) {
-                player.sendSystemMessage(Component.literal("§cRequirement: Kill 3 Awakened Demon Lords (" + demonLordKills + "/3)"));
+            if (demonLordKills < demonLordKillsRequired) {
+                player.sendSystemMessage(Component.literal("§cRequirement: Kill " + demonLordKillsRequired + " Awakened Demon Lords (" + demonLordKills + "/" + demonLordKillsRequired + ")"));
             }
-            if (!rimuruKilled) {
-                player.sendSystemMessage(Component.literal("§cRequirement: Kill Rimuru Tempest"));
-            }
-            if (!hinataKilled) {
+            if (requireHinata && !hinataKilled) {
                 player.sendSystemMessage(Component.literal("§cRequirement: Kill Hinata Sakaguchi"));
             }
-            if (hostileMobKills < 50000) {
-                player.sendSystemMessage(Component.literal("§cRequirement: Kill " + 50000 + " hostile mobs (" + hostileMobKills + "/50000)"));
+            for (String mobId : bossMobs) {
+                if (!player.getPersistentData().getBoolean("primegodling:killed_" + mobId)) {
+                    player.sendSystemMessage(Component.literal("§cRequirement: Kill " + mobId));
+                }
+            }
+            if (hostileMobKills < hostileMobKillsRequired) {
+                player.sendSystemMessage(Component.literal("§cRequirement: Kill " + hostileMobKillsRequired + " hostile mobs (" + hostileMobKills + "/" + hostileMobKillsRequired + ")"));
             }
             return "§cYou have not fulfilled the kill requirements.";
         }

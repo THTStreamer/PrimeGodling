@@ -128,10 +128,9 @@ public class PrimeGodling {
         PacketDistributor.sendToPlayer(player, new SyncNexusCoresPayload(player.getUUID(), eaten, spent));
 
         int demonLordKills = player.getPersistentData().getInt("primegodling:demon_lord_kills");
-        boolean rimuruKilled = player.getPersistentData().getBoolean("primegodling:rimuru_killed");
         boolean hinataKilled = player.getPersistentData().getBoolean("primegodling:hinata_killed");
         int hostileMobKills = player.getPersistentData().getInt("primegodling:hostile_mob_kills");
-        PacketDistributor.sendToPlayer(player, new SyncKillCountersPayload(player.getUUID(), demonLordKills, rimuruKilled, hinataKilled, hostileMobKills));
+        PacketDistributor.sendToPlayer(player, new SyncKillCountersPayload(player.getUUID(), demonLordKills, hinataKilled, hostileMobKills));
     }
 
     private static void onPlayerTick(PlayerTickEvent.Post event) {
@@ -343,24 +342,32 @@ public class PrimeGodling {
                     int count = killer.getPersistentData().getInt("primegodling:demon_lord_kills") + 1;
                     killer.getPersistentData().putInt("primegodling:demon_lord_kills", count);
                     killer.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                        "§dYou killed an Awakened Demon Lord! §7(" + count + "/3)"));
+                        "§dYou killed an Awakened Demon Lord! §7(" + count + "/" + com.primegodling.primegodling.common.config.SkillConfig.COMMON.awakeningDemonLordKills.get() + ")"));
                     changed = true;
                 }
             }
 
             if (killed == null) return;
             ResourceLocation killedId = net.minecraft.world.entity.EntityType.getKey(killed.getType());
+
+            // Track Hinata kill
             if (killedId.equals(ResourceLocation.parse("tensura:hinata_sakaguchi"))) {
                 killer.getPersistentData().putBoolean("primegodling:hinata_killed", true);
                 killer.sendSystemMessage(net.minecraft.network.chat.Component.literal("§dYou killed Hinata Sakaguchi!"));
                 changed = true;
             }
-            if (killedId.equals(ResourceLocation.parse("tensura:rimuru"))
-                    || killedId.equals(ResourceLocation.parse("tensura:rimuru_tempest"))
-                    || killedId.equals(ResourceLocation.parse("tensura:true_dragon_rimuru"))) {
-                killer.getPersistentData().putBoolean("primegodling:rimuru_killed", true);
-                killer.sendSystemMessage(net.minecraft.network.chat.Component.literal("§dYou killed Rimuru Tempest!"));
-                changed = true;
+
+            // Track configurable boss mob kills
+            List<String> bossMobs = new java.util.ArrayList<>(com.primegodling.primegodling.common.config.SkillConfig.COMMON.awakeningBossMobs.get());
+            for (String mobId : bossMobs) {
+                if (killedId.equals(ResourceLocation.parse(mobId))) {
+                    String key = "primegodling:killed_" + mobId;
+                    if (!killer.getPersistentData().getBoolean(key)) {
+                        killer.getPersistentData().putBoolean(key, true);
+                        killer.sendSystemMessage(net.minecraft.network.chat.Component.literal("§dYou killed " + mobId + "!"));
+                        changed = true;
+                    }
+                }
             }
 
             if (killed instanceof Monster) {
@@ -371,10 +378,9 @@ public class PrimeGodling {
 
             if (changed) {
                 int dl = killer.getPersistentData().getInt("primegodling:demon_lord_kills");
-                boolean rim = killer.getPersistentData().getBoolean("primegodling:rimuru_killed");
                 boolean hin = killer.getPersistentData().getBoolean("primegodling:hinata_killed");
                 int hm = killer.getPersistentData().getInt("primegodling:hostile_mob_kills");
-                PacketDistributor.sendToPlayer(killer, new SyncKillCountersPayload(killer.getUUID(), dl, rim, hin, hm));
+                PacketDistributor.sendToPlayer(killer, new SyncKillCountersPayload(killer.getUUID(), dl, hin, hm));
             }
         }
     }
