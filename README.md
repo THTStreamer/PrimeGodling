@@ -333,7 +333,9 @@ creation_authority {
 
 # Divine Devour — Universal Unique Skill
 divine_devour {
-  success_chance = 0.10            # Chance to steal a skill (10%)
+  success_chance = 0.10            # Chance to steal Common/Intrinsic/Extra skills (10%)
+  unique_success_chance = 0.05     # Chance to steal UNIQUE skills (5%)
+  ultimate_success_chance = 0.01   # Chance to steal ULTIMATE skills (1%)
   allow_unique_skills = false     # Allow copying UNIQUE skills
   allow_ultimate_skills = false   # Allow copying ULTIMATE skills
   skill_blacklist = []            # Skills that cannot be copied (modid:skill_id)

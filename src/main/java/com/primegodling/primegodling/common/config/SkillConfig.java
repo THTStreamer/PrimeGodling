@@ -76,6 +76,8 @@ public class SkillConfig {
 
         // Divine Devour
         public final ModConfigSpec.DoubleValue devourSuccessChance;
+        public final ModConfigSpec.DoubleValue devourUniqueSuccessChance;
+        public final ModConfigSpec.DoubleValue devourUltimateSuccessChance;
         public final ModConfigSpec.BooleanValue devourAllowUnique;
         public final ModConfigSpec.BooleanValue devourAllowUltimate;
         public final ModConfigSpec.ConfigValue<List<? extends String>> devourSkillBlacklist;
@@ -224,8 +226,14 @@ public class SkillConfig {
             // ==================== Divine Devour ====================
             builder.push("divine_devour").comment("Divine Devour — Unique Skill (Universal)");
             devourSuccessChance = builder
-                    .comment("Chance to successfully steal a skill (0.10 = 10%)")
+                    .comment("Chance to steal Common/Intrinsic/Extra skills (0.10 = 10%)")
                     .defineInRange("success_chance", 0.10, 0.01, 1.0);
+            devourUniqueSuccessChance = builder
+                    .comment("Chance to steal UNIQUE skills when allow_unique_skills is true (0.05 = 5%)")
+                    .defineInRange("unique_success_chance", 0.05, 0.01, 1.0);
+            devourUltimateSuccessChance = builder
+                    .comment("Chance to steal ULTIMATE skills when allow_ultimate_skills is true (0.01 = 1%)")
+                    .defineInRange("ultimate_success_chance", 0.01, 0.01, 1.0);
             devourAllowUnique = builder
                     .comment("Allow Divine Devour to copy UNIQUE skills from targets",
                             "Default: false (only Common/Intrinsic/Extra skills can be copied)")

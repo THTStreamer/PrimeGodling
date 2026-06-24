@@ -91,9 +91,9 @@ public class DivineDevourSkill extends Skill {
         }
 
         if (entity.level() instanceof ServerLevel serverLevel) {
-            double successChance = SkillConfig.COMMON.devourSuccessChance.get();
+            ManasSkill stolen = targetSkills.get(player.getRandom().nextInt(targetSkills.size()));
+            double successChance = getSuccessChance(stolen);
             if (player.getRandom().nextDouble() < successChance) {
-                ManasSkill stolen = targetSkills.get(player.getRandom().nextInt(targetSkills.size()));
                 if (SkillHelper.learnSkill(player, stolen)) {
                     serverLevel.sendParticles(ParticleTypes.SOUL,
                         target.getX(), target.getY() + 1.0, target.getZ(),
@@ -112,5 +112,17 @@ public class DivineDevourSkill extends Skill {
                     5, 0.3, 0.5, 0.3, 0.02);
             }
         }
+    }
+
+    private double getSuccessChance(ManasSkill skill) {
+        if (skill instanceof Skill tensuraSkill) {
+            Skill.SkillType type = tensuraSkill.getType();
+            return switch (type) {
+                case UNIQUE -> SkillConfig.COMMON.devourUniqueSuccessChance.get();
+                case ULTIMATE -> SkillConfig.COMMON.devourUltimateSuccessChance.get();
+                default -> SkillConfig.COMMON.devourSuccessChance.get();
+            };
+        }
+        return SkillConfig.COMMON.devourSuccessChance.get();
     }
 }
