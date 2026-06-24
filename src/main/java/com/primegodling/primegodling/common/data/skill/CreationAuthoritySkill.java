@@ -46,9 +46,6 @@ public class CreationAuthoritySkill extends Skill {
 
     private static final int CAST_TIME = 60;
     private static final float MAGIC_CIRCLE_RADIUS = 18.0f;
-    private static final float EXPLOSION_RADIUS = 12.0f;
-    private static final float EXPLOSION_RADIUS_MASTERED = 18.0f;
-    private static final int IMMUNITY_DURATION = 40;
     private static final double SKY_HEIGHT = 25.0;
     private static final double MAX_RANGE = 64.0;
 
@@ -173,7 +170,9 @@ public class CreationAuthoritySkill extends Skill {
 
     private static void completeCast(ServerLevel level, ServerPlayer player, ManasSkillInstance instance, CompoundTag tag) {
         boolean mastered = instance.isMastered(player);
-        float radius = mastered ? EXPLOSION_RADIUS_MASTERED : EXPLOSION_RADIUS;
+        float radius = mastered
+            ? SkillConfig.COMMON.creationAuthorityMasteredExplosionRadius.get().floatValue()
+            : SkillConfig.COMMON.creationAuthorityExplosionRadius.get().floatValue();
         int mode = tag.getInt(TAG_MODE);
 
         Vec3 target = new Vec3(
@@ -226,7 +225,8 @@ public class CreationAuthoritySkill extends Skill {
             : SkillConfig.COMMON.creationAuthorityCooldown.get();
         instance.setCoolDown(cooldown, mode);
 
-        player.invulnerableTime = Math.max(player.invulnerableTime, IMMUNITY_DURATION);
+        int immunityDuration = SkillConfig.COMMON.creationAuthorityImmunityDuration.get();
+        player.invulnerableTime = Math.max(player.invulnerableTime, immunityDuration);
 
         tag.putBoolean(TAG_CASTING, false);
         instance.markDirty();

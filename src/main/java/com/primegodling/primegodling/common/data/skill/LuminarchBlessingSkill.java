@@ -12,9 +12,6 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class LuminarchBlessingSkill extends Skill {
 
-    private static final int GLOW_RANGE = 24;
-    private static final int GLOW_RANGE_MASTERED = 48;
-
     public LuminarchBlessingSkill() {
         super(SkillType.INTRINSIC);
     }
@@ -49,7 +46,9 @@ public class LuminarchBlessingSkill extends Skill {
                 entity.getX(), entity.getY() + 1.5, entity.getZ(),
                 2, 1.5, 0.8, 1.5, 0.01);
 
-            int range = instance.isMastered(entity) ? GLOW_RANGE_MASTERED : GLOW_RANGE;
+            int range = instance.isMastered(entity)
+                ? SkillConfig.COMMON.luminarchBlessingMasteredRange.get()
+                : SkillConfig.COMMON.luminarchBlessingRange.get();
             for (LivingEntity nearby : serverLevel.getEntitiesOfClass(LivingEntity.class,
                     entity.getBoundingBox().inflate(range),
                     e -> e != entity && e.isAlive())) {
@@ -57,8 +56,9 @@ public class LuminarchBlessingSkill extends Skill {
             }
 
             if (instance.isMastered(entity)) {
+                double healRange = SkillConfig.COMMON.luminarchBlessingHealRange.get();
                 for (LivingEntity nearby : serverLevel.getEntitiesOfClass(LivingEntity.class,
-                        entity.getBoundingBox().inflate(4.0),
+                        entity.getBoundingBox().inflate(healRange),
                         e -> e != entity && e.isAlive())) {
                     nearby.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0, false, false, true));
                 }

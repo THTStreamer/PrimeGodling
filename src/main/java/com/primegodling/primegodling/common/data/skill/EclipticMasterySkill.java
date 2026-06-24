@@ -1,5 +1,6 @@
 package com.primegodling.primegodling.common.data.skill;
 
+import com.primegodling.primegodling.common.config.SkillConfig;
 import io.github.manasmods.manascore.network.api.util.Changeable;
 import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
 import io.github.manasmods.tensura.ability.skill.Skill;
@@ -19,9 +20,9 @@ public class EclipticMasterySkill extends Skill {
     public EclipticMasterySkill() {
         super(SkillType.INTRINSIC);
         addHeldAttributeModifier(Attributes.ARMOR, ARMOR_ID,
-            6.0, AttributeModifier.Operation.ADD_VALUE);
+            SkillConfig.COMMON.eclipticMasteryArmor.get(), AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.ARMOR_TOUGHNESS, TOUGHNESS_ID,
-            4.0, AttributeModifier.Operation.ADD_VALUE);
+            SkillConfig.COMMON.eclipticMasteryToughness.get(), AttributeModifier.Operation.ADD_VALUE);
     }
 
     @Override
@@ -60,7 +61,9 @@ public class EclipticMasterySkill extends Skill {
             net.minecraft.world.damagesource.DamageSource source, Changeable<Float> damage) {
         if (entity.level().isClientSide) return false;
         if (source.getEntity() instanceof LivingEntity attacker) {
-            float reflect = instance.isMastered(entity) ? 3.0f : 1.0f;
+            float reflect = instance.isMastered(entity)
+                ? SkillConfig.COMMON.eclipticMasteryMasteredReflectDamage.get().floatValue()
+                : SkillConfig.COMMON.eclipticMasteryReflectDamage.get().floatValue();
             attacker.hurt(entity.damageSources().thorns(entity), reflect);
         }
         return false;
@@ -70,7 +73,9 @@ public class EclipticMasterySkill extends Skill {
     public boolean onBeingDamaged(ManasSkillInstance instance, LivingEntity entity,
             net.minecraft.world.damagesource.DamageSource source, float damage) {
         if (entity.level().isClientSide) return false;
-        double chance = instance.isMastered(entity) ? 0.10 : 0.05;
+        double chance = instance.isMastered(entity)
+            ? SkillConfig.COMMON.eclipticMasteryMasteredNegateChance.get()
+            : SkillConfig.COMMON.eclipticMasteryNegateChance.get();
         if (entity.getRandom().nextDouble() < chance) {
             if (entity.level() instanceof ServerLevel serverLevel) {
                 serverLevel.sendParticles(ParticleTypes.ENCHANTED_HIT,

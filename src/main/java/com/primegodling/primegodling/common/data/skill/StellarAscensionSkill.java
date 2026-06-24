@@ -1,5 +1,6 @@
 package com.primegodling.primegodling.common.data.skill;
 
+import com.primegodling.primegodling.common.config.SkillConfig;
 import io.github.manasmods.manascore.network.api.util.Changeable;
 import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
 import io.github.manasmods.tensura.ability.skill.Skill;
@@ -22,9 +23,9 @@ public class StellarAscensionSkill extends Skill {
     public StellarAscensionSkill() {
         super(SkillType.INTRINSIC);
         addHeldAttributeModifier(Attributes.ATTACK_DAMAGE, STRENGTH_ID,
-            4.0, AttributeModifier.Operation.ADD_VALUE);
+            SkillConfig.COMMON.stellarAscensionAttackBonus.get(), AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.MAX_HEALTH, HEALTH_ID,
-            20.0, AttributeModifier.Operation.ADD_VALUE);
+            SkillConfig.COMMON.stellarAscensionHealthBonus.get(), AttributeModifier.Operation.ADD_VALUE);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class StellarAscensionSkill extends Skill {
     @Override
     public void onTick(ManasSkillInstance instance, LivingEntity entity) {
         if (entity.level().isClientSide) return;
-        if (EnergyHelper.isOutOfEnergy(entity, instance, 0, 5.0f)) {
+        if (EnergyHelper.isOutOfEnergy(entity, instance, 0, (float) SkillConfig.COMMON.stellarAscensionEnergyCost.get().doubleValue())) {
             instance.setToggled(false);
             instance.onToggleOff(entity);
             return;
@@ -72,7 +73,9 @@ public class StellarAscensionSkill extends Skill {
             LivingEntity target, net.minecraft.world.damagesource.DamageSource source,
             Changeable<Float> damage) {
         if (!instance.isToggled()) return true;
-        float bonus = instance.isMastered(entity) ? 4.0f : 2.0f;
+        float bonus = instance.isMastered(entity)
+            ? SkillConfig.COMMON.stellarAscensionMasteredDamageBonus.get().floatValue()
+            : SkillConfig.COMMON.stellarAscensionDamageBonus.get().floatValue();
         damage.set(damage.get() + bonus);
         return true;
     }

@@ -261,73 +261,98 @@ All config files are located in `config/primegodling/`:
 | File | Type | Purpose |
 |------|------|---------|
 | `races.toml` | COMMON | EP thresholds, magicule/aura ranges, flight costs, EP gain multiplier, random reward counts |
-| `skills.toml` | COMMON | Primordial Bloom regen rate, Cosmic Awareness range, Divine Nexus requirements, Creation Authority cooldowns |
+| `skills.toml` | COMMON | All skill settings, Divine Nexus requirements, Divine Devour options |
 | `server.toml` | SERVER | Nexus Core crafting recipe toggle |
 | `nexus-drops.toml` | SERVER | Per-mob Nexus Core drop chances |
 
-### Key Config Values
+### Skills Config (`skills.toml`)
+
+Every skill in the mod has configurable values. Below is a summary of all available options:
 
 ```toml
-# races.toml
-evolution {
-  stage1_demi_godling_ep = 50000
-  stage2_prime_godling_ep = 100000
-  stage3_celestial_godling_ep = 200000
-  stage4_ecliptic_godling_ep = 400000
-  stage5_new_god_ep = 800000
-}
-
-ep_gain {
-  ep_gain_multiplier = 0.5  # Half EP gain speed
-}
-
-creative_flight {
-  activation_cost = 40
-  maintenance_cost = 10
-  maintenance_interval_ticks = 10
-  activation_cost_subordinate = 20
-  maintenance_cost_subordinate = 2
-  maintenance_interval_ticks_subordinate = 100
-}
-
-random_rewards {
-  prime_godling_resistance_count = 3
-  prime_godling_skill_count = 3
-  celestial_godling_skill_count = 2
-}
-```
-
-```toml
-# skills.toml
+# Primordial Bloom — Stage 2 Unique Skill
 primordial_bloom {
-  regen_rate_percent_per_second = 3
+  regen_rate_percent_per_second = 3  # Magicule regen per second (% of max)
 }
 
-divine_nexus_awakening {
-  ep_required = 1000000
-  cores_required = 1000
-  demon_lord_kills_required = 3
-  hostile_mob_kills_required = 50000
-  require_hinata_kill = true
-  boss_mobs = []
+# Cosmic Awareness — Stage 2 Intrinsic Skill
+cosmic_awareness {
+  detection_range = 32  # Range for invisible entity detection and presence sense
 }
 
-divine_nexus {
-  min_unique_skills = 5
-  min_ep_required = 150000
-  nexus_core_ep_cost = 10000
+# Stellar Ascension — Stage 3 Intrinsic Skill
+stellar_ascension {
+  attack_bonus = 4.0              # Bonus attack damage when toggled
+  health_bonus = 20.0             # Bonus max health when toggled
+  damage_bonus = 2.0              # Bonus magic damage on attack (non-mastered)
+  mastered_damage_bonus = 4.0     # Bonus magic damage on attack (mastered)
+  energy_cost = 5.0               # Energy cost per tick while toggled
 }
 
+# Ecliptic Mastery — Stage 3 Intrinsic Skill
+ecliptic_mastery {
+  armor = 6.0                     # Bonus armor
+  toughness = 4.0                 # Bonus armor toughness
+  reflect_damage = 1.0            # Damage reflected to attackers (non-mastered)
+  mastered_reflect_damage = 3.0   # Damage reflected to attackers (mastered)
+  negate_chance = 0.05            # Chance to negate damage (5%, non-mastered)
+  mastered_negate_chance = 0.10   # Chance to negate damage (10%, mastered)
+}
+
+# Luminarch Blessing — Stage 4 Intrinsic Skill
+luminarch_blessing {
+  energy_cost_per_tick = 200      # Energy cost per tick while toggled
+  glow_range = 24                 # Glowing detection range (non-mastered)
+  mastered_glow_range = 48        # Glowing detection range (mastered)
+  heal_range = 4.0                # Range for healing allies (mastered only)
+}
+
+# Primordial Fortitude — Stage 5 Intrinsic Skill
+primordial_fortitude {
+  attack_bonus = 10.0             # Bonus attack damage
+  health_bonus = 40.0             # Bonus max health
+  armor = 12.0                    # Bonus armor
+  toughness = 8.0                 # Bonus armor toughness
+  speed_multiplier = 0.1          # Movement speed bonus (0.1 = 10% faster)
+  damage_reduction = 0.9          # Damage reduction (90%, non-mastered)
+  mastered_damage_reduction = 0.95 # Damage reduction (95%, mastered)
+  learning_gain = 50.0            # Bonus ability learning rate
+  mastery_gain = 50.0             # Bonus ability mastery rate
+  chant_speed = 5.0               # Chant speed multiplier
+}
+
+# Creation Authority — Stage 6 Ultimate Skill
 creation_authority {
-  cooldown_ticks = 200
-  mastered_cooldown_ticks = 60
-  energy_cost = 5000.0
+  cooldown_ticks = 200            # Cooldown after use (non-mastered)
+  mastered_cooldown_ticks = 60    # Cooldown after use (mastered)
+  energy_cost = 5000.0            # Energy cost to activate
+  explosion_radius = 12.0         # Explosion radius (non-mastered)
+  mastered_explosion_radius = 18.0 # Explosion radius (mastered)
+  immunity_duration = 40          # Invulnerability after activation (ticks)
 }
 
+# Divine Devour — Universal Unique Skill
 divine_devour {
-  allow_unique_skills = false
-  allow_ultimate_skills = false
-  skill_blacklist = []
+  allow_unique_skills = false     # Allow copying UNIQUE skills
+  allow_ultimate_skills = false   # Allow copying ULTIMATE skills
+  skill_blacklist = []            # Skills that cannot be copied (modid:skill_id)
+}
+
+# Divine Nexus — Awakening prerequisites (New God only)
+divine_nexus {
+  min_unique_skills = 5           # Minimum unique skills to unlock path
+  min_ep_required = 150000        # Minimum EP to see Divine Nexus option
+  nexus_core_ep_cost = 10000      # EP cost per Nexus Core consumed
+}
+
+# Divine Nexus Awakening — Full awakening requirements
+divine_nexus_awakening {
+  ep_required = 1000000           # Minimum EP required
+  cores_required = 1000           # Nexus Cores required
+  demon_lord_kills_required = 3   # Awakened Demon Lords (Path A)
+  hostile_mob_kills_required = 50000 # Hostile mobs (Path B)
+  require_hinata_kill = true      # Require Hinata kill for Path B
+  boss_mobs = []                  # Additional boss mobs (modid:entity_id)
 }
 ```
 

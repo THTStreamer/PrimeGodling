@@ -1,5 +1,6 @@
 package com.primegodling.primegodling.common.data.skill;
 
+import com.primegodling.primegodling.common.config.SkillConfig;
 import io.github.manasmods.manascore.network.api.util.Changeable;
 import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
 import io.github.manasmods.tensura.ability.skill.Skill;
@@ -27,15 +28,15 @@ public class PrimordialFortitudeSkill extends Skill {
     public PrimordialFortitudeSkill() {
         super(SkillType.INTRINSIC);
         addHeldAttributeModifier(Attributes.ATTACK_DAMAGE, DMG_ID,
-            10.0, AttributeModifier.Operation.ADD_VALUE);
+            SkillConfig.COMMON.primordialFortitudeAttackBonus.get(), AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.MAX_HEALTH, HP_ID,
-            40.0, AttributeModifier.Operation.ADD_VALUE);
+            SkillConfig.COMMON.primordialFortitudeHealthBonus.get(), AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.ARMOR, ARMOR_ID,
-            12.0, AttributeModifier.Operation.ADD_VALUE);
+            SkillConfig.COMMON.primordialFortitudeArmor.get(), AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.ARMOR_TOUGHNESS, TOUGH_ID,
-            8.0, AttributeModifier.Operation.ADD_VALUE);
+            SkillConfig.COMMON.primordialFortitudeToughness.get(), AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.MOVEMENT_SPEED, SPEED_ID,
-            0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+            SkillConfig.COMMON.primordialFortitudeSpeedMultiplier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
     @Override
@@ -69,7 +70,9 @@ public class PrimordialFortitudeSkill extends Skill {
     public boolean onTakenDamage(ManasSkillInstance instance, LivingEntity entity,
             net.minecraft.world.damagesource.DamageSource source, Changeable<Float> damage) {
         if (!entity.level().isClientSide) {
-            float reduction = instance.isMastered(entity) ? 0.95f : 0.9f;
+            float reduction = instance.isMastered(entity)
+                ? SkillConfig.COMMON.primordialFortitudeMasteredDamageReduction.get().floatValue()
+                : SkillConfig.COMMON.primordialFortitudeDamageReduction.get().floatValue();
             damage.set(damage.get() * (1.0f - reduction));
         }
         return false;
@@ -80,19 +83,22 @@ public class PrimordialFortitudeSkill extends Skill {
         if (!entity.level().isClientSide()) {
             instance.addHeldAttributeModifiers(entity, 0);
 
+            double learningGain = SkillConfig.COMMON.primordialFortitudeLearningGain.get();
             AttributeInstance learningAttr = entity.getAttribute(TensuraAttributes.ABILITY_LEARNING_GAIN);
             if (learningAttr != null) {
                 learningAttr.addOrReplacePermanentModifier(
-                    new AttributeModifier(LEARNING_ID, 50.0, AttributeModifier.Operation.ADD_VALUE));
+                    new AttributeModifier(LEARNING_ID, learningGain, AttributeModifier.Operation.ADD_VALUE));
             }
 
+            double masteryGain = SkillConfig.COMMON.primordialFortitudeMasteryGain.get();
             AttributeInstance masteryAttr = entity.getAttribute(TensuraAttributes.ABILITY_MASTERY_GAIN);
             if (masteryAttr != null) {
                 masteryAttr.addOrReplacePermanentModifier(
-                    new AttributeModifier(MASTERY_ID, 50.0, AttributeModifier.Operation.ADD_VALUE));
+                    new AttributeModifier(MASTERY_ID, masteryGain, AttributeModifier.Operation.ADD_VALUE));
             }
 
-            AttributeHelper.multiplyChantSpeed(entity, 5.0);
+            double chantSpeed = SkillConfig.COMMON.primordialFortitudeChantSpeed.get();
+            AttributeHelper.multiplyChantSpeed(entity, chantSpeed);
         }
     }
 
@@ -102,19 +108,22 @@ public class PrimordialFortitudeSkill extends Skill {
         if (player.level().isClientSide()) return;
         instance.addHeldAttributeModifiers(player, 0);
 
+        double learningGain = SkillConfig.COMMON.primordialFortitudeLearningGain.get();
         AttributeInstance learningAttr = player.getAttribute(TensuraAttributes.ABILITY_LEARNING_GAIN);
         if (learningAttr != null) {
             learningAttr.addOrReplacePermanentModifier(
-                new AttributeModifier(LEARNING_ID, 50.0, AttributeModifier.Operation.ADD_VALUE));
+                new AttributeModifier(LEARNING_ID, learningGain, AttributeModifier.Operation.ADD_VALUE));
         }
 
+        double masteryGain = SkillConfig.COMMON.primordialFortitudeMasteryGain.get();
         AttributeInstance masteryAttr = player.getAttribute(TensuraAttributes.ABILITY_MASTERY_GAIN);
         if (masteryAttr != null) {
             masteryAttr.addOrReplacePermanentModifier(
-                new AttributeModifier(MASTERY_ID, 50.0, AttributeModifier.Operation.ADD_VALUE));
+                new AttributeModifier(MASTERY_ID, masteryGain, AttributeModifier.Operation.ADD_VALUE));
         }
 
-        AttributeHelper.multiplyChantSpeed(player, 5.0);
+        double chantSpeed = SkillConfig.COMMON.primordialFortitudeChantSpeed.get();
+        AttributeHelper.multiplyChantSpeed(player, chantSpeed);
     }
 
     @Override
@@ -128,7 +137,8 @@ public class PrimordialFortitudeSkill extends Skill {
             AttributeInstance masteryAttr = entity.getAttribute(TensuraAttributes.ABILITY_MASTERY_GAIN);
             if (masteryAttr != null) masteryAttr.removeModifier(MASTERY_ID);
 
-            AttributeHelper.removeChantSpeed(entity, 5.0);
+            double chantSpeed = SkillConfig.COMMON.primordialFortitudeChantSpeed.get();
+            AttributeHelper.removeChantSpeed(entity, chantSpeed);
         }
     }
 }
