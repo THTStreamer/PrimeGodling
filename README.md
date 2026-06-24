@@ -129,7 +129,7 @@ At certain evolution milestones, you receive random skills from the Tensura skil
 
 ## Creative Flight
 
-All Godling races grant **creative flight** (the `HAS_CREATIVE_FLIGHT` tag). Press the **R key** (default) to toggle flight on/off.
+Flight is unlocked at **Celestial Godling** (Stage 3) and above. Press the **R key** (default) to toggle flight on/off.
 
 ### Flight Costs
 
@@ -183,11 +183,8 @@ Nexus Cores also drop from certain Tensura mobs. The drop table is configurable 
 
 | Mob | Drop Chance | Amount |
 |-----|-------------|--------|
-| Rimuru Tempest | 100% | 1 |
 | Hinata Sakaguchi | 100% | 1 |
 | Ifrit | 100% | 1 |
-| Dragon | 100% | 1 |
-| True Dragon Rimuru | 100% | 1 |
 | Charybdis | 100% | 1 |
 | Wyrm | 50% | 1 |
 | Ogre | 25% | 1 |
@@ -196,6 +193,8 @@ Nexus Cores also drop from certain Tensura mobs. The drop table is configurable 
 | Goblin | 1% | 1 |
 | Orc | 2% | 1 |
 | Lizardman | 2% | 1 |
+
+> **Note:** Rimuru Tempest is not included by default as he is not part of the base Tensura mod. You can add any Tensura entity ID via the config file.
 
 ### Nexus Core Consumption
 
@@ -214,10 +213,10 @@ To begin the Divine Nexus ritual, you must meet **all** of the following:
 | Requirement | Details |
 |-------------|---------|
 | **Race** | Must be a **New God** (Stage 5) |
-| **EP** | At least 1,000,000 EP |
+| **EP** | Configurable (default: 1,000,000 EP) |
 | **Named** | Your character must have a name |
-| **Nexus Cores Consumed** | At least 1,000 Nexus Cores eaten |
-| **Kill Requirements** | Kill 3 Awakened Demon Lords **OR** (Kill Rimuru Tempest + Kill Hinata Sakaguchi + Kill 50,000 hostile mobs) |
+| **Nexus Cores Consumed** | Configurable (default: 1,000 Nexus Cores eaten) |
+| **Kill Requirements** | Configurable: Kill X Awakened Demon Lords **OR** (Kill Hinata Sakaguchi + Kill Y hostile mobs) |
 | **Unique Skills** | At least 5 unique skills learned |
 | **Magicule** | Enough magicule to fuel the awakening (configurable, default 10,000) |
 
@@ -245,9 +244,9 @@ During the ritual:
 
 Your kill progress is tracked automatically:
 - **Demon Lord kills:** Kill any player with True Demon Lord status.
-- **Rimuru kill:** Kill `tensura:rimuru`, `tensura:rimuru_tempest`, or `tensura:true_dragon_rimuru`.
-- **Hinata kill:** Kill `tensura:hinata_sakaguchi`.
+- **Hinata kill:** Kill `tensura:hinata_sakaguchi` (if `require_hinata_kill` is enabled).
 - **Hostile mob kills:** Kill any `Monster` entity.
+- **Boss mob kills:** Kill any entity registered in the `boss_mobs` config list.
 
 Progress is synced to your client and displayed in chat when you make progress.
 
@@ -300,6 +299,15 @@ random_rewards {
 # skills.toml
 primordial_bloom {
   regen_rate_percent_per_second = 3
+}
+
+divine_nexus_awakening {
+  ep_required = 1000000
+  cores_required = 1000
+  demon_lord_kills_required = 3
+  hostile_mob_kills_required = 50000
+  require_hinata_kill = true
+  boss_mobs = []
 }
 
 divine_nexus {
