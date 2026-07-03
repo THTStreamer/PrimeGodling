@@ -63,6 +63,28 @@ All notable changes to the **Primordial Ascent** mod are documented in this file
 
 ---
 
+## [0.2.5] — 2026-07-03
+
+### Fixed
+- **Ecliptic Mastery Immortal Bug**: Skill is now toggleable. Damage negation and reflection only activate when toggled ON. Previously, the passive always-on behavior caused near-immortality when combined with other defensive skills.
+- **Primordial Fortitude Attribute Loss on Rejoin**: Skill modifiers and progression bonuses now re-apply correctly when reconnecting to a server.
+- **Config Values Not Affecting Stats**: Stellar Ascension, Ecliptic Mastery, and Primordial Fortitude now read their attribute values from config at runtime instead of using hardcoded constructor values.
+- **Dead Config `divineNexusMinEp`**: Now properly checked as an early EP gate in the Divine Nexus awakening ritual.
+- **Skill Modifier Persistence on Rejoin**: All toggled skills now re-apply their attribute modifiers when a player logs in.
+
+### Changed
+- **Primordial Fortitude Damage Reduction**: Reduced from 90-95% to 55-65% default. Config range expanded to 0-100% so server owners can customize freely.
+- **Divine Disruption Visuals**: Professional-grade particle effects and client-side renderer with shockwave rings, ground indicator, spiraling tendrils, and glow orbs. Added Warden sound effects on activation/release.
+- **Divine Devour & Disruption Configurable**: Hardcoded constants now exposed as config options:
+  - `divine_devour.cooldown_ticks`, `mastered_cooldown_ticks`, `range`
+  - `divine_disruption.aoe_radius`, `cost_interval`
+- **Skill Textures**: All 9 skill icon textures now properly placed under `assets/primegodling/textures/skill/`.
+
+### Added
+- **Rejoin Skill Sync**: Skills automatically re-apply their held attribute modifiers when a player logs in, preventing stat loss on reconnect.
+
+---
+
 ## Credits
 
 See [LICENSE.txt](LICENSE.txt) for full attribution and credits.

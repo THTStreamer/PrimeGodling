@@ -53,8 +53,12 @@ public class NexusAwakening {
         }
 
         double currentEP = EnergyHelper.getBaseMaxEP(player);
+        int minEp = SkillConfig.COMMON.divineNexusMinEp.get();
+        if (currentEP < minEp) {
+            return "§cYou need at least " + minEp + " EP to access the Divine Nexus path. You have " + (int) currentEP + " EP.";
+        }
         if (currentEP < epRequired) {
-            return "§cYou need at least " + epRequired + " EP. You have " + (int) currentEP + " EP.";
+            return "§cYou need at least " + epRequired + " EP to attempt the awakening. You have " + (int) currentEP + " EP.";
         }
 
         IExistence existence = TensuraStorages.getExistenceFrom(player);

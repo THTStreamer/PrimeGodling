@@ -23,17 +23,21 @@ public class StellarAscensionSkill extends Skill {
     public StellarAscensionSkill() {
         super(SkillType.INTRINSIC);
         addHeldAttributeModifier(Attributes.ATTACK_DAMAGE, STRENGTH_ID,
-            4.0, AttributeModifier.Operation.ADD_VALUE);
+            1.0, AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.MAX_HEALTH, HEALTH_ID,
-            20.0, AttributeModifier.Operation.ADD_VALUE);
+            1.0, AttributeModifier.Operation.ADD_VALUE);
     }
 
     @Override
     public double getAttributeModifierAmplifier(ManasSkillInstance instance, LivingEntity entity,
             net.minecraft.core.Holder<net.minecraft.world.entity.ai.attributes.Attribute> attribute,
             io.github.manasmods.manascore.skill.api.ManasSkill.AttributeTemplate template, int mode) {
-        if (instance.isMastered(entity)) {
-            return 2.0;
+        double masteredMult = instance.isMastered(entity) ? 2.0 : 1.0;
+        if (attribute.value() == Attributes.ATTACK_DAMAGE.value()) {
+            return SkillConfig.COMMON.stellarAscensionAttackBonus.get() * masteredMult;
+        }
+        if (attribute.value() == Attributes.MAX_HEALTH.value()) {
+            return SkillConfig.COMMON.stellarAscensionHealthBonus.get() * masteredMult;
         }
         return 1.0;
     }

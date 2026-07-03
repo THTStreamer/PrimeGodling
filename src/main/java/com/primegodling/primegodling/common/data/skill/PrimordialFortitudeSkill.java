@@ -28,35 +28,100 @@ public class PrimordialFortitudeSkill extends Skill {
     public PrimordialFortitudeSkill() {
         super(SkillType.INTRINSIC);
         addHeldAttributeModifier(Attributes.ATTACK_DAMAGE, DMG_ID,
-            10.0, AttributeModifier.Operation.ADD_VALUE);
+            1.0, AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.MAX_HEALTH, HP_ID,
-            40.0, AttributeModifier.Operation.ADD_VALUE);
+            1.0, AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.ARMOR, ARMOR_ID,
-            12.0, AttributeModifier.Operation.ADD_VALUE);
+            1.0, AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.ARMOR_TOUGHNESS, TOUGH_ID,
-            8.0, AttributeModifier.Operation.ADD_VALUE);
+            1.0, AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.MOVEMENT_SPEED, SPEED_ID,
-            0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+            1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
     @Override
     public double getAttributeModifierAmplifier(ManasSkillInstance instance, LivingEntity entity,
             net.minecraft.core.Holder<net.minecraft.world.entity.ai.attributes.Attribute> attribute,
             io.github.manasmods.manascore.skill.api.ManasSkill.AttributeTemplate template, int mode) {
-        if (instance.isMastered(entity)) {
-            return 1.5;
+        double masteredMult = instance.isMastered(entity) ? 1.5 : 1.0;
+        if (attribute.value() == Attributes.ATTACK_DAMAGE.value()) {
+            return SkillConfig.COMMON.primordialFortitudeAttackBonus.get() * masteredMult;
+        }
+        if (attribute.value() == Attributes.MAX_HEALTH.value()) {
+            return SkillConfig.COMMON.primordialFortitudeHealthBonus.get() * masteredMult;
+        }
+        if (attribute.value() == Attributes.ARMOR.value()) {
+            return SkillConfig.COMMON.primordialFortitudeArmor.get() * masteredMult;
+        }
+        if (attribute.value() == Attributes.ARMOR_TOUGHNESS.value()) {
+            return SkillConfig.COMMON.primordialFortitudeToughness.get() * masteredMult;
+        }
+        if (attribute.value() == Attributes.MOVEMENT_SPEED.value()) {
+            return SkillConfig.COMMON.primordialFortitudeSpeedMultiplier.get() * masteredMult;
         }
         return 1.0;
     }
 
     @Override
-    public boolean canTick(ManasSkillInstance instance, LivingEntity entity) {
+    public boolean canBeToggled(ManasSkillInstance instance, LivingEntity entity) {
         return true;
+    }
+
+    @Override
+    public boolean canTick(ManasSkillInstance instance, LivingEntity entity) {
+        return instance.isToggled();
+    }
+
+    private void applyProgressionBonuses(LivingEntity entity) {
+        double learningGain = SkillConfig.COMMON.primordialFortitudeLearningGain.get();
+        AttributeInstance learningAttr = entity.getAttribute(TensuraAttributes.ABILITY_LEARNING_GAIN);
+        if (learningAttr != null) {
+            learningAttr.addOrReplacePermanentModifier(
+                new AttributeModifier(LEARNING_ID, learningGain, AttributeModifier.Operation.ADD_VALUE));
+        }
+
+        double masteryGain = SkillConfig.COMMON.primordialFortitudeMasteryGain.get();
+        AttributeInstance masteryAttr = entity.getAttribute(TensuraAttributes.ABILITY_MASTERY_GAIN);
+        if (masteryAttr != null) {
+            masteryAttr.addOrReplacePermanentModifier(
+                new AttributeModifier(MASTERY_ID, masteryGain, AttributeModifier.Operation.ADD_VALUE));
+        }
+
+        double chantSpeed = SkillConfig.COMMON.primordialFortitudeChantSpeed.get();
+        AttributeHelper.multiplyChantSpeed(entity, chantSpeed);
+    }
+
+    private void removeProgressionBonuses(LivingEntity entity) {
+        AttributeInstance learningAttr = entity.getAttribute(TensuraAttributes.ABILITY_LEARNING_GAIN);
+        if (learningAttr != null) learningAttr.removeModifier(LEARNING_ID);
+
+        AttributeInstance masteryAttr = entity.getAttribute(TensuraAttributes.ABILITY_MASTERY_GAIN);
+        if (masteryAttr != null) masteryAttr.removeModifier(MASTERY_ID);
+
+        double chantSpeed = SkillConfig.COMMON.primordialFortitudeChantSpeed.get();
+        AttributeHelper.removeChantSpeed(entity, chantSpeed);
+    }
+
+    @Override
+    public void onToggleOn(ManasSkillInstance instance, LivingEntity entity) {
+        if (!entity.level().isClientSide()) {
+            instance.addHeldAttributeModifiers(entity, 0);
+            applyProgressionBonuses(entity);
+        }
+    }
+
+    @Override
+    public void onToggleOff(ManasSkillInstance instance, LivingEntity entity) {
+        if (!entity.level().isClientSide()) {
+            instance.removeAttributeModifiers(entity, 0);
+            removeProgressionBonuses(entity);
+        }
     }
 
     @Override
     public void onTick(ManasSkillInstance instance, LivingEntity entity) {
         if (entity.level().isClientSide) return;
+        if (!instance.isToggled()) return;
         if (entity.tickCount % 40 == 0) {
             entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 100, 0, false, false, true));
             entity.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 100, 0, false, false, true));
@@ -70,6 +135,7 @@ public class PrimordialFortitudeSkill extends Skill {
     public boolean onTakenDamage(ManasSkillInstance instance, LivingEntity entity,
             net.minecraft.world.damagesource.DamageSource source, Changeable<Float> damage) {
         if (!entity.level().isClientSide) {
+            if (!instance.isToggled()) return false;
             float reduction = instance.isMastered(entity)
                 ? SkillConfig.COMMON.primordialFortitudeMasteredDamageReduction.get().floatValue()
                 : SkillConfig.COMMON.primordialFortitudeDamageReduction.get().floatValue();
@@ -80,65 +146,24 @@ public class PrimordialFortitudeSkill extends Skill {
 
     @Override
     public void onLearnSkill(ManasSkillInstance instance, LivingEntity entity) {
-        if (!entity.level().isClientSide()) {
-            instance.addHeldAttributeModifiers(entity, 0);
-
-            double learningGain = SkillConfig.COMMON.primordialFortitudeLearningGain.get();
-            AttributeInstance learningAttr = entity.getAttribute(TensuraAttributes.ABILITY_LEARNING_GAIN);
-            if (learningAttr != null) {
-                learningAttr.addOrReplacePermanentModifier(
-                    new AttributeModifier(LEARNING_ID, learningGain, AttributeModifier.Operation.ADD_VALUE));
-            }
-
-            double masteryGain = SkillConfig.COMMON.primordialFortitudeMasteryGain.get();
-            AttributeInstance masteryAttr = entity.getAttribute(TensuraAttributes.ABILITY_MASTERY_GAIN);
-            if (masteryAttr != null) {
-                masteryAttr.addOrReplacePermanentModifier(
-                    new AttributeModifier(MASTERY_ID, masteryGain, AttributeModifier.Operation.ADD_VALUE));
-            }
-
-            double chantSpeed = SkillConfig.COMMON.primordialFortitudeChantSpeed.get();
-            AttributeHelper.multiplyChantSpeed(entity, chantSpeed);
-        }
+        instance.setToggled(true);
     }
 
     @Override
     public void onRespawn(ManasSkillInstance instance, ServerPlayer player, boolean wasDead) {
         if (!wasDead) return;
         if (player.level().isClientSide()) return;
-        instance.addHeldAttributeModifiers(player, 0);
-
-        double learningGain = SkillConfig.COMMON.primordialFortitudeLearningGain.get();
-        AttributeInstance learningAttr = player.getAttribute(TensuraAttributes.ABILITY_LEARNING_GAIN);
-        if (learningAttr != null) {
-            learningAttr.addOrReplacePermanentModifier(
-                new AttributeModifier(LEARNING_ID, learningGain, AttributeModifier.Operation.ADD_VALUE));
+        if (instance.isToggled()) {
+            instance.addHeldAttributeModifiers(player, 0);
+            applyProgressionBonuses(player);
         }
-
-        double masteryGain = SkillConfig.COMMON.primordialFortitudeMasteryGain.get();
-        AttributeInstance masteryAttr = player.getAttribute(TensuraAttributes.ABILITY_MASTERY_GAIN);
-        if (masteryAttr != null) {
-            masteryAttr.addOrReplacePermanentModifier(
-                new AttributeModifier(MASTERY_ID, masteryGain, AttributeModifier.Operation.ADD_VALUE));
-        }
-
-        double chantSpeed = SkillConfig.COMMON.primordialFortitudeChantSpeed.get();
-        AttributeHelper.multiplyChantSpeed(player, chantSpeed);
     }
 
     @Override
     public void onForgetSkill(ManasSkillInstance instance, LivingEntity entity) {
         if (!entity.level().isClientSide()) {
             instance.removeAttributeModifiers(entity, 0);
-
-            AttributeInstance learningAttr = entity.getAttribute(TensuraAttributes.ABILITY_LEARNING_GAIN);
-            if (learningAttr != null) learningAttr.removeModifier(LEARNING_ID);
-
-            AttributeInstance masteryAttr = entity.getAttribute(TensuraAttributes.ABILITY_MASTERY_GAIN);
-            if (masteryAttr != null) masteryAttr.removeModifier(MASTERY_ID);
-
-            double chantSpeed = SkillConfig.COMMON.primordialFortitudeChantSpeed.get();
-            AttributeHelper.removeChantSpeed(entity, chantSpeed);
+            removeProgressionBonuses(entity);
         }
     }
 }

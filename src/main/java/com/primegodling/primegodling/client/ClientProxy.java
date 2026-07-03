@@ -1,5 +1,6 @@
 package com.primegodling.primegodling.client;
 
+import com.primegodling.primegodling.client.render.DivineDisruptionRenderer;
 import com.primegodling.primegodling.client.render.RaceModelRegistry;
 import com.primegodling.primegodling.client.render.halo.HaloMeshRenderer;
 import net.neoforged.bus.api.IEventBus;
@@ -11,6 +12,7 @@ public class ClientProxy {
         bus.addListener(ClientProxy::registerScreens);
 
         HaloMeshRenderer.register();
+        DivineDisruptionRenderer.register();
     }
 
     private static void registerScreens(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) {

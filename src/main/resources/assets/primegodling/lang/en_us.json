@@ -40,13 +40,16 @@
   "primegodling.skill.luminarch_blessing.description": "Toggle: grants Regeneration, Absorption, and highlights all living entities within 24 blocks through walls (Glowing). Mastery: 48-block range and heals nearby allies.",
 
   "primegodling.skill.primordial_fortitude": "Primordial Fortitude",
-  "primegodling.skill.primordial_fortitude.description": "Bestows overwhelming divine fortitude, boosting all core attributes. Grants Fire Resistance, Water Breathing, fall damage immunity, and 90-95% damage reduction. Greatly accelerates skill learning.",
+  "primegodling.skill.primordial_fortitude.description": "Bestows overwhelming divine fortitude, boosting all core attributes. Grants Fire Resistance, Water Breathing, fall damage immunity, and 55-65% damage reduction. Greatly accelerates skill learning.",
 
   "primegodling.skill.creation_authority": "Creation Authority",
   "primegodling.skill.creation_authority.description": "Ultimate Skill. Passively grants +6 Attack, +16 HP, +4 Armor, +4 Toughness. Press to call down primordial lightning that devastates the target area with a massive explosion. Grants brief damage immunity after activation. High energy cost.",
 
   "primegodling.skill.divine_devour": "Divine Devour",
   "primegodling.skill.divine_devour.description": "Unique Skill. Press the skill key while looking at a mob to attempt to steal one of its skills. 10% chance per use. Cooldown: 10 ticks (0.5s) / 5 ticks mastered (0.25s).",
+
+  "primegodling.skill.divine_disruption": "Divine Disruption",
+  "primegodling.skill.divine_disruption.description": "Unique Skill. Press and hold to nullify all magicules within 15 blocks, disabling enemy skills. Costs 10% magicules on activation and 5% per 10 ticks. Mastered: 5% activation, 2% per 10 ticks.",
 
   "awakening.primegodling.divine_nexus.name": "Divine Nexus",
   "awakening.primegodling.divine_nexus.desc": "The third path alongside True Demon Lord and True Hero. Requires New God, 1M EP, and 1,000 Nexus Cores.",

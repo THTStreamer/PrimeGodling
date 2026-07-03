@@ -20,33 +20,60 @@ public class EclipticMasterySkill extends Skill {
     public EclipticMasterySkill() {
         super(SkillType.INTRINSIC);
         addHeldAttributeModifier(Attributes.ARMOR, ARMOR_ID,
-            6.0, AttributeModifier.Operation.ADD_VALUE);
+            1.0, AttributeModifier.Operation.ADD_VALUE);
         addHeldAttributeModifier(Attributes.ARMOR_TOUGHNESS, TOUGHNESS_ID,
-            4.0, AttributeModifier.Operation.ADD_VALUE);
+            1.0, AttributeModifier.Operation.ADD_VALUE);
     }
 
     @Override
     public double getAttributeModifierAmplifier(ManasSkillInstance instance, LivingEntity entity,
             net.minecraft.core.Holder<net.minecraft.world.entity.ai.attributes.Attribute> attribute,
             io.github.manasmods.manascore.skill.api.ManasSkill.AttributeTemplate template, int mode) {
-        if (instance.isMastered(entity)) {
-            return 2.0;
+        double masteredMult = instance.isMastered(entity) ? 2.0 : 1.0;
+        if (attribute.value() == Attributes.ARMOR.value()) {
+            return SkillConfig.COMMON.eclipticMasteryArmor.get() * masteredMult;
+        }
+        if (attribute.value() == Attributes.ARMOR_TOUGHNESS.value()) {
+            return SkillConfig.COMMON.eclipticMasteryToughness.get() * masteredMult;
         }
         return 1.0;
     }
 
     @Override
-    public void onLearnSkill(ManasSkillInstance instance, LivingEntity entity) {
+    public boolean canBeToggled(ManasSkillInstance instance, LivingEntity entity) {
+        return true;
+    }
+
+    @Override
+    public boolean canTick(ManasSkillInstance instance, LivingEntity entity) {
+        return false;
+    }
+
+    @Override
+    public void onToggleOn(ManasSkillInstance instance, LivingEntity entity) {
         if (!entity.level().isClientSide()) {
             instance.addHeldAttributeModifiers(entity, 0);
         }
     }
 
     @Override
+    public void onToggleOff(ManasSkillInstance instance, LivingEntity entity) {
+        if (!entity.level().isClientSide()) {
+            instance.removeAttributeModifiers(entity, 0);
+        }
+    }
+
+    @Override
+    public void onLearnSkill(ManasSkillInstance instance, LivingEntity entity) {
+    }
+
+    @Override
     public void onRespawn(ManasSkillInstance instance, ServerPlayer player, boolean wasDead) {
         if (!wasDead) return;
         if (player.level().isClientSide()) return;
-        instance.addHeldAttributeModifiers(player, 0);
+        if (instance.isToggled()) {
+            instance.addHeldAttributeModifiers(player, 0);
+        }
     }
 
     @Override
@@ -60,6 +87,7 @@ public class EclipticMasterySkill extends Skill {
     public boolean onTakenDamage(ManasSkillInstance instance, LivingEntity entity,
             net.minecraft.world.damagesource.DamageSource source, Changeable<Float> damage) {
         if (entity.level().isClientSide) return false;
+        if (!instance.isToggled()) return false;
         if (source.getEntity() instanceof LivingEntity attacker) {
             float reflect = instance.isMastered(entity)
                 ? SkillConfig.COMMON.eclipticMasteryMasteredReflectDamage.get().floatValue()
@@ -73,6 +101,7 @@ public class EclipticMasterySkill extends Skill {
     public boolean onBeingDamaged(ManasSkillInstance instance, LivingEntity entity,
             net.minecraft.world.damagesource.DamageSource source, float damage) {
         if (entity.level().isClientSide) return false;
+        if (!instance.isToggled()) return false;
         double chance = instance.isMastered(entity)
             ? SkillConfig.COMMON.eclipticMasteryMasteredNegateChance.get()
             : SkillConfig.COMMON.eclipticMasteryNegateChance.get();

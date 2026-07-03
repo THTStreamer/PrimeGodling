@@ -22,10 +22,6 @@ import java.util.List;
 
 public class DivineDevourSkill extends Skill {
 
-    private static final int COOLDOWN_NORMAL = 10;
-    private static final int COOLDOWN_MASTERED = 5;
-    private static final double RANGE = 32.0;
-
     public DivineDevourSkill() {
         super(SkillType.UNIQUE);
     }
@@ -45,17 +41,20 @@ public class DivineDevourSkill extends Skill {
         if (entity.level().isClientSide) return;
         if (!(entity instanceof ServerPlayer player)) return;
 
+        double range = SkillConfig.COMMON.devourRange.get();
         Vec3 start = player.getEyePosition();
         Vec3 look = player.getLookAngle();
-        Vec3 end = start.add(look.x * RANGE, look.y * RANGE, look.z * RANGE);
-        AABB aabb = player.getBoundingBox().expandTowards(look.scale(RANGE)).inflate(1.0);
+        Vec3 end = start.add(look.x * range, look.y * range, look.z * range);
+        AABB aabb = player.getBoundingBox().expandTowards(look.scale(range)).inflate(1.0);
         EntityHitResult hit = ProjectileUtil.getEntityHitResult(player, start, end, aabb,
-            e -> e instanceof LivingEntity && e != player, RANGE * RANGE);
+            e -> e instanceof LivingEntity && e != player, range * range);
         if (hit == null) return;
 
         LivingEntity target = (LivingEntity) hit.getEntity();
 
-        int cooldown = instance.isMastered(entity) ? COOLDOWN_MASTERED : COOLDOWN_NORMAL;
+        int cooldown = instance.isMastered(entity)
+            ? SkillConfig.COMMON.devourCooldownMastered.get()
+            : SkillConfig.COMMON.devourCooldownNormal.get();
         instance.setCoolDown(cooldown, mode);
 
         boolean allowUnique = SkillConfig.COMMON.devourAllowUnique.get();

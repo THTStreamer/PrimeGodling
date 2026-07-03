@@ -1,6 +1,6 @@
 # Primordial Ascent - Tensura: Reincarnated Addon
 
-A **Minecraft 1.21.1 NeoForge** addon for [Tensura: Reincarnated](https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated) that adds the **Godling** race -- a 7-stage evolution line culminating in the **Primordial Supreme God**, with a brand-new **Divine Nexus** awakening path that stands alongside True Demon Lord and True Hero as a third endgame option.
+A **Minecraft 1.21.1 NeoForge** addon for [Tensura: Reincarnated](https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated) that adds the **Godling** race -- a 7-stage evolution line culminating in the **Primordial Supreme God**, with a brand-new **Divine Nexus** awakening path that stands alongside True Demon Lord and True Hero as a third endgame option. Features 9 unique skills including toggleable passives, an AoE magicule nullification field, and a skill-stealing universal ability.
 
 ---
 
@@ -26,9 +26,10 @@ A **Minecraft 1.21.1 NeoForge** addon for [Tensura: Reincarnated](https://www.cu
 |-----|---------|----------|
 | [Minecraft](https://www.minecraft.net/) | 1.21.1 | Yes |
 | [NeoForge](https://neoforged.net/) | 21.1.230+ | Yes |
-| [Tensura: Reincarnated](https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated) | 2.0.0.8+ | Yes |
+| [Tensura: Reincarnated](https://www.curseforge.com/minecraft/mc-mods/tensura-reincarnated) | 2.0.1.0+ | Yes |
 | [ManasCore](https://www.curseforge.com/minecraft/mc-mods/manascore) | 4.0.0.2+ | Yes |
 | [GeckoLib](https://www.curseforge.com/minecraft/mc-mods/geckolib) | 4.8.4+ | Yes |
+| [Architectury](https://www.curseforge.com/minecraft/mc-mods/architectury) | 13.0.8+ | Yes |
 
 > **Note:** All dependencies must be installed for the mod to function. ManasCore and GeckoLib are pulled in automatically by Tensura: Reincarnated in most modpack setups.
 
@@ -37,7 +38,7 @@ A **Minecraft 1.21.1 NeoForge** addon for [Tensura: Reincarnated](https://www.cu
 ## Installation
 
 1. Install Minecraft 1.21.1 with NeoForge 21.1.230 or later.
-2. Download the latest `PrimordialAscent-1.21.1-x.x.x.jar` from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/prime-godling/files).
+2. Download the latest `PrimordialAscent-1.21.1-0.2.5.jar` from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/prime-godling/files).
 3. Place the JAR into your Minecraft `mods/` folder alongside Tensura: Reincarnated, ManasCore, and GeckoLib.
 4. Launch the game. The mod appears in the mod list as **Primordial Ascent**.
 
@@ -77,7 +78,7 @@ The Godling line has **7 stages**. Each evolution requires hitting an EP thresho
 | 2 | Prime Godling | 100,000 | 4 | 20,000 - 80,000 | 10,000 - 40,000 | Primordial Bloom, Cosmic Awareness, random resistances + skills |
 | 3 | Celestial Godling | 200,000 | 16 | 100,000 - 500,000 | 50,000 - 250,000 | Stellar Ascension, Ecliptic Mastery, resistances evolve to nullifications |
 | 4 | Ecliptic Godling | 400,000 | 64 | 500,000 - 2,000,000 | 250,000 - 1,000,000 | Luminarch Blessing, Dodge Negate, Resistance Degradation |
-| 5 | New God | 800,000 | 256 | 2,000,000 - 8,000,000 | 1,000,000 - 4,000,000 | Primordial Fortitude (90-95% damage reduction) |
+| 5 | New God | 800,000 | 256 | 2,000,000 - 8,000,000 | 1,000,000 - 4,000,000 | Primordial Fortitude (55-65% damage reduction) |
 | 6 | Primordial Supreme God | 1,600,000 | 1,024 | 8,000,000 - 20,000,000 | 4,000,000 - 10,000,000 | All nullifications, Creation Authority |
 
 ### Evolution Requirements
@@ -92,16 +93,18 @@ To evolve, you need:
 
 ## Skills
 
+The mod features **9 unique skills** across the evolution chain, plus 2 universal skills available to any race. All skills have configurable values in `skills.toml`. Skill icons and particle effects are included for all skills.
+
 ### Unique & Intrinsic Skills (granted at evolution milestones)
 
 | Skill | Type | Stage | Description |
 |-------|------|-------|-------------|
-| **Primordial Bloom** | UNIQUE | 2 | Passively regenerates magicules at 3%/s. Periodically spawns blooming particles. Mastery: grants Regeneration to nearby players. |
+| **Primordial Bloom** | INTRINSIC | 2 | Passively regenerates magicules at 3%/s. Periodically spawns blooming particles. Mastery: grants Regeneration to nearby players and subordinates. |
 | **Cosmic Awareness** | INTRINSIC | 2 | Toggle: grants presence sense, detects invisible entities, and marks entities that target you. Drains energy while active. |
 | **Stellar Ascension** | INTRINSIC | 3 | Toggle: boosts attack damage and max health with a celestial aura. Deals bonus magic damage on attack. Mastery: slow falling. |
-| **Ecliptic Mastery** | INTRINSIC | 3 | Passively grants bonus armor and toughness. Reflects damage back to attackers. Has a chance to negate incoming damage. Mastery doubles the effect. |
+| **Ecliptic Mastery** | INTRINSIC | 3 | Toggle: grants bonus armor and toughness. Reflects damage back to attackers. Has a chance to negate incoming damage. Mastery doubles the effect. |
 | **Luminarch Blessing** | INTRINSIC | 4 | Toggle: grants Regeneration, Absorption, and highlights all living entities within 24 blocks through walls (Glowing). Mastery: 48-block range and heals nearby allies. |
-| **Primordial Fortitude** | INTRINSIC | 5 | Boosts all core attributes. Grants Fire Resistance, Water Breathing, fall damage immunity, and 90-95% damage reduction. Greatly accelerates skill learning. |
+| **Primordial Fortitude** | INTRINSIC | 5 | Toggle: boosts all core attributes. Grants Fire Resistance, Water Breathing, fall damage immunity, and 55-65% damage reduction. Greatly accelerates skill learning. |
 
 ### Ultimate & Unique Skills (granted at endgame)
 
@@ -114,8 +117,18 @@ To evolve, you need:
 | Skill | Type | How to Obtain | Description |
 |-------|------|---------------|-------------|
 | **Divine Devour** | UNIQUE | Random skill generation (any race) | Press the skill key while looking at a mob to attempt to steal one of its skills. 10% chance per use. Cooldown: 10 ticks (0.5s) / 5 ticks mastered (0.25s). |
+| **Divine Disruption** | UNIQUE | Random skill generation (any race) | Press and hold to nullify all magicules within a configurable radius (default: 15 blocks), disabling enemy skills. Costs 10% magicules on activation and 5% per 10 ticks while held. Mastered: 5% activation, 2% per 10 ticks. |
 
-> **Note:** Divine Devour is **not restricted to any race**. It is included in Tensura's universal unique skill pool and can be randomly granted to any player on first join or character reset, regardless of race. By default, only Common, Intrinsic, and Extra skills can be copied. Server owners can enable Unique/Ultimate skill copying and blacklist specific skills via the config.
+> **Note:** Both Divine Devour and Divine Disruption are **not restricted to any race**. They are included in Tensura's universal unique skill pool and can be randomly granted to any player on first join or character reset, regardless of race. By default, only Common, Intrinsic, and Extra skills can be copied. Server owners can enable Unique/Ultimate skill copying and blacklist specific skills via the config.
+
+### Skill Visuals
+
+All 9 skills have dedicated icon textures and particle effects. Divine Disruption features a professional-grade client-side renderer with:
+- Expanding shockwave rings
+- Ground indicator circle showing AoE radius
+- Spiraling energy tendrils from targets to caster
+- Glow orbs and pulsing aura effects
+- Warden sound effects on activation and release
 
 ### Random Skill Grants
 
@@ -123,7 +136,7 @@ At certain evolution milestones, you receive random skills from the Tensura skil
 
 - **Stage 2 (Prime Godling):** 3 random resistances + 3 random non-resistance skills (configurable).
 - **Stage 3 (Celestial Godling):** Your resistances evolve into nullifications + 2 random skills granted or mastered (configurable).
-- **Stage 6 (Primordial Supreme God):** All 22 nullifications granted + Creation Authority + 1 random Unique/Ultimate skill (from the universal pool, which includes Divine Devour).
+- **Stage 6 (Primordial Supreme God):** All 22 nullifications granted + Creation Authority + 1 random Unique/Ultimate skill (from the universal pool, which includes Divine Devour and Divine Disruption).
 
 ---
 
@@ -261,9 +274,11 @@ All config files are located in `config/primegodling/`:
 | File | Type | Purpose |
 |------|------|---------|
 | `races.toml` | COMMON | EP thresholds, magicule/aura ranges, flight costs, EP gain multiplier, random reward counts |
-| `skills.toml` | COMMON | All skill settings, Divine Nexus requirements, Divine Devour options |
+| `skills.toml` | COMMON | All skill settings, Divine Nexus requirements, Divine Devour/Disruption options |
 | `server.toml` | SERVER | Nexus Core crafting recipe toggle |
 | `nexus-drops.toml` | SERVER | Per-mob Nexus Core drop chances |
+
+> **Note:** All skill config values are read at runtime and immediately affect gameplay when changed. Server owners can customize every aspect of skill behavior without restarting the server (config changes take effect on next server restart or world reload).
 
 ### Skills Config (`skills.toml`)
 
@@ -314,8 +329,8 @@ primordial_fortitude {
   armor = 12.0                    # Bonus armor
   toughness = 8.0                 # Bonus armor toughness
   speed_multiplier = 0.1          # Movement speed bonus (0.1 = 10% faster)
-  damage_reduction = 0.9          # Damage reduction (90%, non-mastered)
-  mastered_damage_reduction = 0.95 # Damage reduction (95%, mastered)
+  damage_reduction = 0.55         # Damage reduction (55%, non-mastered, configurable 0-100%)
+  mastered_damage_reduction = 0.65 # Damage reduction (65%, mastered, configurable 0-100%)
   learning_gain = 50.0            # Bonus ability learning rate
   mastery_gain = 50.0             # Bonus ability mastery rate
   chant_speed = 5.0               # Chant speed multiplier
@@ -339,6 +354,19 @@ divine_devour {
   allow_unique_skills = false     # Allow copying UNIQUE skills
   allow_ultimate_skills = false   # Allow copying ULTIMATE skills
   skill_blacklist = []            # Skills that cannot be copied (modid:skill_id)
+  cooldown_ticks = 10             # Cooldown after use (non-mastered)
+  mastered_cooldown_ticks = 5     # Cooldown after use (mastered)
+  range = 32.0                    # Maximum targeting range in blocks
+}
+
+# Divine Disruption — Universal Unique Skill
+divine_disruption {
+  activation_cost = 0.10           # Magicule cost on activation (10% of max)
+  activation_cost_mastered = 0.05  # Magicule cost on activation when mastered (5%)
+  tick_cost = 0.05                 # Magicule cost per interval while active (5%)
+  tick_cost_mastered = 0.02        # Magicule cost per interval when mastered (2%)
+  aoe_radius = 15.0                # Radius of the disruption aura in blocks
+  cost_interval = 10               # Ticks between each sustained cost drain
 }
 
 # Divine Nexus — Awakening prerequisites (New God only)
@@ -363,10 +391,10 @@ divine_nexus_awakening {
 
 ## Known Issues
 
-- No dedicated texture for the Primordial Fortitude skill icon yet.
 - `ScaledEPRequirement.java` and `ServerProxy.java` contain dead code from earlier development.
 - `FLIGHT_DATA` and `LAST_EP` maps are not cleaned on player logout (minor memory concern on long-running servers).
 - The Divine Nexus advancement reward loot table awards a placeholder item.
+- Divine Disruption texture is a placeholder (replace with proper artwork).
 
 See [ROADMAP.md](ROADMAP.md) for the full list of planned fixes and improvements.
 
@@ -405,6 +433,14 @@ gradlew build
 The output JAR will be in `build/libs/`.
 
 > **Requires:** JDK 21, Gradle 9.x+
+
+### Included Resources
+
+The mod includes all 9 skill icon textures at `assets/primegodling/textures/skill/`. Divine Disruption texture is a placeholder and should be replaced with proper artwork.
+
+### Included Resources
+
+The mod includes all 9 skill icon textures at `assets/primegodling/textures/skill/`. Divine Disruption texture is a placeholder and should be replaced with proper artwork.
 
 ---
 

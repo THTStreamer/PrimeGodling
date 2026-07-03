@@ -20,7 +20,8 @@ public class ConfigInjector {
             SkillRegistry.LUMINARCH_BLESSING,
             SkillRegistry.PRIMORDIAL_FORTITUDE,
             SkillRegistry.CREATION_AUTHORITY,
-            SkillRegistry.DIVINE_DEVOUR
+            SkillRegistry.DIVINE_DEVOUR,
+            SkillRegistry.DIVINE_DISRUPTION
     );
 
     private ConfigInjector() {}

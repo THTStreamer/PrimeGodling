@@ -25,6 +25,9 @@ import com.primegodling.primegodling.network.SyncNexusCoresPayload;
 import net.neoforged.neoforge.network.PacketDistributor;
 import io.github.manasmods.manascore.race.api.RaceEvents;
 import io.github.manasmods.manascore.race.api.Races;
+import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
+import io.github.manasmods.manascore.skill.api.SkillAPI;
+import io.github.manasmods.manascore.skill.api.Skills;
 import io.github.manasmods.tensura.data.TensuraRaceTags;
 import io.github.manasmods.tensura.storage.TensuraStorages;
 import io.github.manasmods.tensura.storage.ep.IExistence;
@@ -131,6 +134,15 @@ public class PrimeGodling {
         boolean hinataKilled = player.getPersistentData().getBoolean("primegodling:hinata_killed");
         int hostileMobKills = player.getPersistentData().getInt("primegodling:hostile_mob_kills");
         PacketDistributor.sendToPlayer(player, new SyncKillCountersPayload(player.getUUID(), demonLordKills, hinataKilled, hostileMobKills));
+
+        Skills skillStorage = SkillAPI.getSkillsFrom(player);
+        if (skillStorage != null) {
+            for (ManasSkillInstance skillInst : skillStorage.getLearnedSkills()) {
+                if (skillInst.isToggled()) {
+                    skillInst.addHeldAttributeModifiers(player, 0);
+                }
+            }
+        }
     }
 
     private static void onPlayerTick(PlayerTickEvent.Post event) {

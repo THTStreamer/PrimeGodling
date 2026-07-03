@@ -13,4 +13,5 @@ public final class SkillRegistry {
     public static final ResourceLocation PRIMORDIAL_FORTITUDE = ResourceLocation.fromNamespaceAndPath("primegodling", "primordial_fortitude");
     public static final ResourceLocation CREATION_AUTHORITY = ResourceLocation.fromNamespaceAndPath("primegodling", "creation_authority");
     public static final ResourceLocation DIVINE_DEVOUR = ResourceLocation.fromNamespaceAndPath("primegodling", "divine_devour");
+    public static final ResourceLocation DIVINE_DISRUPTION = ResourceLocation.fromNamespaceAndPath("primegodling", "divine_disruption");
 }

@@ -4,6 +4,7 @@ import com.primegodling.primegodling.PrimeGodling;
 import com.primegodling.primegodling.common.data.skill.CosmicAwarenessSkill;
 import com.primegodling.primegodling.common.data.skill.CreationAuthoritySkill;
 import com.primegodling.primegodling.common.data.skill.DivineDevourSkill;
+import com.primegodling.primegodling.common.data.skill.DivineDisruptionSkill;
 import com.primegodling.primegodling.common.data.skill.EclipticMasterySkill;
 import com.primegodling.primegodling.common.data.skill.LuminarchBlessingSkill;
 import com.primegodling.primegodling.common.data.skill.PrimordialBloomSkill;
@@ -27,6 +28,7 @@ public class ModSkills {
     public static final RegistrySupplier<ManasSkill> PRIMORDIAL_FORTITUDE;
     public static final RegistrySupplier<ManasSkill> CREATION_AUTHORITY;
     public static final RegistrySupplier<ManasSkill> DIVINE_DEVOUR;
+    public static final RegistrySupplier<ManasSkill> DIVINE_DISRUPTION;
 
     static {
         PRIMORDIAL_BLOOM = SKILLS.register("primordial_bloom", PrimordialBloomSkill::new);
@@ -37,6 +39,7 @@ public class ModSkills {
         PRIMORDIAL_FORTITUDE = SKILLS.register("primordial_fortitude", PrimordialFortitudeSkill::new);
         CREATION_AUTHORITY = SKILLS.register("creation_authority", CreationAuthoritySkill::new);
         DIVINE_DEVOUR = SKILLS.register("divine_devour", DivineDevourSkill::new);
+        DIVINE_DISRUPTION = SKILLS.register("divine_disruption", DivineDisruptionSkill::new);
     }
 
     public static void init() {

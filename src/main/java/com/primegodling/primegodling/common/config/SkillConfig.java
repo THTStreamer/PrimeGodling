@@ -81,6 +81,17 @@ public class SkillConfig {
         public final ModConfigSpec.BooleanValue devourAllowUnique;
         public final ModConfigSpec.BooleanValue devourAllowUltimate;
         public final ModConfigSpec.ConfigValue<List<? extends String>> devourSkillBlacklist;
+        public final ModConfigSpec.IntValue devourCooldownNormal;
+        public final ModConfigSpec.IntValue devourCooldownMastered;
+        public final ModConfigSpec.DoubleValue devourRange;
+
+        // Divine Disruption
+        public final ModConfigSpec.DoubleValue divineDisruptionActivationCost;
+        public final ModConfigSpec.DoubleValue divineDisruptionActivationCostMastered;
+        public final ModConfigSpec.DoubleValue divineDisruptionTickCost;
+        public final ModConfigSpec.DoubleValue divineDisruptionTickCostMastered;
+        public final ModConfigSpec.DoubleValue divineDisruptionAoeRadius;
+        public final ModConfigSpec.IntValue divineDisruptionCostInterval;
 
         // Divine Nexus (Awakening prerequisites)
         public final ModConfigSpec.IntValue divineNexusMinSkills;
@@ -185,11 +196,11 @@ public class SkillConfig {
                     .comment("Movement speed multiplier (0.1 = 10% faster)")
                     .defineInRange("speed_multiplier", 0.1, 0.0, 5.0);
             primordialFortitudeDamageReduction = builder
-                    .comment("Damage reduction factor (non-mastered, 0.9 = 90% reduction)")
-                    .defineInRange("damage_reduction", 0.9, 0.0, 0.99);
+                    .comment("Damage reduction factor (non-mastered, 0.55 = 55% reduction, 1.0 = 100%)")
+                    .defineInRange("damage_reduction", 0.55, 0.0, 1.0);
             primordialFortitudeMasteredDamageReduction = builder
-                    .comment("Damage reduction factor (mastered, 0.95 = 95% reduction)")
-                    .defineInRange("mastered_damage_reduction", 0.95, 0.0, 0.99);
+                    .comment("Damage reduction factor (mastered, 0.65 = 65% reduction, 1.0 = 100%)")
+                    .defineInRange("mastered_damage_reduction", 0.65, 0.0, 1.0);
             primordialFortitudeLearningGain = builder
                     .comment("Bonus to ability learning rate")
                     .defineInRange("learning_gain", 50.0, 0.0, 1000.0);
@@ -247,6 +258,37 @@ public class SkillConfig {
                             "Format: \"modid:skill_id\" (e.g. \"tensura:predation\")",
                             "These skills will never be stolen regardless of allow_unique_skills or allow_ultimate_skills.")
                     .defineListAllowEmpty("skill_blacklist", SkillConfig::defaultDevourBlacklist, obj -> obj instanceof String s && s.contains(":"));
+            devourCooldownNormal = builder
+                    .comment("Cooldown in ticks after use (non-mastered)")
+                    .defineInRange("cooldown_ticks", 10, 1, 200);
+            devourCooldownMastered = builder
+                    .comment("Cooldown in ticks after use (mastered)")
+                    .defineInRange("mastered_cooldown_ticks", 5, 1, 200);
+            devourRange = builder
+                    .comment("Maximum range to target a mob for skill stealing")
+                    .defineInRange("range", 32.0, 4.0, 128.0);
+            builder.pop();
+
+            // ==================== Divine Disruption ====================
+            builder.push("divine_disruption").comment("Divine Disruption — Unique Skill (AoE Magicule Nullification)");
+            divineDisruptionActivationCost = builder
+                    .comment("Magicule cost on activation as a fraction of max magicule (0.10 = 10%)")
+                    .defineInRange("activation_cost", 0.10, 0.01, 1.0);
+            divineDisruptionActivationCostMastered = builder
+                    .comment("Magicule cost on activation when mastered (0.05 = 5%)")
+                    .defineInRange("activation_cost_mastered", 0.05, 0.01, 1.0);
+            divineDisruptionTickCost = builder
+                    .comment("Magicule cost per 10 ticks while active as a fraction of max magicule (0.05 = 5%)")
+                    .defineInRange("tick_cost", 0.05, 0.01, 1.0);
+            divineDisruptionTickCostMastered = builder
+                    .comment("Magicule cost per 10 ticks while active when mastered (0.02 = 2%)")
+                    .defineInRange("tick_cost_mastered", 0.02, 0.01, 1.0);
+            divineDisruptionAoeRadius = builder
+                    .comment("Radius of the disruption aura in blocks")
+                    .defineInRange("aoe_radius", 15.0, 4.0, 64.0);
+            divineDisruptionCostInterval = builder
+                    .comment("Ticks between each sustained magicule cost drain")
+                    .defineInRange("cost_interval", 10, 1, 100);
             builder.pop();
 
             // ==================== Divine Nexus ====================
