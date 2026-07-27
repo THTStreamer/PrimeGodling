@@ -38,7 +38,7 @@ A **Minecraft 1.21.1 NeoForge** addon for [Tensura: Reincarnated](https://www.cu
 ## Installation
 
 1. Install Minecraft 1.21.1 with NeoForge 21.1.230 or later.
-2. Download the latest `PrimordialAscent-1.21.1-0.2.5.jar` from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/prime-godling/files).
+2. Download the latest `PrimordialAscent-1.21.1-0.2.6.jar` from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/prime-godling/files).
 3. Place the JAR into your Minecraft `mods/` folder alongside Tensura: Reincarnated, ManasCore, and GeckoLib.
 4. Launch the game. The mod appears in the mod list as **Primordial Ascent**.
 
@@ -69,7 +69,7 @@ When you create a new world and join, the Tensura reincarnation screen will appe
 
 ## Evolution Chain
 
-The Godling line has **7 stages**. Each evolution requires hitting an EP threshold **and** consuming a certain number of **Nexus Cores** (see [Nexus Cores](#nexus-cores)).
+The Godling line has **7 stages**. Each evolution requires hitting an EP threshold **and** consuming a certain number of **Nexus Cores** (see [Nexus Cores](#nexus-cores)). Every evolution also grants cumulative stat bonuses: **x2 EP**, **+100 HP**, **+100 SHP**, **+100 MP**, and **+100 AP**.
 
 | Stage | Race | EP Required | Nexus Cores | Magicule Range | Aura Range | Key Reward |
 |-------|------|-------------|-------------|----------------|------------|------------|
@@ -80,6 +80,20 @@ The Godling line has **7 stages**. Each evolution requires hitting an EP thresho
 | 4 | Ecliptic Godling | 400,000 | 64 | 500,000 - 2,000,000 | 250,000 - 1,000,000 | Luminarch Blessing, Dodge Negate, Resistance Degradation |
 | 5 | New God | 800,000 | 256 | 2,000,000 - 8,000,000 | 1,000,000 - 4,000,000 | Primordial Fortitude (55-65% damage reduction) |
 | 6 | Primordial Supreme God | 1,600,000 | 1,024 | 8,000,000 - 20,000,000 | 4,000,000 - 10,000,000 | All nullifications, Creation Authority |
+
+### Evolution Stat Bonuses
+
+Each evolution grants cumulative bonuses that stack with every stage:
+
+| Bonus | Per Evolution | After Stage 6 (6 evolutions) |
+|-------|---------------|------------------------------|
+| EP | x2 current EP | 64x starting EP |
+| HP (Max Health) | +100 | +600 |
+| SHP (Spiritual Health) | +100 | +600 |
+| MP (Max Magicule) | +100 | +600 |
+| AP (Armor) | +100 | +600 |
+
+> **Note:** These bonuses are applied via permanent attribute modifiers and persist across deaths. The EP multiplier doubles your current EP at the moment of evolution.
 
 ### Evolution Requirements
 
@@ -433,10 +447,6 @@ gradlew build
 The output JAR will be in `build/libs/`.
 
 > **Requires:** JDK 21, Gradle 9.x+
-
-### Included Resources
-
-The mod includes all 9 skill icon textures at `assets/primegodling/textures/skill/`. Divine Disruption texture is a placeholder and should be replaced with proper artwork.
 
 ### Included Resources
 
