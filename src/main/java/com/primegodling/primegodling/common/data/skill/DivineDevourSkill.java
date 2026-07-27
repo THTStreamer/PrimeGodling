@@ -4,7 +4,7 @@ import com.primegodling.primegodling.common.config.SkillConfig;
 import io.github.manasmods.manascore.skill.api.ManasSkill;
 import io.github.manasmods.manascore.skill.api.ManasSkillInstance;
 import io.github.manasmods.manascore.skill.api.SkillAPI;
-import io.github.manasmods.tensura.ability.SkillHelper;
+import io.github.manasmods.manascore.skill.api.Skills;
 import io.github.manasmods.tensura.ability.skill.Skill;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -33,7 +33,13 @@ public class DivineDevourSkill extends Skill {
 
     @Override
     public boolean canTick(ManasSkillInstance instance, LivingEntity entity) {
-        return false;
+        return true;
+    }
+
+    @Override
+    public void onTick(ManasSkillInstance instance, LivingEntity entity) {
+        if (entity.level().isClientSide) return;
+        instance.addMasteryPoint(entity);
     }
 
     @Override
@@ -93,7 +99,9 @@ public class DivineDevourSkill extends Skill {
             ManasSkill stolen = targetSkills.get(player.getRandom().nextInt(targetSkills.size()));
             double successChance = getSuccessChance(stolen);
             if (player.getRandom().nextDouble() < successChance) {
-                if (SkillHelper.learnSkill(player, stolen)) {
+                Skills skillStorage = SkillAPI.getSkillsFrom(player);
+                if (skillStorage != null && skillStorage.getSkill(stolen.getRegistryName()).isEmpty()) {
+                    skillStorage.learnSkill(stolen.getRegistryName());
                     serverLevel.sendParticles(ParticleTypes.SOUL,
                         target.getX(), target.getY() + 1.0, target.getZ(),
                         20, 1.0, 1.0, 1.0, 0.1);

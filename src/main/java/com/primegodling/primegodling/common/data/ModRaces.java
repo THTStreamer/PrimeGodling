@@ -2,25 +2,26 @@ package com.primegodling.primegodling.common.data;
 
 import com.primegodling.primegodling.PrimeGodling;
 import com.primegodling.primegodling.common.data.race.PrimeGodlingRace;
-import dev.architectury.registry.registries.DeferredRegister;
-import dev.architectury.registry.registries.RegistrySupplier;
 import io.github.manasmods.manascore.race.api.ManasRace;
 import io.github.manasmods.manascore.race.impl.RaceRegistry;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
 
 public class ModRaces {
 
     private static final DeferredRegister<ManasRace> RACES =
-            DeferredRegister.create(PrimeGodling.MOD_ID, RaceRegistry.KEY);
+            DeferredRegister.create(RaceRegistry.KEY, PrimeGodling.MOD_ID);
 
-    public static final RegistrySupplier<ManasRace> HALF_GODLING;
-    public static final RegistrySupplier<ManasRace> DEMI_GODLING;
-    public static final RegistrySupplier<ManasRace> PRIME_GODLING;
-    public static final RegistrySupplier<ManasRace> CELESTIAL_GODLING;
-    public static final RegistrySupplier<ManasRace> ECLIPTIC_GODLING;
-    public static final RegistrySupplier<ManasRace> NEW_GOD;
-    public static final RegistrySupplier<ManasRace> PRIMORDIAL_SUPREME_GOD;
+    public static final DeferredHolder<ManasRace, ManasRace> HALF_GODLING;
+    public static final DeferredHolder<ManasRace, ManasRace> DEMI_GODLING;
+    public static final DeferredHolder<ManasRace, ManasRace> PRIME_GODLING;
+    public static final DeferredHolder<ManasRace, ManasRace> CELESTIAL_GODLING;
+    public static final DeferredHolder<ManasRace, ManasRace> ECLIPTIC_GODLING;
+    public static final DeferredHolder<ManasRace, ManasRace> NEW_GOD;
+    public static final DeferredHolder<ManasRace, ManasRace> PRIMORDIAL_SUPREME_GOD;
 
     static {
         HALF_GODLING = RACES.register("half_godling",
@@ -39,8 +40,8 @@ public class ModRaces {
                 () -> RaceData.createStage(6));
     }
 
-    public static void init() {
-        RACES.register();
+    public static void init(IEventBus bus) {
+        RACES.register(bus);
     }
 
     public static void linkEvolutions() {

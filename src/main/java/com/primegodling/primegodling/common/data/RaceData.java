@@ -87,39 +87,39 @@ public final class RaceData {
                 race.addAttr(Attributes.ATTACK_DAMAGE, "cg_damage", 5.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ATTACK_DAMAGE, "cg_mult", 0.20, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 race.addAttr(Attributes.MOVEMENT_SPEED, "cg_speed", 0.08, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR, "cg_armor", 9.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR_TOUGHNESS, "cg_toughness", 3.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "cg_dodge_negate", 0.20, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR, "cg_armor", 6.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR_TOUGHNESS, "cg_toughness", 2.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "cg_dodge_negate", 0.05, AttributeModifier.Operation.ADD_VALUE);
             }
             case 4 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "eg_health", 28.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ATTACK_DAMAGE, "eg_damage", 8.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ATTACK_DAMAGE, "eg_mult", 0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 race.addAttr(Attributes.MOVEMENT_SPEED, "eg_speed", 0.10, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR, "eg_armor", 13.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR_TOUGHNESS, "eg_toughness", 6.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR, "eg_armor", 8.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR_TOUGHNESS, "eg_toughness", 4.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "eg_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "eg_dodge_negate", 0.35, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "eg_dodge_negate", 0.10, AttributeModifier.Operation.ADD_VALUE);
             }
             case 5 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "ng_health", 45.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ATTACK_DAMAGE, "ng_damage", 12.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ATTACK_DAMAGE, "ng_mult", 0.30, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 race.addAttr(Attributes.MOVEMENT_SPEED, "ng_speed", 0.15, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR, "ng_armor", 17.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR_TOUGHNESS, "ng_toughness", 10.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR, "ng_armor", 12.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR_TOUGHNESS, "ng_toughness", 6.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "ng_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "ng_dodge_negate", 0.55, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "ng_dodge_negate", 0.15, AttributeModifier.Operation.ADD_VALUE);
             }
             case 6 -> {
                 race.addAttr(Attributes.MAX_HEALTH, "psg_health", 70.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ATTACK_DAMAGE, "psg_damage", 20.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(Attributes.ATTACK_DAMAGE, "psg_mult", 0.40, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
                 race.addAttr(Attributes.MOVEMENT_SPEED, "psg_speed", 0.22, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR, "psg_armor", 24.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(Attributes.ARMOR_TOUGHNESS, "psg_toughness", 14.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR, "psg_armor", 16.0, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(Attributes.ARMOR_TOUGHNESS, "psg_toughness", 8.0, AttributeModifier.Operation.ADD_VALUE);
                 race.addAttr(TensuraAttributes.RESISTANCE_DEGRADATION, "psg_res_degradation", 1.0, AttributeModifier.Operation.ADD_VALUE);
-                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "psg_dodge_negate", 0.75, AttributeModifier.Operation.ADD_VALUE);
+                race.addAttr(TensuraAttributes.DODGE_NEGATE_CHANCE, "psg_dodge_negate", 0.25, AttributeModifier.Operation.ADD_VALUE);
             }
         }
     }

@@ -23,7 +23,13 @@ public class DivineDisruptionSkill extends Skill {
 
     @Override
     public boolean canTick(ManasSkillInstance instance, LivingEntity entity) {
-        return false;
+        return true;
+    }
+
+    @Override
+    public void onTick(ManasSkillInstance instance, LivingEntity entity) {
+        if (entity.level().isClientSide) return;
+        instance.addMasteryPoint(entity);
     }
 
     @Override

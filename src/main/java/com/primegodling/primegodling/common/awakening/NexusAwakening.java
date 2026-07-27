@@ -94,20 +94,21 @@ public class NexusAwakening {
                 || (hinataReqMet && allBossMobsKilled && hostileMobKills >= hostileMobKillsRequired);
 
         if (!killReqMet) {
-            if (demonLordKills < demonLordKillsRequired) {
-                player.sendSystemMessage(Component.literal("§cRequirement: Kill " + demonLordKillsRequired + " Awakened Demon Lords (" + demonLordKills + "/" + demonLordKillsRequired + ")"));
+            player.sendSystemMessage(Component.literal("§6--- Kill Requirements ---"));
+            player.sendSystemMessage(Component.literal("§ePath A: Kill " + demonLordKillsRequired + " True Demon Lord PLAYERS"));
+            player.sendSystemMessage(Component.literal("§7  Progress: " + demonLordKills + "/" + demonLordKillsRequired));
+            if (demonLordKills >= demonLordKillsRequired) {
+                player.sendSystemMessage(Component.literal("§a  ✓ Complete!"));
             }
-            if (requireHinata && !hinataKilled) {
-                player.sendSystemMessage(Component.literal("§cRequirement: Kill Hinata Sakaguchi"));
+            player.sendSystemMessage(Component.literal("§ePath B (alternative):"));
+            if (requireHinata) {
+                player.sendSystemMessage(Component.literal("§7  Kill Hinata Sakaguchi: " + (hinataKilled ? "§a✓" : "§c✗")));
             }
             for (String mobId : bossMobs) {
-                if (!player.getPersistentData().getBoolean("primegodling:killed_" + mobId)) {
-                    player.sendSystemMessage(Component.literal("§cRequirement: Kill " + mobId));
-                }
+                boolean killed = player.getPersistentData().getBoolean("primegodling:killed_" + mobId);
+                player.sendSystemMessage(Component.literal("§7  Kill " + mobId + ": " + (killed ? "§a✓" : "§c✗")));
             }
-            if (hostileMobKills < hostileMobKillsRequired) {
-                player.sendSystemMessage(Component.literal("§cRequirement: Kill " + hostileMobKillsRequired + " hostile mobs (" + hostileMobKills + "/" + hostileMobKillsRequired + ")"));
-            }
+            player.sendSystemMessage(Component.literal("§7  Kill " + hostileMobKillsRequired + " hostile mobs: " + hostileMobKills + "/" + hostileMobKillsRequired));
             return "§cYou have not fulfilled the kill requirements.";
         }
 

@@ -35,7 +35,10 @@ import io.github.manasmods.tensura.util.EnergyHelper;
 import io.github.manasmods.tensura.util.SubordinateHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
@@ -44,8 +47,10 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -80,8 +85,8 @@ public class PrimeGodling {
 
         ModItems.ITEMS.register(bus);
         ModEntities.ENTITY_TYPES.register(bus);
-        ModRaces.init();
-        ModSkills.init();
+        ModRaces.init(bus);
+        ModSkills.init(bus);
         ResistanceHelper.init();
         bus.addListener(PrimeGodling::onCreativeTabContents);
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onAddReloadListeners);
@@ -98,6 +103,8 @@ public class PrimeGodling {
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onLivingDrops);
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onServerTick);
         NeoForge.EVENT_BUS.addListener(PrimeGodling::onPlayerLoggedIn);
+        NeoForge.EVENT_BUS.addListener(PrimeGodling::onDebugDamage);
+        NeoForge.EVENT_BUS.addListener(PrimeGodling::onDebugIncomingDamage);
         NeoForge.EVENT_BUS.addListener(DivineNexusCommand::onRegisterCommands);
 
         RaceEvents.ACTIVATE_ABILITY.register((raceInstance, entity) -> {
@@ -353,8 +360,9 @@ public class PrimeGodling {
                 if (targetExistence != null && targetExistence.isTrueDemonLord()) {
                     int count = killer.getPersistentData().getInt("primegodling:demon_lord_kills") + 1;
                     killer.getPersistentData().putInt("primegodling:demon_lord_kills", count);
+                    int required = com.primegodling.primegodling.common.config.SkillConfig.COMMON.awakeningDemonLordKills.get();
                     killer.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                        "§dYou killed an Awakened Demon Lord! §7(" + count + "/" + com.primegodling.primegodling.common.config.SkillConfig.COMMON.awakeningDemonLordKills.get() + ")"));
+                        "§dYou killed a True Demon Lord PLAYER! §7(" + count + "/" + required + " for Path A)"));
                     changed = true;
                 }
             }
@@ -395,5 +403,76 @@ public class PrimeGodling {
                 PacketDistributor.sendToPlayer(killer, new SyncKillCountersPayload(killer.getUUID(), dl, hin, hm));
             }
         }
+    }
+
+    private static void onDebugDamage(LivingDamageEvent.Pre event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (player.level().isClientSide()) return;
+
+        var source = event.getSource();
+        var entity = source.getEntity();
+        var directEntity = source.getDirectEntity();
+        float originalDmg = event.getNewDamage();
+
+        LOGGER.info("[DAMAGE POST-ARMOR] Player={} source={} entity={} directEntity={} amount={} health={}",
+                player.getName().getString(),
+                source.type().msgId(),
+                entity != null ? entity.getType().toShortString() : "null",
+                directEntity != null ? directEntity.getType().toShortString() : "null",
+                originalDmg,
+                player.getHealth());
+
+        var existence = TensuraStorages.getExistenceFrom(player);
+        if (existence != null) {
+            LOGGER.info("[DAMAGE POST-ARMOR] spiritualForm={}", existence.isSpiritualForm());
+        }
+
+        var armorAttr = player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR);
+        var toughAttr = player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR_TOUGHNESS);
+        var dodgeAttr = player.getAttribute(io.github.manasmods.tensura.registry.attribute.TensuraAttributes.DODGE_NEGATE_CHANCE);
+        LOGGER.info("[DAMAGE POST-ARMOR] armor={} toughness={} dodgeNegate={}",
+                armorAttr != null ? armorAttr.getValue() : "null",
+                toughAttr != null ? toughAttr.getValue() : "null",
+                dodgeAttr != null ? dodgeAttr.getValue() : "null");
+
+        Skills skills = SkillAPI.getSkillsFrom(player);
+        if (skills != null) {
+            int toggled = 0;
+            int total = 0;
+            StringBuilder sb = new StringBuilder();
+            for (ManasSkillInstance inst : skills.getLearnedSkills()) {
+                total++;
+                if (inst.isToggled()) {
+                    toggled++;
+                    sb.append(inst.getSkill().getRegistryName()).append("(ON) ");
+                }
+            }
+            LOGGER.info("[DAMAGE POST-ARMOR] skills: {} total, {} toggled: {}", total, toggled, sb.toString());
+        }
+    }
+
+    private static void onDebugIncomingDamage(LivingIncomingDamageEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (player.level().isClientSide()) return;
+
+        var source = event.getSource();
+        float amount = event.getAmount();
+        float originalAmount = event.getOriginalAmount();
+
+        LOGGER.info("[INCOMING] Player={} source={} entity={} directEntity={} amount={} originalAmount={} bypassesArmor={}",
+                player.getName().getString(),
+                source.type().msgId(),
+                source.getEntity() != null ? source.getEntity().getType().toShortString() : "null",
+                source.getDirectEntity() != null ? source.getDirectEntity().getType().toShortString() : "null",
+                amount,
+                originalAmount,
+                source.is(DamageTypeTags.BYPASSES_ARMOR));
+
+        AttributeInstance maxHealth = player.getAttribute(Attributes.MAX_HEALTH);
+        LOGGER.info("[INCOMING] maxHealth={} currentHealth={}",
+                maxHealth != null ? maxHealth.getValue() : "null",
+                player.getHealth());
+
+        LOGGER.info("[INCOMING] isCancelled={}", event.isCanceled());
     }
 }

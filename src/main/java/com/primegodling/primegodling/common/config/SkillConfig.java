@@ -313,19 +313,23 @@ public class SkillConfig {
                     .comment("Number of Nexus Cores required to attempt Divine Nexus awakening")
                     .defineInRange("cores_required", 1000, 0, 100_000);
             awakeningDemonLordKills = builder
-                    .comment("Number of Awakened Demon Lords required (Path A)")
+                    .comment("Path A: Number of True Demon Lord PLAYERS you must kill.",
+                            "These must be actual players who have awakened as True Demon Lord.",
+                            "Killing NPC demon lords does NOT count for this requirement.")
                     .defineInRange("demon_lord_kills_required", 3, 0, 100);
             awakeningHostileMobKills = builder
-                    .comment("Number of hostile mobs required (Path B)")
+                    .comment("Path B: Number of hostile mobs you must kill.",
+                            "This is the alternative to Path A, combined with boss kills below.")
                     .defineInRange("hostile_mob_kills_required", 50000, 0, 10_000_000);
             awakeningRequireHinata = builder
-                    .comment("Whether killing Hinata Sakaguchi is required for Path B")
+                    .comment("Path B: Whether killing Hinata Sakaguchi is required.",
+                            "Part of the alternative path if you choose not to kill 3 True Demon Lord players.")
                     .define("require_hinata_kill", true);
             awakeningBossMobs = builder
                     .comment(
-                            "List of specific boss mobs that count for Path B alternative kill requirement.",
+                            "Path B: List of specific boss mobs that must ALL be killed.",
                             "Format: \"modid:entity_id\" (e.g. \"tensura:hinata_sakaguchi\")",
-                            "These mobs must ALL be killed as part of Path B.",
+                            "Part of the alternative path if you choose not to kill 3 True Demon Lord players.",
                             "Hinata is controlled by require_hinata_kill above; add her here only if you want dual counting."
                     )
                     .defineListAllowEmpty("boss_mobs", SkillConfig::defaultBossMobs, obj -> obj instanceof String s && s.contains(":"));

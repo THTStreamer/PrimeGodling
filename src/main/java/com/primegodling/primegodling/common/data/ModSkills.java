@@ -10,25 +10,26 @@ import com.primegodling.primegodling.common.data.skill.LuminarchBlessingSkill;
 import com.primegodling.primegodling.common.data.skill.PrimordialBloomSkill;
 import com.primegodling.primegodling.common.data.skill.PrimordialFortitudeSkill;
 import com.primegodling.primegodling.common.data.skill.StellarAscensionSkill;
-import dev.architectury.registry.registries.DeferredRegister;
-import dev.architectury.registry.registries.RegistrySupplier;
 import io.github.manasmods.manascore.skill.api.ManasSkill;
 import io.github.manasmods.manascore.skill.impl.SkillRegistry;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModSkills {
 
     private static final DeferredRegister<ManasSkill> SKILLS =
-            DeferredRegister.create(PrimeGodling.MOD_ID, SkillRegistry.KEY);
+            DeferredRegister.create(SkillRegistry.KEY, PrimeGodling.MOD_ID);
 
-    public static final RegistrySupplier<ManasSkill> PRIMORDIAL_BLOOM;
-    public static final RegistrySupplier<ManasSkill> COSMIC_AWARENESS;
-    public static final RegistrySupplier<ManasSkill> STELLAR_ASCENSION;
-    public static final RegistrySupplier<ManasSkill> ECLIPTIC_MASTERY;
-    public static final RegistrySupplier<ManasSkill> LUMINARCH_BLESSING;
-    public static final RegistrySupplier<ManasSkill> PRIMORDIAL_FORTITUDE;
-    public static final RegistrySupplier<ManasSkill> CREATION_AUTHORITY;
-    public static final RegistrySupplier<ManasSkill> DIVINE_DEVOUR;
-    public static final RegistrySupplier<ManasSkill> DIVINE_DISRUPTION;
+    public static final DeferredHolder<ManasSkill, ManasSkill> PRIMORDIAL_BLOOM;
+    public static final DeferredHolder<ManasSkill, ManasSkill> COSMIC_AWARENESS;
+    public static final DeferredHolder<ManasSkill, ManasSkill> STELLAR_ASCENSION;
+    public static final DeferredHolder<ManasSkill, ManasSkill> ECLIPTIC_MASTERY;
+    public static final DeferredHolder<ManasSkill, ManasSkill> LUMINARCH_BLESSING;
+    public static final DeferredHolder<ManasSkill, ManasSkill> PRIMORDIAL_FORTITUDE;
+    public static final DeferredHolder<ManasSkill, ManasSkill> CREATION_AUTHORITY;
+    public static final DeferredHolder<ManasSkill, ManasSkill> DIVINE_DEVOUR;
+    public static final DeferredHolder<ManasSkill, ManasSkill> DIVINE_DISRUPTION;
 
     static {
         PRIMORDIAL_BLOOM = SKILLS.register("primordial_bloom", PrimordialBloomSkill::new);
@@ -42,7 +43,7 @@ public class ModSkills {
         DIVINE_DISRUPTION = SKILLS.register("divine_disruption", DivineDisruptionSkill::new);
     }
 
-    public static void init() {
-        SKILLS.register();
+    public static void init(IEventBus bus) {
+        SKILLS.register(bus);
     }
 }

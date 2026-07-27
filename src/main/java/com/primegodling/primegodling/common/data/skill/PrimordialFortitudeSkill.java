@@ -14,8 +14,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import com.mojang.logging.LogUtils;
+import org.slf4j.Logger;
 
 public class PrimordialFortitudeSkill extends Skill {
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private static final ResourceLocation DMG_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "fort_damage");
     private static final ResourceLocation HP_ID = ResourceLocation.fromNamespaceAndPath("primegodling", "fort_health");
@@ -105,6 +108,7 @@ public class PrimordialFortitudeSkill extends Skill {
     @Override
     public void onToggleOn(ManasSkillInstance instance, LivingEntity entity) {
         if (!entity.level().isClientSide()) {
+            LOGGER.debug("[PrimordialFortitude] Toggled ON for {}", entity.getName().getString());
             instance.addHeldAttributeModifiers(entity, 0);
             applyProgressionBonuses(entity);
         }
@@ -113,6 +117,7 @@ public class PrimordialFortitudeSkill extends Skill {
     @Override
     public void onToggleOff(ManasSkillInstance instance, LivingEntity entity) {
         if (!entity.level().isClientSide()) {
+            LOGGER.debug("[PrimordialFortitude] Toggled OFF for {}", entity.getName().getString());
             instance.removeAttributeModifiers(entity, 0);
             removeProgressionBonuses(entity);
         }
@@ -135,17 +140,27 @@ public class PrimordialFortitudeSkill extends Skill {
     public boolean onTakenDamage(ManasSkillInstance instance, LivingEntity entity,
             net.minecraft.world.damagesource.DamageSource source, Changeable<Float> damage) {
         if (!entity.level().isClientSide) {
-            if (!instance.isToggled()) return false;
+            boolean toggled = instance.isToggled();
+            LOGGER.debug("[PrimordialFortitude] onTakenDamage: entity={}, toggled={}, incomingDamage={}",
+                entity.getName().getString(), toggled, damage.get());
+            if (!toggled) return false;
             float reduction = instance.isMastered(entity)
                 ? SkillConfig.COMMON.primordialFortitudeMasteredDamageReduction.get().floatValue()
                 : SkillConfig.COMMON.primordialFortitudeDamageReduction.get().floatValue();
-            damage.set(damage.get() * (1.0f - reduction));
+            float originalDamage = damage.get();
+            float finalDamage = originalDamage * (1.0f - reduction);
+            if (finalDamage < 1.0f && originalDamage > 0.0f) {
+                finalDamage = 1.0f;
+            }
+            damage.set(finalDamage);
+            LOGGER.debug("[PrimordialFortitude] reduction={}, finalDamage={}", reduction, damage.get());
         }
         return false;
     }
 
     @Override
     public void onLearnSkill(ManasSkillInstance instance, LivingEntity entity) {
+        LOGGER.debug("[PrimordialFortitude] Skill learned by {}, auto-toggling ON", entity.getName().getString());
         instance.setToggled(true);
     }
 

@@ -14,6 +14,7 @@ import io.github.manasmods.manascore.skill.impl.SkillRegistry;
 import io.github.manasmods.tensura.config.race.RaceConfig;
 import io.github.manasmods.tensura.race.template.DefaultRace;
 import io.github.manasmods.tensura.race.template.EvolutionRequirement;
+import io.github.manasmods.tensura.registry.attribute.TensuraAttributes;
 import io.github.manasmods.tensura.storage.Alignment;
 import io.github.manasmods.tensura.storage.TensuraStorages;
 import io.github.manasmods.tensura.storage.ep.IExistence;
@@ -154,8 +155,51 @@ public class PrimeGodlingRace extends DefaultRace {
         return reqs;
     }
 
+    private static final ResourceLocation EVOLUTION_BONUS_HP = ResourceLocation.fromNamespaceAndPath("primegodling", "evolution_bonus_hp");
+    private static final ResourceLocation EVOLUTION_BONUS_SHP = ResourceLocation.fromNamespaceAndPath("primegodling", "evolution_bonus_shp");
+    private static final ResourceLocation EVOLUTION_BONUS_MP = ResourceLocation.fromNamespaceAndPath("primegodling", "evolution_bonus_mp");
+    private static final ResourceLocation EVOLUTION_BONUS_AP = ResourceLocation.fromNamespaceAndPath("primegodling", "evolution_bonus_ap");
+
     @Override
     public void triggerEvolutionRewards(ManasRaceInstance instance, LivingEntity entity) {
+        if (!(entity instanceof ServerPlayer player)) return;
+
+        int evolutionCount = player.getPersistentData().getInt("primegodling:evolution_count") + 1;
+        player.getPersistentData().putInt("primegodling:evolution_count", evolutionCount);
+
+        IExistence existence = TensuraStorages.getExistenceFrom(player);
+        if (existence != null) {
+            double currentEP = existence.getEP();
+            existence.setEP(currentEP * 2.0);
+        }
+
+        double bonus = evolutionCount * 100.0;
+
+        AttributeInstance hpAttr = player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH);
+        if (hpAttr != null) {
+            hpAttr.removeModifier(EVOLUTION_BONUS_HP);
+            hpAttr.addPermanentModifier(new AttributeModifier(EVOLUTION_BONUS_HP, bonus, AttributeModifier.Operation.ADD_VALUE));
+        }
+
+        AttributeInstance shpAttr = player.getAttribute(TensuraAttributes.MAX_SPIRITUAL_HEALTH);
+        if (shpAttr != null) {
+            shpAttr.removeModifier(EVOLUTION_BONUS_SHP);
+            shpAttr.addPermanentModifier(new AttributeModifier(EVOLUTION_BONUS_SHP, bonus, AttributeModifier.Operation.ADD_VALUE));
+        }
+
+        AttributeInstance mpAttr = player.getAttribute(TensuraAttributes.MAX_MAGICULE);
+        if (mpAttr != null) {
+            mpAttr.removeModifier(EVOLUTION_BONUS_MP);
+            mpAttr.addPermanentModifier(new AttributeModifier(EVOLUTION_BONUS_MP, bonus, AttributeModifier.Operation.ADD_VALUE));
+        }
+
+        AttributeInstance apAttr = player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR);
+        if (apAttr != null) {
+            apAttr.removeModifier(EVOLUTION_BONUS_AP);
+            apAttr.addPermanentModifier(new AttributeModifier(EVOLUTION_BONUS_AP, bonus, AttributeModifier.Operation.ADD_VALUE));
+        }
+
+        player.sendSystemMessage(Component.literal("§6✦ Evolution bonus: +100 HP, SHP, MP, AP | EP x2!"));
     }
 
     @Override
