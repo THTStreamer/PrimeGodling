@@ -115,11 +115,11 @@ public class EclipticMasterySkill extends Skill {
     @Override
     public boolean onBeingDamaged(ManasSkillInstance instance, LivingEntity entity,
             net.minecraft.world.damagesource.DamageSource source, float damage) {
-        if (entity.level().isClientSide) return false;
+        if (entity.level().isClientSide) return true;
         boolean toggled = instance.isToggled();
         LOGGER.debug("[EclipticMastery] onBeingDamaged: entity={}, toggled={}, mastered={}, incomingDamage={}, source={}",
             entity.getName().getString(), toggled, instance.isMastered(entity), damage, source.getMsgId());
-        if (!toggled) return false;
+        if (!toggled) return true;
         double chance = instance.isMastered(entity)
             ? SkillConfig.COMMON.eclipticMasteryMasteredNegateChance.get()
             : SkillConfig.COMMON.eclipticMasteryNegateChance.get();
@@ -131,8 +131,8 @@ public class EclipticMasterySkill extends Skill {
                     entity.getX(), entity.getY() + 1.0, entity.getZ(),
                     15, 1.0, 1.0, 1.0, 0.3);
             }
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 }
