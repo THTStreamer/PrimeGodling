@@ -169,8 +169,26 @@ public class PrimeGodlingRace extends DefaultRace {
 
         IExistence existence = TensuraStorages.getExistenceFrom(player);
         if (existence != null) {
+            double savedEP = player.getPersistentData().getDouble("primegodling:pre_evolution_ep");
             double currentEP = existence.getEP();
-            existence.setEP(currentEP * 2.0);
+            double epToUse = Math.max(savedEP, currentEP);
+            double newAura = epToUse;
+            double newMagicule = epToUse;
+
+            AttributeInstance auraAttr = player.getAttribute(TensuraAttributes.MAX_AURA);
+            if (auraAttr != null) {
+                auraAttr.setBaseValue(newAura);
+            }
+            AttributeInstance magiculeAttr = player.getAttribute(TensuraAttributes.MAX_MAGICULE);
+            if (magiculeAttr != null) {
+                magiculeAttr.setBaseValue(newMagicule);
+            }
+
+            existence.setAura(newAura);
+            existence.setMagicule(newMagicule);
+            existence.markDirty();
+
+            player.getPersistentData().remove("primegodling:pre_evolution_ep");
         }
 
         double bonus = evolutionCount * 100.0;
@@ -275,6 +293,12 @@ public class PrimeGodlingRace extends DefaultRace {
     @Override
     public void onRaceEvolution(ManasRaceInstance oldInstance, LivingEntity entity, ManasRaceInstance newInstance) {
         if (entity instanceof ServerPlayer player) {
+            IExistence existence = TensuraStorages.getExistenceFrom(player);
+            if (existence != null) {
+                double currentEP = existence.getEP();
+                player.getPersistentData().putDouble("primegodling:pre_evolution_ep", currentEP);
+            }
+
             ManasRace newRace = newInstance.getRace();
             if (newRace instanceof PrimeGodlingRace pgr) {
                 long newEp = pgr.getEpThreshold();
